@@ -22,78 +22,86 @@ Todas las historias de usuario junto con sus Epic Stories se recogen en el table
 
 ![Diagrama de Casos de Uso](/Diagramas/CasosDeUso.png)
 
-#### Tecnologías usadas
+#### Arquitectura
 
--  **Front-end:**
+La arquitectura de la página web se basará principalmente en separar el backend del frontend en diferentes servidores, permitiendo así _Server Side Rendering_. En un futuro, se seguirá esta idea y se implementará en forma de microservicios.
+Por tanto, por una parte tenemos el _back-end_, que es un servidor escrito en Express que actuará únicamente como un servidor REST API que estará conectado a la base de datos. Y por otra parte, tenemos el _front-end_, que se implementará en otro servidor encargado únicamente de renderizar el cliente.
 
-   -  HTML5
-   -  CSS3
-   -  Bootstrap
-   -  Javascript:
-      -  Axios
-   -  ReactJS + Redux
+### Principales tecnologías usadas
 
--  **Back-end**:
+- **Front-end:**
 
-   -  NodeJS
-   -  Express
-   -  Mongoose
+  - HTML5
+  - CSS3
+  - Bootstrap
+  - Javascript:
+    - Axios
+  - Next.js + React.js + Redux
 
--  **Base de datos**: MongoDB
+- **Back-end**:
+
+  - NodeJS
+  - Express
+    - Passport for authentication
+    - Sendgrid to send emails
+    - Stripe for payments
+  - Mongoose
+
+- **Base de datos**: MongoDB
 
 #### Historial versiones
 
--  **Version 0.1**:
+- **Version 0.1**:
 
-   -  [ ] Import/export del catálogo
-   -  [ ] Opciones de backup de la base de datos
+  - [ ] Import/export del catálogo
+  - [ ] Opciones de backup de la base de datos
 
--  **Version 0.2 [Sprint 1]**:
+- **Version 0.2**:
 
-   -  [ ] Autenticación del administrador
-   -  [ ] Diseño e implementación de la parte privada
-   -  [ ] Fichar libros
+  - [ ] Autenticación del administrador
+  - [ ] Diseño e implementación de la parte privada
+  - [ ] Fichar libros
 
--  **Version 0.3**:
+- **Version 0.3**:
 
-   -  [ ] Buscar libros
-   -  [ ] Diseño e implementación parte pública
+  - [ ] Buscar libros
+  - [ ] Diseño e implementación parte pública
 
--  **Versión 0.4 [Sprint 2]**:
+- **Versión 0.4**:
 
-   -  [ ] Información de contacto de la librería
-   -  [ ] Portabilidad
+  - [ ] Información de contacto de la librería
+  - [ ] Portabilidad
 
--  **Versión 0.5**:
+- **Versión 0.5**:
 
-   -  [ ] Cifrado APIs
-   -  [ ] Comprar
-   -  [ ] Ver gastos de envío
+  - [ ] Cifrado APIs
+  - [ ] Comprar
+  - [ ] Ver gastos de envío
 
--  **Versión 0.6 [Sprint 3]**:
+- **Versión 0.6**:
 
-   -  [ ] API banco
-   -  [ ] Pagar
+  - [ ] API banco
+  - [ ] Pagar
 
--  **Versión 0.7**:
+- **Versión 0.7**:
 
-   -  [ ] Carro de la compra
-   -  [ ] Manejar pedidos
-   -  [ ] Historial de pedidos
-   -  [ ] Información sobre la librería
+  - [ ] Carro de la compra
+  - [ ] Manejar pedidos
+  - [ ] Historial de pedidos
+  - [ ] Información sobre la librería
 
--  **Versión 0.8 [Sprint 4]**:
+- **Versión 0.8**:
 
-   -  [ ] API Correos
-   -  [ ] Ver estado del pedido
+  - [ ] API Correos
+  - [ ] Ver estado del pedido
 
--  **Versión 0.9**:
+- **Versión 0.9**:
 
-   -  [ ] Crear facturas
-   -  [ ] Lista de facturas
-   -  [ ] Convertir a PDF las facturas
-   -  [ ] Enviar por email las facturas
+  - [ ] Crear facturas
+  - [ ] Lista de facturas
+  - [ ] Convertir a PDF las facturas
+  - [ ] Enviar por email las facturas
 
--  **Versión 0.10 [Sprint 5] - Versión ALFA**:
-   -  [ ] Prestaciones
-   -  [ ] Fidelidad
+- **Versión 0.10 - Versión ALFA**:
+  - [ ] Prestaciones
+  - [ ] Fidelidad
