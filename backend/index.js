@@ -5,7 +5,11 @@ const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
 const path = require("path");
 
+const router = require("./routes");
+
 const catalogueController = require("./controllers/catalogue");
+
+// --------------------------------------------- //
 
 dotenv.config({
   path: path.resolve(__dirname, `./config/.env.${process.env.ENVIRONMENT}`),
@@ -25,9 +29,11 @@ mongoose
 
 const app = express();
 
+// ---------------------------------------------- //
+
 app.use(bodyParser.json());
 
-app.get("/", catalogueController.import);
+app.use("/", router);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

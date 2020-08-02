@@ -1,6 +1,10 @@
 const fs = require("fs");
 const csv = require("csvtojson");
 
+exports.test = (req, res, next) => {
+  res.send("All ok");
+};
+
 exports.import = async (req, res, next) => {
   /*const path = "./bbdd.txt";
   // Sacar headers de la primera linea... asociar con algun tipo de logica cada etiqueta en español con la de ingles
