@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
+// const autoIncrement = require("mongoose-auto-increment");
 
 const bookSchema = new Schema({
   // key: typeOfValue,
@@ -17,15 +18,14 @@ const bookSchema = new Schema({
   isbn: String,
   publicationPlace: String,
   publisher: String,
-  collection: String,
+  bookCollection: String,
   year: Number,
   size: String,
   pages: Number,
-  illustrations: String,
+  illustration: String,
   binding: String,
   condition: {
     type: String,
-    required: true,
     default: "",
   },
   dedication: String,
@@ -52,7 +52,7 @@ const bookSchema = new Schema({
     enum: ["venta", "vendido", "reservado"],
     default: "venta",
   },
-  edicion: String,
+  edition: String,
 
   //format: String,  // formato
   //weight: String,   // peso
@@ -64,6 +64,8 @@ const bookSchema = new Schema({
   //catalogue: String,         // catalogo
   //AbeBooksCategory: String,   // Categoría de AbeBooks
 });
+
+// bookSchema.plugin(autoIncrement.plugin, { model: "Book", field: "reference" });
 
 // This will load the schema into mongoose
 mongoose.model("books", bookSchema);

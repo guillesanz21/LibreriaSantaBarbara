@@ -7,18 +7,19 @@ const path = require("path");
 
 const router = require("./routes");
 
-const catalogueController = require("./controllers/catalogue");
-
 // --------------------------------------------- //
 
 dotenv.config({
   path: path.resolve(__dirname, `./config/.env.${process.env.ENVIRONMENT}`),
 });
 
-mongoose
+require("./models/Book");
+
+const connection = mongoose
   .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useCreateIndex: true,
   })
   .then(() => {
     console.log("CONNECTED TO DB!");
@@ -26,6 +27,8 @@ mongoose
   .catch((err) => {
     console.log("ERROR", err.message);
   });
+
+//autoIncrement.initialize(connection);
 
 const app = express();
 
@@ -36,6 +39,7 @@ app.use(bodyParser.json());
 app.use("/", router);
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT, (err) => {
+  if (err) throw err;
   console.log("API REST Server listening on port 3000!!");
 });

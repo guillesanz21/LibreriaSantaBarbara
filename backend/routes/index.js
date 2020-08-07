@@ -13,9 +13,16 @@ router.get("/", catalogueController.test);
 
 router.get(
   "/import",
-  authorizationMiddleware.requireLogin,
-  authorizationMiddleware.requireAdmin,
+  //authorizationMiddleware.requireLogin,
+  //authorizationMiddleware.requireAdmin,
   catalogueController.import
+);
+
+router.get(
+  "/export",
+  //authorizationMiddleware.requireLogin,
+  //authorizationMiddleware.requireAdmin,
+  catalogueController.export
 );
 
 module.exports = router;

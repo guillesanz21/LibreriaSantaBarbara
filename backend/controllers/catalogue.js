@@ -1,21 +1,27 @@
-const fs = require("fs");
-const csv = require("csvtojson");
+// Import
+const catalogueToJSON = require("../services/catalogue/import/catalogueToJSON");
+const jsonToCSV = require("../services/catalogue/import/jsonToDB");
+// Export
+const dbToJSON = require("../services/catalogue/export/dbToJSON");
+// const jsonToCSV = require("../services/catalogue/export/jsonToCSV");
 
 exports.test = (req, res, next) => {
   res.send("All ok");
 };
 
 exports.import = async (req, res, next) => {
-  /*const path = "./bbdd.txt";
-  // Sacar headers de la primera linea... asociar con algun tipo de logica cada etiqueta en español con la de ingles
-  // por ejemplo, año de publicación --> year. Despues con la propiedad "headers" asignar los headers adecuados
-  const csvConverter = csv({
-    delimiter: [",", "\t"],
-    noheader: false,
-    headers: [],
-  });
-  const jsonArray = await csvConverter.fromFile(path);
-  console.log(jsonArray);*/
+  const booksArray = await catalogueToJSON();
+  const successfulImport = await jsonToCSV(booksArray);
+  if (!successfulImport) {
+    return res.send("Importación fallida!");
+  }
+  res.send("Importación completada!");
+};
 
-  res.send("All working just fine");
+exports.export = async (req, res, next) => {
+  const booksArray = await dbToJSON();
+  console.log(booksArray);
+  // In the future add the posibility to export in json, xml and other formats
+  // const csv = await jsonToCSV(booksArray);
+  res.send(booksArray);
 };
