@@ -21,7 +21,7 @@
     "cookie-session": "^1.4.0",
     "csvtojson": "^2.0.10",
     "dotenv": "^8.2.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "json2csv": "^5.0.1",
     "mongoose": "^5.9.25",
     "mongoose-auto-increment": "^5.0.1",
