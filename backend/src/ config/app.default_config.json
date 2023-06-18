@@ -1,0 +1,10 @@
+{
+  "NODE_ENV": "development",
+  "API_PREFIX": "/api",
+  "APP_NAME": "NestJS API",
+  "APP_PORT": 3000,
+  "APP_HOST": "http://localhost",
+  "CORS_ORIGIN": true,
+  "CORS_METHODS": "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+  "CORS_CREDENTIALS": true
+}

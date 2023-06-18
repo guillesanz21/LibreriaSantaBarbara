@@ -1,10 +1,14 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { ConfigModule } from '@nestjs/config';
+import { appConfig, CORS } from './ config';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true, // make config module global
+      load: [appConfig, CORS], // load config files
+      envFilePath: `.env.${process.env.NODE_ENV}`, // load .env file
+    }),
+  ],
 })
 export class AppModule {}
