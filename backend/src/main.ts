@@ -14,7 +14,7 @@ async function bootstrap() {
   app.setGlobalPrefix(configService.get('app.apiPrefix'));
   app.use(morgan('dev'));
 
-  const port = configService.get('app.port');
+  const port = configService.get('app.port', { infer: true });
 
   await app.listen(port);
   console.log(`Server running on port: ${port}`);

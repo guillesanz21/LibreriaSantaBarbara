@@ -12,5 +12,7 @@
   "DB_PORT": 5432,
   "DB_USER": "postgres",
   "DB_PASSWORD": "dev_pg_pass",
-  "DB_NAME": "santaBarbara"
+  "DB_NAME": "santaBarbara",
+  "DB_SYNCHRONIZE": false,
+  "DB_MAX_CONNECTIONS": 100
 }

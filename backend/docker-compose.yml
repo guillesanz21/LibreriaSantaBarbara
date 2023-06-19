@@ -23,7 +23,7 @@ services:
     ports:
       - ${APP_PORT}:3000
     volumes:
-      - .:/app
+      - .:/usr/src/app
     depends_on:
       - postgres
     environment:
