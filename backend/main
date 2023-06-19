@@ -1,0 +1,192 @@
+#! /bin/bash
+
+# =================================================================================================================
+# Variables
+# -----------------------------------------------------------------------------------------------------------------
+SCRIPT_HOME="$(cd "$(dirname "$0")" && pwd)"
+
+# =================================================================================================================
+# Side functions and utils:
+# -----------------------------------------------------------------------------------------------------------------
+function toLower() {
+    # echo ${@,,}
+    echo $(echo ${@} | tr '[:upper:]' '[:lower:]')
+}
+
+function echoError () {
+  _msg=${1}
+  _red='\e[31m'
+  _nc='\e[0m' # No Color
+  echo -e "${_red}${_msg}${_nc}"
+}
+
+function echoWarning () {
+  _msg=${1}
+  _yellow='\e[33m'
+  _nc='\e[0m' # No Color
+  echo -e "${_yellow}${_msg}${_nc}"
+}
+
+function echoSuccess () {
+  _msg=${1}
+  _green='\e[32m'
+  _nc='\e[0m' # No Color
+  echo -e "${_green}${_msg}${_nc}"
+}
+
+# Check if a program is installed
+function isInstalled () {
+    echo "Checking if $1 is installed..."
+    # command -v <cmd> --> Returns the path of the installation
+    if ! (command -v $1 &> /dev/null); then
+        echoError "Error: $1 is not installed. Please, return when $1 is installed!"
+        exit 1
+    fi
+}
+
+# Check if the required programs are installed
+function checkBasicsInstalled() {
+    cmds_CHECK=(docker docker-compose)
+    # set -x
+    for cmd_CHECK in ${cmds_CHECK[@]}; do
+        isInstalled ${cmd_CHECK}
+    done
+    # set +x
+}
+
+# =================================================================================================================
+# Main functions:
+# -----------------------------------------------------------------------------------------------------------------
+# Build the containers
+build() {
+  checkBasicsInstalled
+  sudo rm -rf .data/db/*
+  docker-compose --env-file .env.development -f docker-compose.yml build ${@}
+}
+
+# Start the docker-compose for development with the .env.development file
+dev() {
+  detached=""
+  if [[ ${1} == "-d" ]]; then
+    shift
+    echo "Starting in detached mode..."
+    detached="-d"
+  fi
+  checkBasicsInstalled
+  docker-compose --env-file .env.development -f docker-compose.yml up ${detached} ${@}
+}
+
+# Start the docker-compose for testing with the .env.test file
+test() {
+  checkBasicsInstalled
+  docker-compose --env-file .env.test -f docker-compose.yml up ${@}
+}
+
+# Stop the containers
+stop() {
+  ENV=${1:-"development"}
+  checkBasicsInstalled
+  docker-compose --env-file .env.${ENV} -f docker-compose.yml stop ${@}
+}
+
+# Resume the containers
+resume() {
+  ENV=${1:-"development"}
+  checkBasicsInstalled
+  docker-compose --env-file .env.${ENV} -f docker-compose.yml start -d ${@}
+}
+
+# Bring the containers down
+down() {
+  ENV=${1:-"development"}
+  checkBasicsInstalled
+  docker-compose --env-file .env.${ENV} -f docker-compose.yml down ${@}
+}
+
+# =================================================================================================================
+# HELP:
+# -----------------------------------------------------------------------------------------------------------------
+help() {
+  cat <<-EOF
+Usage: $0 [command] [options]
+
+Commands:
+  build         Build the containers
+
+  dev|start  [-d] (-d: detached mode)
+                Start the containers for development
+
+  test          Start the containers for testing
+
+  log|logs      Print the logs of the containers
+
+  stop  [dev|test]  (default: dev)
+                Stop the containers
+
+  restart|resume  [dev|test]  (default: dev)
+                Restart the containers
+
+  rm|down  [dev|test]  (default: dev)
+                Bring the containers down
+
+  help          Print this help
+
+EOF
+  exit 1
+}
+
+
+# =================================================================================================================
+# Main:
+# -----------------------------------------------------------------------------------------------------------------
+pushd ${SCRIPT_HOME} >/dev/null
+COMMAND=$(toLower ${1})
+# shift will change the output of ${@} from "./manage [command] [options]" to "[options]"
+# It there is no command, it will default the value of COMMAND to "help"
+shift || COMMAND=help
+
+case "${COMMAND}" in
+    build)
+        echo "Building..."
+        build ${@}
+        echoSuccess "Done!"
+        ;;
+    start|dev)
+        echo "Starting..."
+        dev ${@}
+        echoSuccess "Done!"
+        ;;
+    test)
+        echo "Testing..."
+        test ${@}
+        echoSuccess "Done!"
+        ;;
+    log|logs)
+        echo "Printing logs..."
+        docker-compose --env-file .env.development -f docker-compose.yml logs -f ${@}
+        ;;
+    stop)
+        echo "Stopping the containers..."
+        stop ${@}
+        echoSuccess "Done!"
+        ;;
+    restart|resume)
+        echo "Re-starting the stopped containers (if any)..."
+        resume ${@}
+        echoSuccess "Done!"
+        ;;
+    rm|down)
+        echo "Bringing the containers down..."
+        down
+        echoSuccess "Done!"
+        ;;
+    help)
+        help
+        ;;
+    *)
+        help
+        ;;
+esac
+
+
+popd >/dev/null

@@ -1,0 +1,35 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:15.3-alpine
+    container_name: database
+    hostname: ${DB_HOST}
+    restart: always
+    ports:
+      - ${DB_PORT}:5432
+    volumes:
+      - ./.data/db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: api
+    hostname: ${APP_HOST}
+    ports:
+      - ${APP_PORT}:3000
+    volumes:
+      - .:/app
+    depends_on:
+      - postgres
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USERNAME: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+    command: /opt/startup.${NODE_ENV}.sh
