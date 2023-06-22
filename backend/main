@@ -82,6 +82,22 @@ test() {
   docker-compose --env-file .env.test -f docker-compose.yml up ${@}
 }
 
+# Generate migrations
+generateMigrations() {
+  checkBasicsInstalled
+  migrationName=${1:-"migration"}
+  ENV=${2:-"development"}
+  docker exec -it api npm run migration:generate -- src/database/migrations/${migrationName} -p
+  sudo chmod 777 src/database/migrations/*${migrationName}*
+}
+
+# Running migrations
+runMigrations() {
+  checkBasicsInstalled
+  ENV=${1:-"development"}
+  docker exec -it api npm run migration:run
+}
+
 # Stop the containers
 stop() {
   ENV=${1:-"development"}
@@ -111,12 +127,18 @@ help() {
 Usage: $0 [command] [options]
 
 Commands:
-  build         Build the containers
+  (sudo) build         Build the containers
 
   dev|start  [-d] (-d: detached mode)
                 Start the containers for development
 
   test          Start the containers for testing
+
+  (sudo) migrations:generate  [migrationName] [ENV]  (default: migrationName=migration, ENV=development)
+                Generate migrations
+
+  migrations:run  [ENV]  (default: development)
+                Run migrations
 
   log|logs      Print the logs of the containers
 
@@ -160,6 +182,14 @@ case "${COMMAND}" in
         echo "Testing..."
         test ${@}
         echoSuccess "Done!"
+        ;;
+    migration:generate|migrations:generate)
+        echo "Generating migrations..."
+        generateMigrations ${@}
+        ;;
+    migration:run|migrations:run)
+        echo "Running migrations..."
+        runMigrations ${@}
         ;;
     log|logs)
         echo "Printing logs..."

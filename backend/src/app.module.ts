@@ -2,8 +2,10 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource, DataSourceOptions } from 'typeorm';
-import { appConfig, CORS, dbConfig } from './ config';
+import { appConfig, CORS, dbConfig } from './config';
 import { TypeOrmConfigService } from './database/typeorm-config.service';
+import { UsersModule } from './users/users.module';
+import { BooksModule } from './books/books.module';
 
 @Module({
   imports: [
@@ -18,6 +20,8 @@ import { TypeOrmConfigService } from './database/typeorm-config.service';
         return new DataSource(options).initialize();
       },
     }),
+    UsersModule,
+    BooksModule,
   ],
 })
 export class AppModule {}

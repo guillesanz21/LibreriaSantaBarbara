@@ -21,7 +21,6 @@ RUN sed -i 's/\r//g' /opt/wait-for-it.sh
 RUN sed -i 's/\r//g' /opt/startup.development.sh
 RUN sed -i 's/\r//g' /opt/startup.test.sh
 
-
 WORKDIR /usr/src/app
 # RUN npm run build
 
