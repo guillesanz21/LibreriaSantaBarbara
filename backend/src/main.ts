@@ -1,9 +1,11 @@
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { useContainer } from 'class-validator';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
+import validationOptions from './utils/validation-options';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,6 +16,11 @@ async function bootstrap() {
   app.enableCors(configService.get('CORS'));
 
   app.setGlobalPrefix(configService.get('app.apiPrefix'));
+  app.enableVersioning({
+    type: VersioningType.URI,
+  });
+  app.useGlobalPipes(new ValidationPipe(validationOptions));
+
   app.use(morgan('dev'));
 
   const port = configService.get('app.port', { infer: true });
