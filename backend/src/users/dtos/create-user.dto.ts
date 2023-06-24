@@ -1,28 +1,21 @@
 import {
-  IsDefined,
   IsOptional,
   IsBoolean,
   IsString,
-  // IsNumber,
-  IsDate,
   IsEmail,
   MaxLength,
+  IsNotEmpty,
 } from 'class-validator';
 import { userConstraints } from 'src/config/constants/database.constraint_values';
 
 const { common: constraints } = userConstraints;
 
 export class CreateUserDto {
-  // ? Should I leave this here?
-  // @IsDefined()
-  // @IsNumber()
-  // id: number;
-
-  @IsDefined()
+  @IsOptional()
   @IsBoolean()
   is_admin: boolean;
 
-  @IsDefined()
+  @IsNotEmpty()
   @IsEmail()
   @MaxLength(constraints.email.maxLength)
   email: string;
@@ -32,16 +25,8 @@ export class CreateUserDto {
   @MaxLength(constraints.address.maxLength)
   address: string;
 
-  @IsDefined()
+  @IsNotEmpty()
   @IsString()
   @MaxLength(constraints.phone_number.maxLength)
   phone_number: string;
-
-  @IsDefined()
-  @IsDate()
-  created_at: Date;
-
-  @IsDefined()
-  @IsDate()
-  updated_at: Date;
 }

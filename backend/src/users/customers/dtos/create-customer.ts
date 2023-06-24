@@ -7,7 +7,7 @@ import {
   MaxLength,
 } from 'class-validator';
 
-import { CreateUserDto } from './create-user.dto';
+import { CreateUserDto } from '../../dtos/create-user.dto';
 import { userConstraints } from 'src/config/constants/database.constraint_values';
 
 const { customer: constraints } = userConstraints;

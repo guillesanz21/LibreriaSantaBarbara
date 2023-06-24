@@ -6,7 +6,7 @@ import {
   JoinColumn,
   Index,
 } from 'typeorm';
-import { EntityHelper } from 'src/utils/entity-helper';
+import { EntityHelper } from 'src/utils/entities/entity-helper.entity';
 import { Book } from '../../entities/book.entity';
 
 @Entity('Language')

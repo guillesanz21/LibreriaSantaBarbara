@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, OneToMany } from 'typeorm';
-import { User } from './user.entity';
-import { Book } from '../../books/entities/book.entity';
+import { User } from '../../entities/user.entity';
+import { Book } from '../../../books/entities/book.entity';
 
 @Entity('Store')
 export class Store extends User {

@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class CreateTables1687453362109 implements MigrationInterface {
-  name = 'CreateTables1687453362109';
+export class CreateTables1687621238481 implements MigrationInterface {
+  name = 'CreateTables1687621238481';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
@@ -12,7 +12,8 @@ export class CreateTables1687453362109 implements MigrationInterface {
                 "address" text,
                 "phone_number" text NOT NULL,
                 "created_at" date NOT NULL DEFAULT now(),
-                "updated_at" date NOT NULL DEFAULT now(),
+                "updated_at" date DEFAULT now(),
+                "deleted_at" date,
                 "password" text NOT NULL,
                 "name" text NOT NULL,
                 "NIF" text,
@@ -70,17 +71,6 @@ export class CreateTables1687453362109 implements MigrationInterface {
             CREATE INDEX "IDX_966409202478432786fdf607ea" ON "Keyword" ("book_id")
         `);
     await queryRunner.query(`
-            CREATE TABLE "Image" (
-                "id" SERIAL NOT NULL,
-                "url" text NOT NULL,
-                "book_id" integer NOT NULL,
-                CONSTRAINT "PK_ddecd6b02f6dd0d3d10a0a74717" PRIMARY KEY ("id")
-            )
-        `);
-    await queryRunner.query(`
-            CREATE INDEX "IDX_e4174c535992fe14b0b1f588cf" ON "Image" ("book_id")
-        `);
-    await queryRunner.query(`
             CREATE TABLE "Book" (
                 "id" SERIAL NOT NULL,
                 "ref" integer NOT NULL,
@@ -119,6 +109,17 @@ export class CreateTables1687453362109 implements MigrationInterface {
             CREATE INDEX "IDX_a8057e34852fe1a3f422e04656" ON "Book" ("status_id")
         `);
     await queryRunner.query(`
+            CREATE TABLE "Image" (
+                "id" SERIAL NOT NULL,
+                "url" text NOT NULL,
+                "book_id" integer NOT NULL,
+                CONSTRAINT "PK_ddecd6b02f6dd0d3d10a0a74717" PRIMARY KEY ("id")
+            )
+        `);
+    await queryRunner.query(`
+            CREATE INDEX "IDX_e4174c535992fe14b0b1f588cf" ON "Image" ("book_id")
+        `);
+    await queryRunner.query(`
             CREATE TABLE "Customer" (
                 "id" SERIAL NOT NULL,
                 "is_admin" boolean NOT NULL DEFAULT false,
@@ -126,7 +127,8 @@ export class CreateTables1687453362109 implements MigrationInterface {
                 "address" text,
                 "phone_number" text NOT NULL,
                 "created_at" date NOT NULL DEFAULT now(),
-                "updated_at" date NOT NULL DEFAULT now(),
+                "updated_at" date DEFAULT now(),
+                "deleted_at" date,
                 "password" text,
                 "first_name" text,
                 "last_name" text,
@@ -159,10 +161,6 @@ export class CreateTables1687453362109 implements MigrationInterface {
             ADD CONSTRAINT "FK_966409202478432786fdf607eab" FOREIGN KEY ("book_id") REFERENCES "Book"("id") ON DELETE CASCADE ON UPDATE CASCADE
         `);
     await queryRunner.query(`
-            ALTER TABLE "Image"
-            ADD CONSTRAINT "FK_e4174c535992fe14b0b1f588cf9" FOREIGN KEY ("book_id") REFERENCES "Book"("id") ON DELETE CASCADE ON UPDATE CASCADE
-        `);
-    await queryRunner.query(`
             ALTER TABLE "Book"
             ADD CONSTRAINT "FK_dde618087261cdf6072ba2169a7" FOREIGN KEY ("store_id") REFERENCES "Store"("id") ON DELETE CASCADE ON UPDATE CASCADE
         `);
@@ -173,6 +171,10 @@ export class CreateTables1687453362109 implements MigrationInterface {
     await queryRunner.query(`
             ALTER TABLE "Book"
             ADD CONSTRAINT "FK_a8057e34852fe1a3f422e046562" FOREIGN KEY ("status_id") REFERENCES "Status"("id") ON DELETE RESTRICT ON UPDATE CASCADE
+        `);
+    await queryRunner.query(`
+            ALTER TABLE "Image"
+            ADD CONSTRAINT "FK_e4174c535992fe14b0b1f588cf9" FOREIGN KEY ("book_id") REFERENCES "Book"("id") ON DELETE CASCADE ON UPDATE CASCADE
         `);
     await queryRunner.query(`
             ALTER TABLE "Topic_of_Book"
@@ -192,6 +194,9 @@ export class CreateTables1687453362109 implements MigrationInterface {
             ALTER TABLE "Topic_of_Book" DROP CONSTRAINT "FK_78c0f439caaae08089d04052648"
         `);
     await queryRunner.query(`
+            ALTER TABLE "Image" DROP CONSTRAINT "FK_e4174c535992fe14b0b1f588cf9"
+        `);
+    await queryRunner.query(`
             ALTER TABLE "Book" DROP CONSTRAINT "FK_a8057e34852fe1a3f422e046562"
         `);
     await queryRunner.query(`
@@ -199,9 +204,6 @@ export class CreateTables1687453362109 implements MigrationInterface {
         `);
     await queryRunner.query(`
             ALTER TABLE "Book" DROP CONSTRAINT "FK_dde618087261cdf6072ba2169a7"
-        `);
-    await queryRunner.query(`
-            ALTER TABLE "Image" DROP CONSTRAINT "FK_e4174c535992fe14b0b1f588cf9"
         `);
     await queryRunner.query(`
             ALTER TABLE "Keyword" DROP CONSTRAINT "FK_966409202478432786fdf607eab"
@@ -222,6 +224,12 @@ export class CreateTables1687453362109 implements MigrationInterface {
             DROP TABLE "Customer"
         `);
     await queryRunner.query(`
+            DROP INDEX "public"."IDX_e4174c535992fe14b0b1f588cf"
+        `);
+    await queryRunner.query(`
+            DROP TABLE "Image"
+        `);
+    await queryRunner.query(`
             DROP INDEX "public"."IDX_a8057e34852fe1a3f422e04656"
         `);
     await queryRunner.query(`
@@ -232,12 +240,6 @@ export class CreateTables1687453362109 implements MigrationInterface {
         `);
     await queryRunner.query(`
             DROP TABLE "Book"
-        `);
-    await queryRunner.query(`
-            DROP INDEX "public"."IDX_e4174c535992fe14b0b1f588cf"
-        `);
-    await queryRunner.query(`
-            DROP TABLE "Image"
         `);
     await queryRunner.query(`
             DROP INDEX "public"."IDX_966409202478432786fdf607ea"

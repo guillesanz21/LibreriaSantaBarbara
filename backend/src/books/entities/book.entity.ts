@@ -12,8 +12,8 @@ import {
   JoinTable,
   Index,
 } from 'typeorm';
-import { EntityHelper } from 'src/utils/entity-helper';
-import { Store } from '../../users/entities/store.entity';
+import { EntityHelper } from 'src/utils/entities/entity-helper.entity';
+import { Store } from '../../users/stores/entities/store.entity';
 import { Location } from '../locations/entities/location.entity';
 import { Status } from '../status/entities/status.entity';
 import { Language } from '../languages/entites/language.entity';

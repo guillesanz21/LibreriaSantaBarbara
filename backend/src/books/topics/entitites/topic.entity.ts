@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
-import { EntityHelper } from 'src/utils/entity-helper';
+import { EntityHelper } from 'src/utils/entities/entity-helper.entity';
 import { Book } from '../../entities/book.entity';
 
 @Entity('Topic')

@@ -3,9 +3,9 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  // OneToMany,
+  DeleteDateColumn,
 } from 'typeorm';
-import { EntityHelper } from 'src/utils/entity-helper';
+import { EntityHelper } from 'src/utils/entities/entity-helper.entity';
 
 export abstract class User extends EntityHelper {
   @PrimaryGeneratedColumn()
@@ -26,6 +26,9 @@ export abstract class User extends EntityHelper {
   @CreateDateColumn({ type: 'date', nullable: false })
   created_at: Date;
 
-  @UpdateDateColumn({ type: 'date', nullable: false })
+  @UpdateDateColumn({ type: 'date', nullable: true })
   updated_at: Date;
+
+  @DeleteDateColumn({ type: 'date', nullable: true })
+  deleted_at: Date;
 }
