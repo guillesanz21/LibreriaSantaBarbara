@@ -9,6 +9,10 @@ export const userConstraints = {
     phone_number: {
       maxLength: 15,
     },
+    password: {
+      minLength: 8,
+      contains: '$2',
+    },
   },
   customer: {
     first_name: {
@@ -22,9 +26,6 @@ export const userConstraints = {
     },
   },
   store: {
-    password: {
-      minLength: 8,
-    },
     name: {
       maxLength: 100,
     },

@@ -11,39 +11,43 @@ import {
   ParseIntPipe,
   NotFoundException,
 } from '@nestjs/common';
-import { Store } from './entities/store.entity';
-import { StoresService } from './stores.service';
-import { CreateStoreDto } from './dtos/create-store.dto';
-import { UpdateStoreDto } from './dtos/update-store.dto';
+import { Customer } from './entities/customer.entity';
+import { CustomersService } from './customers.service';
+import { CreateCustomerDto } from './dtos/create-customer.dto';
+import { UpdateCustomerDto } from './dtos/update-customer.dto';
 import { NullableType } from 'src/utils/types/nullable.type';
 import { InfinityPaginationResultType } from 'src/utils/types/infinity-pagination-result.type';
 import { infinityPagination } from 'src/utils/infinity-pagination';
 
 // TODO: Admin only
 @Controller()
-export class StoresController {
-  constructor(private readonly storesService: StoresService) {}
+export class CustomersController {
+  constructor(private readonly customersService: CustomersService) {}
 
   @Post()
-  create(@Body() body: CreateStoreDto): Promise<Store> {
-    return this.storesService.create(body);
+  create(@Body() body: CreateCustomerDto): Promise<Customer> {
+    return this.customersService.create(body);
   }
 
   @Get()
   findMany(
     @Query('email') email?: string,
-    @Query('NIF') NIF?: string,
-    @Query('name') name?: string,
+    @Query('DNI') DNI?: string,
+    @Query('first-name') first_name?: string,
+    @Query('last-name') last_name?: string,
     @Query('address') address?: string,
     @Query('phone') phone_number?: string,
+    @Query('email-confirmed') email_confirmed?: boolean,
     @Query('is-admin') is_admin?: boolean,
-  ): Promise<Store[]> {
-    return this.storesService.findMany({
+  ): Promise<Customer[]> {
+    return this.customersService.findMany({
       email,
-      NIF,
-      name,
+      DNI,
+      first_name,
+      last_name,
       address,
       phone_number,
+      email_confirmed,
       is_admin,
     });
   }
@@ -53,23 +57,27 @@ export class StoresController {
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
     @Query('email') email?: string,
-    @Query('NIF') NIF?: string,
-    @Query('name') name?: string,
+    @Query('DNI') DNI?: string,
+    @Query('first-name') first_name?: string,
+    @Query('last-name') last_name?: string,
     @Query('address') address?: string,
     @Query('phone') phone_number?: string,
+    @Query('email-confirmed') email_confirmed?: boolean,
     @Query('is-admin') is_admin?: boolean,
-  ): Promise<InfinityPaginationResultType<Store>> {
+  ): Promise<InfinityPaginationResultType<Customer>> {
     if (limit > 50) {
       limit = 50;
     }
     return infinityPagination(
-      await this.storesService.findManyWithPagination(
+      await this.customersService.findManyWithPagination(
         {
           email,
-          NIF,
-          name,
+          DNI,
+          first_name,
+          last_name,
           address,
           phone_number,
+          email_confirmed,
           is_admin,
         },
         {
@@ -82,20 +90,20 @@ export class StoresController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<NullableType<Store>> {
-    const store = await this.storesService.findOne({ id: +id });
-    if (!store) {
-      throw new NotFoundException('store not found');
+  async findOne(@Param('id') id: string): Promise<NullableType<Customer>> {
+    const customer = await this.customersService.findOne({ id: +id });
+    if (!customer) {
+      throw new NotFoundException('customer not found');
     }
-    return store;
+    return customer;
   }
 
   @Patch(':id')
   update(
     @Param('id') id: number,
-    @Body() body: UpdateStoreDto,
-  ): Promise<Store> {
-    return this.storesService.update(id, body);
+    @Body() body: UpdateCustomerDto,
+  ): Promise<Customer> {
+    return this.customersService.update(id, body);
   }
 
   @Delete(':id')
@@ -104,14 +112,14 @@ export class StoresController {
     @Query('mode') deleteMode?: string,
   ): Promise<void> {
     if (deleteMode && deleteMode === 'hard') {
-      return this.storesService.hardDelete(id);
+      return this.customersService.hardDelete(id);
     } else {
-      return this.storesService.softDelete(id);
+      return this.customersService.softDelete(id);
     }
   }
 
   @Patch(':id/restore')
   restore(@Param('id') id: number): Promise<void> {
-    return this.storesService.restore(id);
+    return this.customersService.restore(id);
   }
 }

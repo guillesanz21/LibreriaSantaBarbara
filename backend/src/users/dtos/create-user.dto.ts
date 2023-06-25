@@ -2,7 +2,6 @@ import {
   IsOptional,
   IsBoolean,
   IsString,
-  IsEmail,
   MaxLength,
   IsNotEmpty,
 } from 'class-validator';
@@ -13,17 +12,12 @@ const { common: constraints } = userConstraints;
 export class CreateUserDto {
   @IsOptional()
   @IsBoolean()
-  is_admin: boolean;
-
-  @IsNotEmpty()
-  @IsEmail()
-  @MaxLength(constraints.email.maxLength)
-  email: string;
+  is_admin?: boolean;
 
   @IsOptional()
   @IsString()
   @MaxLength(constraints.address.maxLength)
-  address: string;
+  address?: string;
 
   @IsNotEmpty()
   @IsString()

@@ -1,14 +1,25 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { BaseCRUDService } from 'src/utils/services/base-CRUD.service';
+import { DeepPartial, Repository } from 'typeorm';
 import { Store } from './entities/store.entity';
+import { BaseCRUDService } from 'src/utils/services/base-CRUD.service';
+import { hashPassword } from 'src/utils/hash-password';
 
 @Injectable()
 export class StoresService extends BaseCRUDService<Store> {
   constructor(
-    @InjectRepository(Store) protected repository: Repository<Store>,
+    @InjectRepository(Store) protected readonly repository: Repository<Store>,
+    private configService: ConfigService,
   ) {
     super(repository);
+  }
+
+  // Override create method
+  async create(body: DeepPartial<Store>): Promise<Store> {
+    const pepper = this.configService.get('constants.pepper', { infer: true });
+    const hashedPassword = await hashPassword(body.password, pepper);
+    body.password = hashedPassword;
+    return this.repository.save(this.repository.create(body));
   }
 }

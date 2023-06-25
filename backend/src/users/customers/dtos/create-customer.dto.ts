@@ -2,6 +2,7 @@ import { Transform } from 'class-transformer';
 import {
   Contains,
   IsAlphanumeric,
+  IsBoolean,
   IsEmail,
   IsNotEmpty,
   IsOptional,
@@ -13,30 +14,38 @@ import { lowerCaseTransformer } from 'src/utils/transformers/lower-case.transfor
 import { IsUnique } from 'src/utils/validators/isUnique.validator';
 import { userConstraints } from 'src/config/constants/database.constraint_values';
 
-const { store: constraints } = userConstraints;
+const { customer: constraints } = userConstraints;
 
-export class CreateStoreDto extends CreateUserDto {
+export class CreateCustomerDto extends CreateUserDto {
   @Transform(lowerCaseTransformer)
   @IsNotEmpty()
   @IsEmail()
   @MaxLength(userConstraints.common.email.maxLength)
-  @IsUnique('Store')
+  @IsUnique('Customer')
   email: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @Contains(userConstraints.common.password.contains) // To ensure that the password is hashed
-  password: string;
+  password?: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  @MaxLength(constraints.name.maxLength)
-  @IsUnique('Store')
-  name: string;
+  @MaxLength(constraints.first_name.maxLength)
+  first_name?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(constraints.last_name.maxLength)
+  last_name?: string;
 
   @IsOptional()
   @IsAlphanumeric()
-  @MaxLength(constraints.NIF.maxLength)
-  @IsUnique('Store')
-  NIF?: string;
+  @MaxLength(constraints.DNI.maxLength)
+  @IsUnique('Customer')
+  DNI?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  email_confirmed?: boolean;
 }

@@ -7,7 +7,7 @@ import { IPaginationOptions } from 'src/utils/types/paginations-options.interfac
 
 @Injectable()
 export class BaseCRUDService<InjectedEntity extends EntityHelper> {
-  constructor(protected repository: Repository<InjectedEntity>) {}
+  constructor(protected readonly repository: Repository<InjectedEntity>) {}
 
   // * [C] Create
   create(body: DeepPartial<InjectedEntity>): Promise<InjectedEntity> {

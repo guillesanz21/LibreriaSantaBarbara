@@ -4,6 +4,7 @@
   "APP_NAME": "NestJS API",
   "APP_PORT": 3000,
   "APP_HOST": "http://localhost",
+  "PEPPER": "DEV_PEPPER_123456789abc",
   "CORS_ORIGIN": true,
   "CORS_METHODS": "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
   "CORS_CREDENTIALS": true,
