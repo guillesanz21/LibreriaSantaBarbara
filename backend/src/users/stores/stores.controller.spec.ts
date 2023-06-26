@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { StoresController } from './stores.controller';
 import { StoresService } from './stores.service';
 import { CreateStoreDto } from './dtos/create-store.dto';
+import { UpdateStoreDto } from './dtos/update-store.dto';
 
 const testStore1 = {
   is_admin: false,
@@ -87,7 +89,7 @@ describe('Store Controller', () => {
       ),
     update: jest
       .fn()
-      .mockImplementation((id: number, store: CreateStoreDto) =>
+      .mockImplementation((id: number, store: UpdateStoreDto) =>
         Promise.resolve({ id, ...store }),
       ),
     hardDelete: jest
@@ -210,5 +212,10 @@ describe('Store Controller', () => {
     expect(returnedStore).toBe(true);
 
     expect(mockStoresService.restore).toHaveBeenCalledWith(1);
+  });
+
+  it('findOne throws an error if user with given id is not found', async () => {
+    mockStoresService.findOne = jest.fn().mockResolvedValue(null);
+    await expect(controller.findOne(1)).rejects.toThrow(NotFoundException);
   });
 });

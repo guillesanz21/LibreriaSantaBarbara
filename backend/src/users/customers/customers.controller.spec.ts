@@ -1,8 +1,10 @@
+import { NotFoundException } from '@nestjs/common';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Test, TestingModule } from '@nestjs/testing';
 import { CustomersController } from './customers.controller';
 import { CustomersService } from './customers.service';
 import { CreateCustomerDto } from './dtos/create-customer.dto';
+import { UpdateCustomerDto } from './dtos/update-customer.dto';
 
 const testCustomer1 = {
   is_admin: false,
@@ -91,7 +93,7 @@ describe('Customer Controller', () => {
       ),
     update: jest
       .fn()
-      .mockImplementation((id: number, customer: CreateCustomerDto) =>
+      .mockImplementation((id: number, customer: UpdateCustomerDto) =>
         Promise.resolve({ id, ...customer }),
       ),
     hardDelete: jest
@@ -215,5 +217,10 @@ describe('Customer Controller', () => {
     expect(returnedCustomer).toBe(true);
 
     expect(mockCustomersService.restore).toHaveBeenCalledWith(1);
+  });
+
+  it('findOne throws an error if user with given id is not found', async () => {
+    mockCustomersService.findOne = jest.fn().mockResolvedValue(null);
+    await expect(controller.findOne(1)).rejects.toThrow(NotFoundException);
   });
 });
