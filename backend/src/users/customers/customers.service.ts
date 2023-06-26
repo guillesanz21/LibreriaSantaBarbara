@@ -18,8 +18,8 @@ export class CustomersService extends BaseCRUDService<Customer> {
 
   // Override create method
   async create(body: DeepPartial<Customer>): Promise<Customer> {
-    const pepper = this.configService.get('constants.pepper', { infer: true });
-    const saltRounds = this.configService.get('constants.salt_rounds', {
+    const pepper = this.configService.get('auth.pepper', { infer: true });
+    const saltRounds = this.configService.get('auth.salt_rounds', {
       infer: true,
     });
     const hashedPassword = await hashPassword(

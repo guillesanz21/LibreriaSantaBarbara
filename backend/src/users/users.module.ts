@@ -2,6 +2,7 @@ import { RouterModule } from '@nestjs/core';
 import { Module } from '@nestjs/common';
 import { CustomersModule } from './customers/customers.module';
 import { StoresModule } from './stores/stores.module';
+import { UsersService } from './users.service';
 
 const routes = [
   {
@@ -21,8 +22,8 @@ const routes = [
 
 @Module({
   imports: [CustomersModule, StoresModule, RouterModule.register(routes)],
-  exports: [],
-  providers: [],
+  exports: [UsersService],
+  providers: [UsersService],
   controllers: [],
 })
 export class UsersModule {}
