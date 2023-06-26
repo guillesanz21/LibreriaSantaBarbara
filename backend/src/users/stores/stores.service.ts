@@ -18,7 +18,14 @@ export class StoresService extends BaseCRUDService<Store> {
   // Override create method
   async create(body: DeepPartial<Store>): Promise<Store> {
     const pepper = this.configService.get('constants.pepper', { infer: true });
-    const hashedPassword = await hashPassword(body.password, pepper);
+    const saltRounds = this.configService.get('constants.salt_rounds', {
+      infer: true,
+    });
+    const hashedPassword = await hashPassword(
+      body.password,
+      pepper,
+      +saltRounds,
+    );
     body.password = hashedPassword;
     return this.repository.save(this.repository.create(body));
   }

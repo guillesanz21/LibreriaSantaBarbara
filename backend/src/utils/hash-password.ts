@@ -4,8 +4,9 @@ import bcrypt from 'bcrypt';
 export const hashPassword = async (
   password: string,
   pepper: string,
+  saltRounds?: number,
 ): Promise<string> => {
-  const salt = await bcrypt.genSalt(10);
+  const salt = await bcrypt.genSalt(saltRounds || 10);
   return bcrypt.hash(password + pepper, salt);
 };
 // * Function that compares a password with a hash
