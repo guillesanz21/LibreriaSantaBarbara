@@ -53,7 +53,7 @@ export class CustomersController {
   }
 
   @Get('/pagination')
-  async findWithPagination(
+  async findManyWithPagination(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
     @Query('email') email?: string,
@@ -90,7 +90,7 @@ export class CustomersController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<NullableType<Customer>> {
+  async findOne(@Param('id') id: number): Promise<NullableType<Customer>> {
     const customer = await this.customersService.findOne({ id: +id });
     if (!customer) {
       throw new NotFoundException('customer not found');
@@ -110,7 +110,7 @@ export class CustomersController {
   remove(
     @Param('id') id: number,
     @Query('mode') deleteMode?: string,
-  ): Promise<void> {
+  ): Promise<boolean> {
     if (deleteMode && deleteMode === 'hard') {
       return this.customersService.hardDelete(id);
     } else {
@@ -119,7 +119,7 @@ export class CustomersController {
   }
 
   @Patch(':id/restore')
-  restore(@Param('id') id: number): Promise<void> {
+  restore(@Param('id') id: number): Promise<boolean> {
     return this.customersService.restore(id);
   }
 }

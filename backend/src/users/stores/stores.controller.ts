@@ -49,7 +49,7 @@ export class StoresController {
   }
 
   @Get('/pagination')
-  async findWithPagination(
+  async findManyWithPagination(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
     @Query('email') email?: string,
@@ -82,7 +82,7 @@ export class StoresController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<NullableType<Store>> {
+  async findOne(@Param('id') id: number): Promise<NullableType<Store>> {
     const store = await this.storesService.findOne({ id: +id });
     if (!store) {
       throw new NotFoundException('store not found');
@@ -102,7 +102,7 @@ export class StoresController {
   remove(
     @Param('id') id: number,
     @Query('mode') deleteMode?: string,
-  ): Promise<void> {
+  ): Promise<boolean> {
     if (deleteMode && deleteMode === 'hard') {
       return this.storesService.hardDelete(id);
     } else {
@@ -111,7 +111,7 @@ export class StoresController {
   }
 
   @Patch(':id/restore')
-  restore(@Param('id') id: number): Promise<void> {
+  restore(@Param('id') id: number): Promise<boolean> {
     return this.storesService.restore(id);
   }
 }

@@ -60,18 +60,21 @@ export class BaseCRUDService<InjectedEntity extends EntityHelper> {
 
   // * [D] Delete methods
   // Hard delete
-  async hardDelete(id: number): Promise<void> {
+  async hardDelete(id: number): Promise<boolean> {
     // We use delete if we don't have any hooks or any other logic to run. Otherwise, we should use remove.
-    await this.repository.delete(id);
+    const deleteResult = await this.repository.delete(id);
+    return deleteResult.affected > 0;
   }
 
   // Soft delete
-  async softDelete(id: number): Promise<void> {
-    await this.repository.softDelete(id);
+  async softDelete(id: number): Promise<boolean> {
+    const updateResult = await this.repository.softDelete(id);
+    return updateResult.affected > 0;
   }
 
   // Restore
-  async restore(id: number): Promise<void> {
-    await this.repository.restore(id);
+  async restore(id: number): Promise<boolean> {
+    const updateResult = await this.repository.restore(id);
+    return updateResult.affected > 0;
   }
 }

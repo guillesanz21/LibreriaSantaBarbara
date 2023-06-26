@@ -60,7 +60,8 @@ function checkBasicsInstalled() {
 # Build the containers
 build() {
   checkBasicsInstalled
-  sudo rm -rf .data/db/*
+  sudo rm -rf .data/db/test/*
+  sudo rm -rf .data/db/development/*
   docker-compose --env-file .env.development -f docker-compose.yml build ${@}
 }
 
@@ -79,6 +80,7 @@ dev() {
 # Start the docker-compose for testing with the .env.test file
 test() {
   checkBasicsInstalled
+  sudo rm -rf .data/db/test/*
   docker-compose --env-file .env.test -f docker-compose.yml up ${@}
 }
 
@@ -127,12 +129,14 @@ help() {
 Usage: $0 [command] [options]
 
 Commands:
-  (sudo) build         Build the containers
+  (sudo) build     Build the containers
 
   dev|start  [-d] (-d: detached mode)
                 Start the containers for development
 
-  test          Start the containers for testing
+  (sudo) test     Start the containers for testing
+
+  testlocal       Test (linter and Unit test only) the API locally
 
   (sudo) migrations:generate  [migrationName] [ENV]  (default: migrationName=migration, ENV=development)
                 Generate migrations
@@ -183,6 +187,12 @@ case "${COMMAND}" in
         test ${@}
         echoSuccess "Done!"
         ;;
+    testlocal|testLocal)
+        echo "Testing locally..."
+        # NODE_ENV=test npm run migration:run
+        NODE_ENV=test npm run lint
+        NODE_ENV=test npm run test:watch
+      ;;
     migration:generate|migrations:generate)
         echo "Generating migrations..."
         generateMigrations ${@}
