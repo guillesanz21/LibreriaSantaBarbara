@@ -1,7 +1,5 @@
-import { Transform } from 'class-transformer';
 import {
   IsAlphanumeric,
-  IsBoolean,
   IsEmail,
   IsNotEmpty,
   IsOptional,
@@ -9,29 +7,33 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { lowerCaseTransformer } from 'src/utils/transformers/lower-case.transformer';
 import { IsUnique } from 'src/utils/validators/isUnique.validator';
+import { Transform } from 'class-transformer';
+import { lowerCaseTransformer } from 'src/utils/transformers/lower-case.transformer';
 import { userConstraints } from 'src/config/constants/database.constraint_values';
 
-const { store: storeConstraints } = userConstraints;
 const { common: commonConstraints } = userConstraints;
+const { store: storeConstraints } = userConstraints;
 
-export class CreateStoreDto {
-  @IsOptional()
-  @IsBoolean()
-  is_admin?: boolean;
-
+export class AuthRegisterStoreLoginDto {
   @Transform(lowerCaseTransformer)
-  @IsNotEmpty()
-  @IsEmail()
-  @MaxLength(commonConstraints.email.maxLength)
   @IsUnique('Store')
+  @IsEmail()
   email: string;
 
   @IsNotEmpty()
-  @IsString()
   @MinLength(commonConstraints.password.minLength)
   password: string;
+
+  @IsNotEmpty()
+  @MaxLength(commonConstraints.phone_number.maxLength)
+  phone_number: string;
+
+  @IsNotEmpty()
+  @IsAlphanumeric()
+  @MaxLength(storeConstraints.NIF.maxLength)
+  @IsUnique('Store')
+  NIF: string;
 
   @IsNotEmpty()
   @IsString()
@@ -40,22 +42,7 @@ export class CreateStoreDto {
   name: string;
 
   @IsOptional()
-  @IsBoolean()
-  approved?: boolean;
-
-  @IsOptional()
-  @IsAlphanumeric()
-  @MaxLength(storeConstraints.NIF.maxLength)
-  @IsUnique('Store')
-  NIF?: string;
-
-  @IsOptional()
   @IsString()
   @MaxLength(commonConstraints.address.maxLength)
   address?: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @MaxLength(commonConstraints.phone_number.maxLength)
-  phone_number: string;
 }

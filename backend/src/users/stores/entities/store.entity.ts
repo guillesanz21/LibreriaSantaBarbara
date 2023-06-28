@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  Index,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -18,12 +19,17 @@ export class Store extends EntityHelper {
   @Column({ nullable: false, default: false })
   is_admin: boolean;
 
+  @Index()
   @Column({ type: 'text', nullable: false, unique: true })
   email: string;
 
   @Column({ type: 'text', nullable: false })
   password: string;
 
+  @Column({ type: 'boolean', nullable: false, default: false })
+  approved: boolean;
+
+  @Index()
   @Column({ type: 'text', nullable: false, unique: true })
   name: string;
 
@@ -35,6 +41,10 @@ export class Store extends EntityHelper {
 
   @Column({ type: 'text', nullable: false })
   phone_number: string;
+
+  @Column({ type: 'text', nullable: true, default: null })
+  @Index()
+  hash: string;
 
   @CreateDateColumn({ type: 'date', nullable: false })
   last_activity: Date;
