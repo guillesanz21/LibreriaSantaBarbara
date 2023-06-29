@@ -6,6 +6,7 @@ import { User, UserType } from './users.types';
 import { NullableType } from 'src/utils/types/nullable.type';
 
 @Injectable()
+// TODO: Refactor USERS SERVICE
 export class UsersService {
   constructor(
     private readonly storesService: StoresService,
@@ -13,8 +14,6 @@ export class UsersService {
   ) {}
 
   // Create user
-  // CHECK: It is calling the DTOs from the stores and customers modules?
-  // IF not, then, how conditionally call the DTOs?
   async create(
     type: UserType,
     data: Partial<User>,

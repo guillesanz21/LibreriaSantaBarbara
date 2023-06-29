@@ -3,9 +3,9 @@ import { IsExists } from 'src/utils/validators/isExists.validator';
 import { Transform } from 'class-transformer';
 import { lowerCaseTransformer } from 'src/utils/transformers/lower-case.transformer';
 
-export class AuthEmailCustomerLoginDto {
+export class AuthLoginEmailStoreDto {
   @Transform(lowerCaseTransformer)
-  @IsExists('Customer')
+  @IsExists('Store')
   email: string;
 
   @IsNotEmpty()

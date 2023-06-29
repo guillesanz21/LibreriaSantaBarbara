@@ -6,10 +6,10 @@ import * as crypto from 'crypto';
 import { Store } from 'src/users/stores/entities/store.entity';
 import { Customer } from 'src/users/customers/entities/customer.entity';
 import { UsersService } from '../../users/users.service';
-import { AuthEmailStoreLoginDto } from './dtos/auth-email-store-login.dto';
-import { AuthEmailCustomerLoginDto } from './dtos/auth-email-customer-login.dto';
-import { AuthRegisterStoreLoginDto } from './dtos/auth-register-store-login.dto';
-import { AuthRegisterCustomerLoginDto } from './dtos/auth-register-customer-login.dto';
+import { AuthLoginEmailStoreDto } from './dtos/auth-login-email-store.dto';
+import { AuthLoginEmailCustomerDto } from './dtos/auth-login-email-customer.dto';
+import { AuthRegisterStoreDto } from './dtos/auth-register-store.dto';
+import { AuthRegisterCustomerDto } from './dtos/auth-register-customer.dto';
 import { AuthConfirmEmailDto } from './dtos/auth-confirm-email.dto';
 import { AuthForgotPasswordDto } from './dtos/auth-forgot-password.dto';
 import { AuthResetPasswordDto } from './dtos/auth-reset-password.dto';
@@ -22,7 +22,7 @@ import {
   LoginResponseType,
   SocialInterface,
 } from '../auth.types';
-import { User, UserType } from 'src/users/users.types';
+import { User, UserType, RoleType } from 'src/users/users.types';
 import { NullableType } from 'src/utils/types/nullable.type';
 import { compareHashedPassword, hashPassword } from 'src/utils/hash-password';
 
@@ -34,8 +34,36 @@ export class JWTService {
     private configService: ConfigService,
   ) {}
 
+  private generateToken(user: User): LoginResponseType {
+    const userType: UserType = user instanceof Store ? 'store' : 'customer';
+    let role: RoleType;
+
+    if (user instanceof Store) {
+      role = user.approved ? 'store' : 'unapprovedStore';
+    } else if (user instanceof Customer) {
+      role = user.email_confirmed ? 'customer' : 'unconfirmedCustomer';
+    } else {
+      role = 'guest';
+    }
+
+    const token: JWTPayload = {
+      id: user.id,
+      userType: userType,
+      role,
+      provider:
+        user instanceof Customer ? AuthProvidersEnum[user.provider] : undefined,
+    };
+
+    const tokenSigned = this.nestJwtService.sign(token);
+
+    return {
+      token: tokenSigned,
+      user,
+    };
+  }
+
   async validateLogin(
-    loginDto: AuthEmailStoreLoginDto | AuthEmailCustomerLoginDto,
+    loginDto: AuthLoginEmailStoreDto | AuthLoginEmailCustomerDto,
     userType: UserType,
     // onlyAdmin: boolean, // CHECK: What about this?
   ): Promise<string | LoginResponseType> {
@@ -64,20 +92,7 @@ export class JWTService {
       return 'incorrectPassword';
     }
 
-    const token: JWTPayload = {
-      id: user.id,
-      role: 'store', // CHECK: store or customer. What about admin?
-      admin: false,
-      provider:
-        user instanceof Customer ? AuthProvidersEnum[user.provider] : undefined,
-    };
-
-    const tokenSigned = this.nestJwtService.sign(token);
-
-    return {
-      token: tokenSigned,
-      user,
-    };
+    return this.generateToken(user);
   }
 
   // Only for customers
@@ -111,6 +126,8 @@ export class JWTService {
     } else if (userByEmail) {
       // If the user is already registered with the same email, then we update the social_id and provider
       user = userByEmail;
+      user.social_id = socialData.id;
+      user.provider = authProvider;
     } else {
       // If the user is not registered, then we create a new user with the social data
       user = (await this.usersService.create('customer', {
@@ -126,41 +143,27 @@ export class JWTService {
       })) as NullableType<Customer>;
     }
 
-    const token: JWTPayload = {
-      id: user.id,
-      role: 'customer',
-      provider: AuthProvidersEnum[authProvider],
-      admin: false,
-    };
-
-    const tokenSigned = this.nestJwtService.sign(token);
-
-    return {
-      token: tokenSigned,
-      user,
-    };
+    return this.generateToken(user);
   }
 
-  async register(
-    dto: AuthRegisterStoreLoginDto | AuthRegisterCustomerLoginDto,
-    userType: UserType,
-  ): Promise<User> {
-    return userType === 'store' && dto instanceof AuthRegisterStoreLoginDto
-      ? await this.registerStore(dto)
-      : userType === 'customer' && dto instanceof AuthRegisterCustomerLoginDto
-      ? await this.registerCustomer(dto)
-      : null;
-  }
-
-  private async registerStore(dto: AuthRegisterStoreLoginDto): Promise<Store> {
+  async registerStore(
+    dto: AuthRegisterStoreDto,
+  ): Promise<string | LoginResponseType> {
     const store = await this.usersService.create('store', dto);
+    if (!store) {
+      return 'errorCreatingUser';
+    }
+
     // TODO: Send email to the admin
     // TODO: Create an admin route to handle this
-    return store as Store;
+
+    // After registration, if everything went well, it will automatically log in
+    return this.generateToken(store);
   }
-  private async registerCustomer(
-    dto: AuthRegisterCustomerLoginDto,
-  ): Promise<Customer> {
+
+  async registerCustomer(
+    dto: AuthRegisterCustomerDto,
+  ): Promise<string | LoginResponseType> {
     const hash = crypto
       .createHash('sha256')
       .update(randomStringGenerator())
@@ -170,10 +173,15 @@ export class JWTService {
       ...dto,
       hash,
     });
+    if (!customer) {
+      return 'errorCreatingUser';
+    }
+
     // TODO: Send email to the user
     // await this.mailService.userSignUp({ to: dto.email, data: { hash } });
 
-    return customer as Customer;
+    // After registration, if everything went well, it will automatically log in
+    return this.generateToken(customer);
   }
 
   async confirmEmail({ hash }: AuthConfirmEmailDto): Promise<string> {
@@ -188,6 +196,7 @@ export class JWTService {
       return 'userNotFound';
     }
     user.hash = null;
+    user.email_confirmed = true;
 
     await user.save();
     return '';
@@ -242,7 +251,7 @@ export class JWTService {
   }
 
   async me(token: JWTPayload): Promise<NullableType<User>> {
-    return await this.usersService.findOne(token.role, { id: token.id });
+    return await this.usersService.findOne(token.userType, { id: token.id });
   }
 
   async updatePassword(
@@ -251,7 +260,7 @@ export class JWTService {
   ): Promise<string> {
     if (passwordDto.password) {
       if (passwordDto.oldPassword) {
-        const currentUser = await this.usersService.findOne(token.role, {
+        const currentUser = await this.usersService.findOne(token.userType, {
           id: token.id,
         });
 
@@ -272,38 +281,45 @@ export class JWTService {
         return 'missingOldPassword';
       }
     }
-    await this.usersService.update(token.role, token.id, passwordDto);
+    const pepper = this.configService.get('auth.pepper', { infer: true });
+    const saltRounds = this.configService.get('auth.salt_rounds', {
+      infer: true,
+    });
+    const hashedPassword = await hashPassword(
+      passwordDto.password,
+      pepper,
+      +saltRounds,
+    );
+
+    await this.usersService.update(token.userType, token.id, {
+      password: hashedPassword,
+    });
     return '';
   }
 
-  async update(
+  updateCustomer(
     token: JWTPayload,
-    userDto: AuthUpdateStoreDto | AuthUpdateCustomerDto,
-  ): Promise<User> {
-    return await this.usersService.update(token.role, token.id, userDto);
-    // if (token.role === 'store') {
-    //   return await this.updateStore(token.id, userDto);
-    // }
-    // if (token.role === 'customer') {
-    //   return await this.updateCustomer(token.id, userDto);
-    // }
+    customerDto: AuthUpdateCustomerDto,
+  ): Promise<Customer> {
+    // TODO: If the email is updated, send an email to the user to confirm the email and update the email_confirmed field to false
+    return this.usersService.update(
+      'customer',
+      token.id,
+      customerDto,
+    ) as Promise<Customer>;
   }
 
-  // CHECK: If the AuthDTO is acting conditionally based on the role, if so, then DELETE:
-  // private async updateStore(
-  //   user_id: number,
-  //   userDto: AuthUpdateStoreDto,
-  // ): Promise<User> {
-  //   return await this.usersService.update('store', user_id, userDto);
-  // }
-  // private async updateCustomer(
-  //   user_id: number,
-  //   userDto: AuthUpdateCustomerDto,
-  // ): Promise<User> {
-  //   return await this.usersService.update('customer', user_id, userDto);
-  // }
+  updateStore(token: JWTPayload, storeDto: AuthUpdateStoreDto): Promise<Store> {
+    console.log(storeDto);
+    // TODO: If the email is updated, send an email to the user to confirm the email and update the email_confirmed field to false
+    return this.usersService.update(
+      'store',
+      token.id,
+      storeDto,
+    ) as Promise<Store>;
+  }
 
-  async softDelete(token: JWTPayload): Promise<void> {
-    await this.usersService.softDelete(token.role, token.id);
+  softDelete(token: JWTPayload): Promise<boolean> {
+    return this.usersService.softDelete(token.userType, token.id);
   }
 }

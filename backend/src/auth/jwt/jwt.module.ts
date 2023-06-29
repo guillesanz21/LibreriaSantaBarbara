@@ -6,7 +6,7 @@ import { JwtController } from './jwt.controller';
 import { IsExistsConstraint } from 'src/utils/validators/isExists.validator';
 import { IsUniqueConstraint } from 'src/utils/validators/isUnique.validator';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JwtStrategy } from '../strategies/jwt.strategy';
+import { JwtStrategy } from './jwt.strategy';
 
 @Module({
   imports: [

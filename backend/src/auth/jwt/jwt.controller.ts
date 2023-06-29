@@ -14,10 +14,10 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { JWTService } from './jwt.service';
-import { AuthEmailStoreLoginDto } from './dtos/auth-email-store-login.dto';
-import { AuthEmailCustomerLoginDto } from './dtos/auth-email-customer-login.dto';
-import { AuthRegisterStoreLoginDto } from './dtos/auth-register-store-login.dto';
-import { AuthRegisterCustomerLoginDto } from './dtos/auth-register-customer-login.dto';
+import { AuthLoginEmailStoreDto } from './dtos/auth-login-email-store.dto';
+import { AuthLoginEmailCustomerDto } from './dtos/auth-login-email-customer.dto';
+import { AuthRegisterStoreDto } from './dtos/auth-register-store.dto';
+import { AuthRegisterCustomerDto } from './dtos/auth-register-customer.dto';
 import { AuthForgotPasswordDto } from './dtos/auth-forgot-password.dto';
 import { AuthConfirmEmailDto } from './dtos/auth-confirm-email.dto';
 import { AuthResetPasswordDto } from './dtos/auth-reset-password.dto';
@@ -34,7 +34,7 @@ export class JwtController {
 
   private async login(
     userType: UserType,
-    loginDto: AuthEmailStoreLoginDto | AuthEmailCustomerLoginDto,
+    loginDto: AuthLoginEmailStoreDto | AuthLoginEmailCustomerDto,
   ): Promise<LoginResponseType> {
     const result = await this.service.validateLogin(loginDto, userType);
     if (typeof result === 'string' && result === 'userNotFound') {
@@ -52,37 +52,44 @@ export class JwtController {
   // *   ######## LOGIN ########
   @Post('stores/login')
   public async loginStore(
-    @Body() loginDto: AuthEmailStoreLoginDto,
+    @Body() loginDto: AuthLoginEmailStoreDto,
   ): Promise<LoginResponseType> {
     return await this.login('store', loginDto);
   }
 
   @Post('customers/login')
   public async loginCustomer(
-    @Body() loginDto: AuthEmailCustomerLoginDto,
+    @Body() loginDto: AuthLoginEmailCustomerDto,
   ): Promise<LoginResponseType> {
     return await this.login('customer', loginDto);
   }
 
-  // TODO:
+  // TODO: Admin login
   //   @Post('admin/email/login')
   //   public adminLogin(@Body() loginDTO: AuthEmailLoginDto): Promise<JWTPayload> {
   //     return this.service.validateLogin(loginDTO, true);
   //   }
 
   // *   ######## REGISTER ########
+
   @Post('stores/register')
   async registerStore(
-    @Body() createUserDto: AuthRegisterStoreLoginDto,
-  ): Promise<User> {
-    return this.service.register(createUserDto, 'store');
+    @Body() createUserDto: AuthRegisterStoreDto,
+  ): Promise<LoginResponseType> {
+    const store = await this.service.registerStore(createUserDto);
+    if (store === 'errorCreatingUser')
+      throw new InternalServerErrorException('error creating user');
+    return store as LoginResponseType;
   }
 
   @Post('customers/register')
   async registerCustomer(
-    @Body() createUserDto: AuthRegisterCustomerLoginDto,
-  ): Promise<User> {
-    return this.service.register(createUserDto, 'customer');
+    @Body() createUserDto: AuthRegisterCustomerDto,
+  ): Promise<LoginResponseType> {
+    const customer = await this.service.registerCustomer(createUserDto);
+    if (customer === 'errorCreatingUser')
+      throw new InternalServerErrorException('error creating user');
+    return customer as LoginResponseType;
   }
 
   @Post('customers/register/confirm')
@@ -170,13 +177,26 @@ export class JwtController {
     return this.service.me(req.user);
   }
 
-  @Patch('me')
+  @Patch('stores/update')
   @UseGuards(AuthGuard('jwt'))
-  public update(
+  public async updateStore(
     @Request() req,
-    @Body() userDto: AuthUpdateStoreDto | AuthUpdateCustomerDto,
+    @Body() storeDto: AuthUpdateStoreDto,
   ): Promise<NullableType<User>> {
-    return this.service.update(req.user, userDto);
+    const store = await this.service.updateStore(req.user, storeDto);
+    if (typeof store === 'string') {
+      //  result is invalidCustomerUpdate | invalidStoreUpdate
+      throw new UnprocessableEntityException(store);
+    }
+    return store;
+  }
+  @Patch('customers/update')
+  @UseGuards(AuthGuard('jwt'))
+  public async updateCustomer(
+    @Request() req,
+    @Body() customerDto: AuthUpdateCustomerDto,
+  ): Promise<NullableType<User>> {
+    return this.service.updateCustomer(req.user, customerDto);
   }
 
   @Patch('me/password')
@@ -195,7 +215,7 @@ export class JwtController {
 
   @Delete('me')
   @UseGuards(AuthGuard('jwt'))
-  public async delete(@Request() req): Promise<void> {
+  public async delete(@Request() req): Promise<boolean> {
     return this.service.softDelete(req.user);
   }
 }

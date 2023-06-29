@@ -15,7 +15,7 @@ import { userConstraints } from 'src/config/constants/database.constraint_values
 const { common: commonConstraints } = userConstraints;
 const { customer: customerConstraints } = userConstraints;
 
-export class AuthRegisterCustomerLoginDto {
+export class AuthRegisterCustomerDto {
   @Transform(lowerCaseTransformer)
   @IsUnique('Customer')
   @IsEmail()
