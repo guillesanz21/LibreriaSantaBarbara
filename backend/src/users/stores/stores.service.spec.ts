@@ -6,36 +6,83 @@ import { compareHashedPassword } from 'src/utils/hash-password';
 import { StoresService } from './stores.service';
 import { Store } from './entities/store.entity';
 import { CreateStoreDto } from './dtos/create-store.dto';
-import { UpdateStoreDto } from './dtos/update-store.dto';
+import { User } from '../entities/user.entity';
+import { CreateUserDto } from '../dtos/create-user.dto';
 
-const testStore1 = {
-  is_admin: false,
+const testUser1 = {
+  id: 2,
+  user_type_id: 2,
+  role_id: 2,
   email: 'test1@test.com',
   password: 'testpassword',
-  name: 'Test Store 1',
   NIF: '123456789A',
   address: null,
   phone_number: '123456789',
   hash: null,
-  last_activity: new Date().toISOString().split('T')[0],
   created_at: new Date().toISOString().split('T')[0],
   updated_at: null,
   deleted_at: null,
 };
+const testStore1 = {
+  user_id: testUser1.id,
+  approved: false,
+  name: 'Test Store 1',
+  last_activity: testUser1.created_at,
+  updated_at: testUser1.updated_at,
+  user: testUser1,
+};
 
-const testStoresArray = [{ id: 1, ...testStore1 }];
+const testUser2 = {
+  id: 3,
+  user_type_id: 2,
+  role_id: 2,
+  email: 'test2@test.com',
+  password: 'testpassword',
+  NIF: '123456789B',
+  address: null,
+  phone_number: '123456780',
+  hash: null,
+  created_at: new Date().toISOString().split('T')[0],
+  updated_at: null,
+  deleted_at: null,
+};
+const testStore2 = {
+  user_id: testUser2.id,
+  approved: true,
+  name: 'Test Store 2',
+  last_activity: testUser2.created_at,
+  updated_at: testUser2.updated_at,
+  user: testUser2,
+};
+
+const testStoresArray = [
+  { id: 1, ...testStore1 },
+  { id: 2, ...testStore2 },
+];
 
 const pepper = 'test-pepper';
 
 describe('StoresService', () => {
   let service: StoresService;
-  let repo: Repository<Store>;
+  let userRepo: Repository<User>;
+  let storeRepo: Repository<Store>;
   let configService: ConfigService;
 
+  const mockUsersRepository = {
+    create: jest.fn().mockImplementation((UserDto: CreateUserDto) => UserDto),
+    delete: jest.fn().mockResolvedValue({ affected: 1 }),
+    softDelete: jest.fn().mockResolvedValue({ affected: 1 }),
+    restore: jest.fn().mockResolvedValue({ affected: 1 }),
+  };
   const mockStoresRepository = {
     find: jest.fn().mockResolvedValue(testStoresArray),
     findOne: jest.fn().mockImplementation((fields) => {
       return { id: fields.where.id, ...testStore1 };
+    }),
+    createQueryBuilder: jest.fn().mockReturnValue({
+      select: jest.fn().mockReturnThis(),
+      where: jest.fn().mockReturnThis(),
+      getRawOne: jest.fn().mockResolvedValue(testStore1),
     }),
     create: jest
       .fn()
@@ -43,36 +90,37 @@ describe('StoresService', () => {
     save: jest.fn().mockImplementation((store: CreateStoreDto) =>
       Promise.resolve({
         id: Date.now(),
-        is_admin: false,
-        email: store.email,
-        password: store.password,
+        user_id: Date.now() + 1,
+        approved: false,
+        user: {
+          id: Date.now() + 1,
+          user_type_id: 2,
+          role_id: store.role_id,
+          email: store.email,
+          password: store.password,
+          NIF: store.NIF,
+          address: store.address,
+          phone_number: store.phone_number,
+          hash: null,
+          last_activity: new Date().toISOString().split('T')[0],
+          created_at: new Date().toISOString().split('T')[0],
+          updated_at: null,
+          deleted_at: null,
+        },
         name: store.name,
-        NIF: store.NIF,
-        address: store.address,
-        phone_number: store.phone_number,
-        hash: null,
-        last_activity: new Date().toISOString().split('T')[0],
-        created_at: new Date().toISOString().split('T')[0],
         updated_at: null,
-        deleted_at: null,
       }),
     ),
-    update: jest
-      .fn()
-      .mockImplementation((id: number, store: UpdateStoreDto) =>
-        Promise.resolve({ id, ...store }),
-      ),
-    // as these do not actually use their return values in our sample
-    // we just make sure that their resolve is true to not crash
-    delete: jest.fn().mockResolvedValue({ affected: 1 }),
-    softDelete: jest.fn().mockResolvedValue({ affected: 1 }),
-    restore: jest.fn().mockResolvedValue({ affected: 1 }),
   };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         StoresService,
+        {
+          provide: getRepositoryToken(User),
+          useValue: mockUsersRepository,
+        },
         {
           provide: getRepositoryToken(Store),
           useValue: mockStoresRepository,
@@ -87,13 +135,15 @@ describe('StoresService', () => {
     }).compile();
 
     service = module.get<StoresService>(StoresService);
-    repo = module.get<Repository<Store>>(getRepositoryToken(Store));
+    userRepo = module.get<Repository<User>>(getRepositoryToken(User));
+    storeRepo = module.get<Repository<Store>>(getRepositoryToken(Store));
     configService = module.get<ConfigService>(ConfigService);
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
-    expect(repo).toBeDefined();
+    expect(userRepo).toBeDefined();
+    expect(storeRepo).toBeDefined();
     expect(configService).toBeDefined();
   });
 
@@ -117,42 +167,62 @@ describe('StoresService', () => {
 
   it('should create a store with hashed password', async () => {
     const storeToCreate = {
-      email: testStore1.email,
-      password: testStore1.password,
+      role_id: testUser1.role_id,
+      email: testUser1.email,
+      password: testUser1.password,
       name: testStore1.name,
-      NIF: testStore1.NIF,
-      address: testStore1.address,
-      phone_number: testStore1.phone_number,
+      NIF: testUser1.NIF,
+      address: testUser1.address,
+      phone_number: testUser1.phone_number,
     };
     const createdStore = await service.create(storeToCreate);
 
     const isPasswordCorrectlyHashed = await compareHashedPassword(
-      testStore1.password,
-      createdStore.password,
+      testUser1.password,
+      createdStore.user.password,
       pepper,
     );
 
     expect(isPasswordCorrectlyHashed).toBe(true);
 
     expect(createdStore).toEqual({
+      user: {
+        id: expect.any(Number),
+        user_type_id: 2,
+        role_id: storeToCreate.role_id,
+        email: storeToCreate.email,
+        password: expect.stringContaining('$2b$'),
+        NIF: storeToCreate.NIF,
+        address: storeToCreate.address,
+        phone_number: storeToCreate.phone_number,
+        hash: null,
+        last_activity: new Date().toISOString().split('T')[0],
+        created_at: new Date().toISOString().split('T')[0],
+        updated_at: null,
+        deleted_at: null,
+      },
+      name: storeToCreate.name,
       id: expect.any(Number),
-      is_admin: false,
-      ...storeToCreate,
-      password: expect.stringContaining('$2b$'),
-      hash: null,
-      last_activity: new Date().toISOString().split('T')[0],
-      created_at: new Date().toISOString().split('T')[0],
+      user_id: expect.any(Number),
+      approved: false,
       updated_at: null,
-      deleted_at: null,
     });
   });
 
   it('should update a store', async () => {
+    const password = 'updatedPassword123';
     const storeToUpdate = {
       name: 'Updated Store Name',
+      password,
     };
     const updatedStore = await service.update(1, storeToUpdate);
+    const isPasswordCorrectlyHashed = await compareHashedPassword(
+      password,
+      updatedStore.user.password,
+      pepper,
+    );
 
+    expect(isPasswordCorrectlyHashed).toBe(true);
     expect(updatedStore.name).toEqual(storeToUpdate.name);
   });
 

@@ -6,39 +6,87 @@ import { compareHashedPassword } from 'src/utils/hash-password';
 import { CustomersService } from './customers.service';
 import { Customer } from './entities/customer.entity';
 import { CreateCustomerDto } from './dtos/create-customer.dto';
-import { UpdateCustomerDto } from './dtos/update-customer.dto';
+import { CreateUserDto } from '../dtos/create-user.dto';
+import { User } from '../entities/user.entity';
 
-const testCustomer1 = {
-  is_admin: false,
+const testUser1 = {
+  id: 2,
+  user_type_id: 3,
+  role_id: 3,
   email: 'test1@test.com',
   password: 'testpassword',
-  provider: 'email',
-  social_id: null,
-  first_name: 'Test Customer Name 1',
-  last_name: 'Test Customer Last Name 1',
-  DNI: '123456789A',
+  NIF: '123456789A',
   address: null,
   phone_number: '123456789',
-  email_confirmed: false,
   hash: null,
   created_at: new Date().toISOString().split('T')[0],
   updated_at: null,
   deleted_at: null,
 };
+const testCustomer1 = {
+  user_id: testUser1.id,
+  email_confirmed: false,
+  provider: 'email',
+  social_id: null,
+  first_name: 'Test Customer Name 1',
+  last_name: 'Test Customer Last Name 1',
+  updated_at: null,
+  user: testUser1,
+};
 
-const testCustomersArray = [{ id: 1, ...testCustomer1 }];
+const testUser2 = {
+  id: 3,
+  user_type_id: 3,
+  role_id: 3,
+  email: 'test2@test.com',
+  password: 'testpassword',
+  NIF: '123456789B',
+  address: null,
+  phone_number: '123456780',
+  hash: null,
+  created_at: new Date().toISOString().split('T')[0],
+  updated_at: null,
+  deleted_at: null,
+};
+const testCustomer2 = {
+  user_id: testUser2.id,
+  email_confirmed: true,
+  provider: 'email',
+  social_id: null,
+  first_name: 'Test Customer Name 2',
+  last_name: 'Test Customer Last Name 2',
+  updated_at: null,
+  user: testUser2,
+};
+
+const testCustomersArray = [
+  { id: 1, ...testCustomer1 },
+  { id: 2, ...testCustomer2 },
+];
 
 const pepper = 'test-pepper';
 
 describe('CustomersService', () => {
   let service: CustomersService;
-  let repo: Repository<Customer>;
+  let userRepo: Repository<User>;
+  let customerRepo: Repository<Customer>;
   let configService: ConfigService;
 
+  const mockUsersRepository = {
+    create: jest.fn().mockImplementation((UserDto: CreateUserDto) => UserDto),
+    delete: jest.fn().mockResolvedValue({ affected: 1 }),
+    softDelete: jest.fn().mockResolvedValue({ affected: 1 }),
+    restore: jest.fn().mockResolvedValue({ affected: 1 }),
+  };
   const mockCustomersRepository = {
     find: jest.fn().mockResolvedValue(testCustomersArray),
     findOne: jest.fn().mockImplementation((fields) => {
       return { id: fields.where.id, ...testCustomer1 };
+    }),
+    createQueryBuilder: jest.fn().mockReturnValue({
+      select: jest.fn().mockReturnThis(),
+      where: jest.fn().mockReturnThis(),
+      getRawOne: jest.fn().mockResolvedValue(testCustomer1),
     }),
     create: jest
       .fn()
@@ -46,39 +94,40 @@ describe('CustomersService', () => {
     save: jest.fn().mockImplementation((customer: CreateCustomerDto) =>
       Promise.resolve({
         id: Date.now(),
-        is_admin: false,
-        email: customer.email,
-        password: customer.password,
+        user_id: Date.now() + 1,
+        email_confirmed: false,
+        user: {
+          id: Date.now() + 1,
+          user_type_id: 2,
+          role_id: customer.role_id,
+          email: customer.email,
+          password: customer.password,
+          NIF: customer.NIF,
+          address: customer.address,
+          phone_number: customer.phone_number,
+          hash: null,
+          last_activity: new Date().toISOString().split('T')[0],
+          created_at: new Date().toISOString().split('T')[0],
+          updated_at: null,
+          deleted_at: null,
+        },
         provider: 'email',
         social_id: null,
         first_name: customer.first_name,
         last_name: customer.last_name,
-        DNI: customer.DNI,
-        address: customer.address,
-        phone_number: customer.phone_number,
-        email_confirmed: false,
-        hash: null,
-        created_at: new Date().toISOString().split('T')[0],
         updated_at: null,
-        deleted_at: null,
       }),
     ),
-    update: jest
-      .fn()
-      .mockImplementation((id: number, customer: UpdateCustomerDto) =>
-        Promise.resolve({ id, ...customer }),
-      ),
-    // as these do not actually use their return values in our sample
-    // we just make sure that their resolve is true to not crash
-    delete: jest.fn().mockResolvedValue({ affected: 1 }),
-    softDelete: jest.fn().mockResolvedValue({ affected: 1 }),
-    restore: jest.fn().mockResolvedValue({ affected: 1 }),
   };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         CustomersService,
+        {
+          provide: getRepositoryToken(User),
+          useValue: mockUsersRepository,
+        },
         {
           provide: getRepositoryToken(Customer),
           useValue: mockCustomersRepository,
@@ -93,13 +142,17 @@ describe('CustomersService', () => {
     }).compile();
 
     service = module.get<CustomersService>(CustomersService);
-    repo = module.get<Repository<Customer>>(getRepositoryToken(Customer));
+    userRepo = module.get<Repository<User>>(getRepositoryToken(User));
+    customerRepo = module.get<Repository<Customer>>(
+      getRepositoryToken(Customer),
+    );
     configService = module.get<ConfigService>(ConfigService);
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
-    expect(repo).toBeDefined();
+    expect(userRepo).toBeDefined();
+    expect(customerRepo).toBeDefined();
     expect(configService).toBeDefined();
   });
 
@@ -122,37 +175,50 @@ describe('CustomersService', () => {
   });
 
   it('should create a customer with hashed password', async () => {
-    const customerToCreate = {
-      email: testCustomer1.email,
-      password: testCustomer1.password,
+    const storeToCreate = {
+      role_id: testUser1.role_id,
+      email: testUser1.email,
+      password: testUser1.password,
       first_name: testCustomer1.first_name,
       last_name: testCustomer1.last_name,
-      DNI: testCustomer1.DNI,
-      address: testCustomer1.address,
-      phone_number: testCustomer1.phone_number,
+      NIF: testUser1.NIF,
+      address: testUser1.address,
+      phone_number: testUser1.phone_number,
     };
-    const createdCustomer = await service.create(customerToCreate);
+    const createdStore = await service.create(storeToCreate);
 
     const isPasswordCorrectlyHashed = await compareHashedPassword(
-      testCustomer1.password,
-      createdCustomer.password,
+      testUser1.password,
+      createdStore.user.password,
       pepper,
     );
 
     expect(isPasswordCorrectlyHashed).toBe(true);
 
-    expect(createdCustomer).toEqual({
+    expect(createdStore).toEqual({
+      user: {
+        id: expect.any(Number),
+        user_type_id: 2,
+        role_id: storeToCreate.role_id,
+        email: storeToCreate.email,
+        password: expect.stringContaining('$2b$'),
+        NIF: storeToCreate.NIF,
+        address: storeToCreate.address,
+        phone_number: storeToCreate.phone_number,
+        hash: null,
+        last_activity: new Date().toISOString().split('T')[0],
+        created_at: new Date().toISOString().split('T')[0],
+        updated_at: null,
+        deleted_at: null,
+      },
+      first_name: storeToCreate.first_name,
+      last_name: storeToCreate.last_name,
       id: expect.any(Number),
-      is_admin: false,
-      ...customerToCreate,
+      user_id: expect.any(Number),
+      email_confirmed: false,
       provider: 'email',
       social_id: null,
-      password: expect.stringContaining('$2b$'),
-      email_confirmed: false,
-      hash: null,
-      created_at: new Date().toISOString().split('T')[0],
       updated_at: null,
-      deleted_at: null,
     });
   });
 

@@ -31,13 +31,12 @@ export class StoresService {
   async create(storeDto: CreateStoreDto): Promise<Store> {
     storeDto.password = await this.hashPassword(storeDto.password);
 
-    const user = await this.userRepository.save(
-      this.userRepository.create({
-        user_type_id: UserTypesEnum.store,
-        ...storeDto,
-      }),
-    );
-    return this.repository.save(this.repository.create({ user, ...storeDto }));
+    const user = this.userRepository.create({
+      user_type_id: UserTypesEnum.store,
+      ...storeDto,
+    });
+    const store = this.repository.create({ user, ...storeDto });
+    return this.repository.save(store);
   }
 
   // * [R] Find methods
@@ -149,13 +148,13 @@ export class StoresService {
       user_id = user.user_id;
       store_id = id;
     } else {
-      const customer = await this.repository
+      const store = await this.repository
         .createQueryBuilder()
         .select('id')
         .where('user_id = :id', { id })
         .getRawOne();
       user_id = id;
-      store_id = customer.id;
+      store_id = store.id;
     }
 
     if (payload.password) {

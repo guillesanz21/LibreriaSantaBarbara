@@ -6,64 +6,59 @@ import { CustomersService } from './customers.service';
 import { CreateCustomerDto } from './dtos/create-customer.dto';
 import { UpdateCustomerDto } from './dtos/update-customer.dto';
 
-const testCustomer1 = {
-  is_admin: false,
+const testUser1 = {
+  id: 2,
+  user_type_id: 3,
+  role_id: 3,
   email: 'test1@test.com',
-  password: '$2b$10$asdkkasqoweku9c,..,91921.',
+  password: 'testpassword',
+  NIF: '123456789A',
+  address: null,
+  phone_number: '123456789',
+  hash: null,
+  created_at: new Date().toISOString().split('T')[0],
+  updated_at: null,
+  deleted_at: null,
+};
+const testCustomer1 = {
+  user_id: testUser1.id,
+  email_confirmed: false,
   provider: 'email',
   social_id: null,
   first_name: 'Test Customer Name 1',
   last_name: 'Test Customer Last Name 1',
-  DNI: '123456789A',
+  updated_at: null,
+  user: testUser1,
+};
+
+const testUser2 = {
+  id: 3,
+  user_type_id: 3,
+  role_id: 3,
+  email: 'test2@test.com',
+  password: 'testpassword',
+  NIF: '123456789B',
   address: null,
-  phone_number: '123456789',
-  email_confirmed: false,
+  phone_number: '123456780',
   hash: null,
   created_at: new Date().toISOString().split('T')[0],
   updated_at: null,
   deleted_at: null,
 };
-
 const testCustomer2 = {
-  is_admin: false,
-  email: 'test2@test.com',
-  password: '$2b$10$1a012la,mp123so01[]-,.',
+  user_id: testUser2.id,
+  email_confirmed: true,
   provider: 'email',
   social_id: null,
   first_name: 'Test Customer Name 2',
   last_name: 'Test Customer Last Name 2',
-  DNI: '123456789B',
-  address: null,
-  phone_number: '69120938802',
-  email_confirmed: false,
-  hash: null,
-  created_at: new Date().toISOString().split('T')[0],
   updated_at: null,
-  deleted_at: null,
-};
-
-const testCustomer3 = {
-  is_admin: false,
-  email: 'test3@test.com',
-  password: '$2b$10$129asl/.so01[]-,.',
-  provider: 'email',
-  social_id: null,
-  first_name: 'Test Customer Name 3',
-  last_name: 'Test Customer Last Name 3',
-  DNI: '123456789C',
-  address: null,
-  phone_number: '09120938801',
-  email_confirmed: false,
-  hash: null,
-  created_at: new Date().toISOString().split('T')[0],
-  updated_at: null,
-  deleted_at: null,
+  user: testUser2,
 };
 
 const testCustomersArray = [
   { id: 1, ...testCustomer1 },
   { id: 2, ...testCustomer2 },
-  { id: 3, ...testCustomer3 },
 ];
 
 describe('Customer Controller', () => {
@@ -74,21 +69,27 @@ describe('Customer Controller', () => {
     create: jest.fn().mockImplementation((customer: CreateCustomerDto) =>
       Promise.resolve({
         id: Date.now(),
-        is_admin: false,
-        email: customer.email.toLowerCase().trim(), // This simulate the transformation in the DTO
-        password: '$2b$10$asdkkasqoweku9c,..,91921.',
+        user_id: Date.now() + 1,
+        email_confirmed: false,
+        user: {
+          id: Date.now() + 1,
+          user_type_id: 3,
+          role_id: customer.role_id,
+          email: customer.email.toLowerCase().trim(), // This simulate the transformation in the DTO
+          password: '$2b$10$asdkkasqoweku9c,..,91921.',
+          NIF: customer.NIF,
+          address: customer.address,
+          phone_number: customer.phone_number,
+          hash: null,
+          created_at: new Date().toISOString().split('T')[0],
+          updated_at: null,
+          deleted_at: null,
+        },
         provider: 'email',
         social_id: null,
         first_name: customer.first_name,
         last_name: customer.last_name,
-        DNI: customer.DNI,
-        address: customer.address,
-        phone_number: customer.phone_number,
-        email_confirmed: false,
-        hash: null,
-        created_at: new Date().toISOString().split('T')[0],
         updated_at: null,
-        deleted_at: null,
       }),
     ),
     findOne: jest
@@ -142,21 +143,34 @@ describe('Customer Controller', () => {
 
   it('should create a customer and return the created customer', async () => {
     const customerToCreate = {
-      email: 'tesT3@TEST.com', // The email is lowercased and trimmed in the DTO
+      role_id: 3,
+      email: 'tesT1@TEST.com', // The email is lowercased and trimmed in the DTO
       password: 'testest', // The password is hashed in the service
-      first_name: testCustomer3.first_name,
-      last_name: testCustomer3.last_name,
-      DNI: testCustomer3.DNI,
-      address: testCustomer3.address,
-      phone_number: testCustomer3.phone_number,
+      first_name: testCustomer1.first_name,
+      last_name: testCustomer1.last_name,
+      NIF: testCustomer1.user.NIF,
+      address: testCustomer1.user.address,
+      phone_number: testCustomer1.user.phone_number,
     };
     const returnedCustomer = await controller.create(customerToCreate);
-    delete testCustomer3.password;
+    delete testCustomer1.user.password;
+    delete testCustomer1.user.id;
 
     expect(returnedCustomer).toEqual({
       id: expect.any(Number),
-      password: expect.stringContaining('$2b$'), // Expect hashed password
-      ...testCustomer3,
+      user_id: expect.any(Number),
+      email_confirmed: false,
+      user: {
+        id: expect.any(Number),
+        password: expect.stringContaining('$2b$'), // Expect hashed password
+        user_type_id: 3,
+        ...testCustomer1.user,
+      },
+      provider: 'email',
+      social_id: null,
+      first_name: customerToCreate.first_name,
+      last_name: customerToCreate.last_name,
+      updated_at: null,
     });
 
     expect(mockCustomersService.create).toHaveBeenCalledWith(customerToCreate);

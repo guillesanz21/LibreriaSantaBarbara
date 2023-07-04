@@ -34,15 +34,12 @@ export class CustomersService {
       customerDto.password = await this.hashPassword(customerDto.password);
     }
 
-    const user = await this.userRepository.save(
-      this.userRepository.create({
-        user_type_id: UserTypesEnum.customer,
-        ...customerDto,
-      }),
-    );
-    return this.repository.save(
-      this.repository.create({ user, ...customerDto }),
-    );
+    const user = this.userRepository.create({
+      user_type_id: UserTypesEnum.customer,
+      ...customerDto,
+    });
+    const store = this.repository.create({ user, ...customerDto });
+    return this.repository.save(store);
   }
 
   // * [R] Find methods

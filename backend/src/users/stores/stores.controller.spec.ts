@@ -6,55 +6,55 @@ import { StoresService } from './stores.service';
 import { CreateStoreDto } from './dtos/create-store.dto';
 import { UpdateStoreDto } from './dtos/update-store.dto';
 
-const testStore1 = {
-  is_admin: false,
+const testUser1 = {
+  id: 2,
+  user_type_id: 2,
+  role_id: 2,
   email: 'test1@test.com',
-  password: '$2b$10$asdkkasqoweku9c,..,91921.',
-  name: 'Test Store 1',
+  password: 'testpassword',
   NIF: '123456789A',
   address: null,
   phone_number: '123456789',
   hash: null,
-  last_activity: new Date().toISOString().split('T')[0],
   created_at: new Date().toISOString().split('T')[0],
   updated_at: null,
   deleted_at: null,
 };
+const testStore1 = {
+  user_id: testUser1.id,
+  approved: false,
+  name: 'Test Store 1',
+  last_activity: testUser1.created_at,
+  updated_at: testUser1.updated_at,
+  user: testUser1,
+};
 
-const testStore2 = {
-  is_admin: false,
+const testUser2 = {
+  id: 3,
+  user_type_id: 2,
+  role_id: 2,
   email: 'test2@test.com',
-  password: '$2b$10$1a012la,mp123so01[]-,.',
-  name: 'Test Store 2',
+  password: 'testpassword',
   NIF: '123456789B',
   address: null,
-  phone_number: '69120938802',
+  phone_number: '123456780',
   hash: null,
-  last_activity: new Date().toISOString().split('T')[0],
   created_at: new Date().toISOString().split('T')[0],
   updated_at: null,
   deleted_at: null,
 };
-
-const testStore3 = {
-  is_admin: false,
-  email: 'test3@test.com',
-  password: '$2b$10$129asl/.so01[]-,.',
-  name: 'Test Store 3',
-  NIF: '123456789C',
-  address: null,
-  phone_number: '09120938801',
-  hash: null,
-  last_activity: new Date().toISOString().split('T')[0],
-  created_at: new Date().toISOString().split('T')[0],
-  updated_at: null,
-  deleted_at: null,
+const testStore2 = {
+  user_id: testUser2.id,
+  approved: true,
+  name: 'Test Store 2',
+  last_activity: testUser2.created_at,
+  updated_at: testUser2.updated_at,
+  user: testUser2,
 };
 
 const testStoresArray = [
   { id: 1, ...testStore1 },
   { id: 2, ...testStore2 },
-  { id: 3, ...testStore3 },
 ];
 
 describe('Store Controller', () => {
@@ -65,18 +65,25 @@ describe('Store Controller', () => {
     create: jest.fn().mockImplementation((store: CreateStoreDto) =>
       Promise.resolve({
         id: Date.now(),
-        is_admin: false,
-        email: store.email.toLowerCase().trim(), // This simulate the transformation in the DTO
-        password: '$2b$10$asdkkasqoweku9c,..,91921.',
+        user_id: Date.now() + 1,
+        approved: false,
+        user: {
+          id: Date.now() + 1,
+          user_type_id: 2,
+          role_id: store.role_id,
+          email: store.email.toLowerCase().trim(), // This simulate the transformation in the DTO
+          password: '$2b$10$asdkkasqoweku9c,..,91921.',
+          NIF: store.NIF,
+          address: store.address,
+          phone_number: store.phone_number,
+          hash: null,
+          last_activity: new Date().toISOString().split('T')[0],
+          created_at: new Date().toISOString().split('T')[0],
+          updated_at: null,
+          deleted_at: null,
+        },
         name: store.name,
-        NIF: store.NIF,
-        address: store.address,
-        phone_number: store.phone_number,
-        hash: null,
-        last_activity: new Date().toISOString().split('T')[0],
-        created_at: new Date().toISOString().split('T')[0],
         updated_at: null,
-        deleted_at: null,
       }),
     ),
     findOne: jest
@@ -130,20 +137,33 @@ describe('Store Controller', () => {
 
   it('should create a store and return the created store', async () => {
     const storeToCreate = {
-      email: 'tesT3@TEST.com', // The email is lowercased and trimmed in the DTO
+      role_id: 2,
+      email: 'tesT1@TEST.com', // The email is lowercased and trimmed in the DTO
       password: 'testest', // The password is hashed in the service
-      name: testStore3.name,
-      NIF: testStore3.NIF,
-      address: testStore3.address,
-      phone_number: testStore3.phone_number,
+      name: testStore1.name,
+      NIF: testStore1.user.NIF,
+      address: testStore1.user.address,
+      phone_number: testStore1.user.phone_number,
     };
     const returnedStore = await controller.create(storeToCreate);
-    delete testStore3.password;
+    delete testStore1.user.password;
+    delete testStore1.user.id;
 
     expect(returnedStore).toEqual({
       id: expect.any(Number),
-      password: expect.stringContaining('$2b$'), // Expect hashed password
-      ...testStore3,
+      user_id: expect.any(Number),
+      approved: false,
+      user: {
+        id: expect.any(Number),
+        password: expect.stringContaining('$2b$'), // Expect hashed password
+        last_activity: expect.any(String),
+        created_at: expect.any(String),
+        updated_at: null,
+        deleted_at: null,
+        ...testStore1.user,
+      },
+      name: storeToCreate.name,
+      updated_at: null,
     });
 
     expect(mockStoresService.create).toHaveBeenCalledWith(storeToCreate);
