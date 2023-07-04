@@ -1,30 +1,30 @@
 import {
   Column,
   CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   Index,
+  JoinColumn,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Book } from '../../../books/entities/book.entity';
 import { EntityHelper } from 'src/utils/entities/entity-helper.entity';
+import { Book } from '../../../books/entities/book.entity';
+import { User } from '../../entities/user.entity';
 
 @Entity('Store')
 export class Store extends EntityHelper {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: false, default: false })
-  is_admin: boolean;
-
   @Index()
-  @Column({ type: 'text', nullable: false, unique: true })
-  email: string;
-
-  @Column({ type: 'text', nullable: false })
-  password: string;
+  @Column({
+    type: 'int',
+    nullable: false,
+    unique: true,
+  })
+  user_id: number;
 
   @Column({ type: 'boolean', nullable: false, default: false })
   approved: boolean;
@@ -33,31 +33,24 @@ export class Store extends EntityHelper {
   @Column({ type: 'text', nullable: false, unique: true })
   name: string;
 
-  @Column({ type: 'text', nullable: true, unique: true })
-  NIF: string;
-
-  @Column({ type: 'text', nullable: true })
-  address: string;
-
-  @Column({ type: 'text', nullable: false })
-  phone_number: string;
-
-  @Column({ type: 'text', nullable: true, default: null })
-  @Index()
-  hash: string;
-
   @CreateDateColumn({ type: 'date', nullable: false })
   last_activity: Date;
 
-  @OneToMany(() => Book, (book) => book.store)
-  books: Book[];
-
-  @CreateDateColumn({ type: 'date', nullable: false })
-  created_at: Date;
-
+  // * Dates
   @UpdateDateColumn({ type: 'date', nullable: true })
   updated_at: Date;
 
-  @DeleteDateColumn({ type: 'date', nullable: true })
-  deleted_at: Date;
+  // * Relations
+  @OneToOne(() => User, (user) => user.store, {
+    eager: true,
+    cascade: true,
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
+    orphanedRowAction: 'delete',
+  })
+  @JoinColumn({ name: 'user_id' })
+  user: User;
+
+  @OneToMany(() => Book, (book) => book.store)
+  books: Book[];
 }

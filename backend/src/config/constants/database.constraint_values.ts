@@ -13,6 +13,9 @@ export const userConstraints = {
       minLength: 8,
       contains: '$2',
     },
+    NIF: {
+      maxLength: 15,
+    },
   },
   customer: {
     first_name: {
@@ -21,16 +24,10 @@ export const userConstraints = {
     last_name: {
       maxLength: 200,
     },
-    DNI: {
-      maxLength: 12,
-    },
   },
   store: {
     name: {
       maxLength: 100,
-    },
-    NIF: {
-      maxLength: 15,
     },
   },
 };

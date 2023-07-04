@@ -37,10 +37,12 @@ export class IsCompositeUniqueConstraint
       | string
       | number;
     const currentObject = validationArguments.object as ValidationEntity; // The current object being validated
+    const valueOfPropertyNumber2 = (validationArguments.constraints[2] ||
+      currentObject[uniquePropertyNumber2]) as string | number;
     const entity = (await this.dataSource.getRepository(repository).findOne({
       where: {
         [uniquePropertyNumber1]: value,
-        [uniquePropertyNumber2]: currentObject[uniquePropertyNumber2],
+        [uniquePropertyNumber2]: valueOfPropertyNumber2,
       },
     })) as ValidationEntity;
 
@@ -61,6 +63,7 @@ export class IsCompositeUniqueConstraint
 export function IsCompositeUnique(
   repository: string,
   uniquePropertyNumber2: string | number,
+  valueOfPropertyNumber2?: string | number,
   validationOptions?: ValidationOptions,
 ) {
   return function (object: any, propertyName: string) {
@@ -68,7 +71,7 @@ export function IsCompositeUnique(
       target: object.constructor,
       propertyName: propertyName,
       options: validationOptions,
-      constraints: [repository, uniquePropertyNumber2],
+      constraints: [repository, uniquePropertyNumber2, valueOfPropertyNumber2],
       validator: IsCompositeUniqueConstraint,
     });
   };

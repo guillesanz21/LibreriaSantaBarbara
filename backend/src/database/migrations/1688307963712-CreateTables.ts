@@ -1,39 +1,112 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class CreateTables1687884195847 implements MigrationInterface {
-  name = 'CreateTables1687884195847';
+export class CreateTables1688307963712 implements MigrationInterface {
+  name = 'CreateTables1688307963712';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
-            CREATE TABLE "Store" (
+            CREATE TABLE "Forgot" (
                 "id" SERIAL NOT NULL,
-                "is_admin" boolean NOT NULL DEFAULT false,
+                "user_id" integer NOT NULL,
+                "hash" text NOT NULL,
+                "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
+                "deletedAt" TIMESTAMP,
+                CONSTRAINT "PK_0406907c9846b95ddfb05a804c0" PRIMARY KEY ("id")
+            )
+        `);
+    await queryRunner.query(`
+            CREATE INDEX "IDX_e748f84f8974537d8ef198d661" ON "Forgot" ("user_id")
+        `);
+    await queryRunner.query(`
+            CREATE INDEX "IDX_c4770d66a9d43e7af538f615da" ON "Forgot" ("hash")
+        `);
+    await queryRunner.query(`
+            CREATE TABLE "Role" (
+                "id" integer NOT NULL,
+                "role" text NOT NULL,
+                CONSTRAINT "UQ_7e5fbe13db7686818270d8e46fa" UNIQUE ("role"),
+                CONSTRAINT "PK_9309532197a7397548e341e5536" PRIMARY KEY ("id")
+            )
+        `);
+    await queryRunner.query(`
+            CREATE TABLE "User_Type" (
+                "id" integer NOT NULL,
+                "user_type" text NOT NULL,
+                CONSTRAINT "UQ_e0cf56def093f7b958eaa072de7" UNIQUE ("user_type"),
+                CONSTRAINT "PK_b72b6bd5265a683ae446b1feb0c" PRIMARY KEY ("id")
+            )
+        `);
+    await queryRunner.query(`
+            CREATE TABLE "Customer" (
+                "id" SERIAL NOT NULL,
+                "user_id" integer NOT NULL,
+                "email_confirmed" boolean NOT NULL DEFAULT false,
+                "provider" character varying NOT NULL DEFAULT 'email',
+                "social_id" text,
+                "first_name" text,
+                "last_name" text,
+                "updated_at" date DEFAULT now(),
+                CONSTRAINT "UQ_8171a61aa570303df5ba3ba8d37" UNIQUE ("user_id"),
+                CONSTRAINT "REL_8171a61aa570303df5ba3ba8d3" UNIQUE ("user_id"),
+                CONSTRAINT "PK_60596e16740e1fa20dbf0154ec7" PRIMARY KEY ("id")
+            )
+        `);
+    await queryRunner.query(`
+            CREATE INDEX "IDX_8171a61aa570303df5ba3ba8d3" ON "Customer" ("user_id")
+        `);
+    await queryRunner.query(`
+            CREATE INDEX "IDX_0a75a9ec86ce60aa15a196577f" ON "Customer" ("social_id")
+        `);
+    await queryRunner.query(`
+            CREATE TABLE "User" (
+                "id" SERIAL NOT NULL,
+                "user_type_id" integer NOT NULL,
+                "role_id" integer NOT NULL,
                 "email" text NOT NULL,
-                "password" text NOT NULL,
-                "approved" boolean NOT NULL DEFAULT false,
-                "name" text NOT NULL,
+                "password" text,
                 "NIF" text,
                 "address" text,
-                "phone_number" text NOT NULL,
+                "phone_number" text,
                 "hash" text,
-                "last_activity" date NOT NULL DEFAULT now(),
                 "created_at" date NOT NULL DEFAULT now(),
                 "updated_at" date DEFAULT now(),
                 "deleted_at" date,
-                CONSTRAINT "UQ_2d4b489e686ed3dd1ad2acb5f03" UNIQUE ("email"),
+                CONSTRAINT "UQ_10ab0d9dcc3c029fac3afe3666a" UNIQUE ("NIF", "user_type_id"),
+                CONSTRAINT "UQ_65b914bd0312bce9aefcc95afbd" UNIQUE ("email", "user_type_id"),
+                CONSTRAINT "PK_9862f679340fb2388436a5ab3e4" PRIMARY KEY ("id")
+            )
+        `);
+    await queryRunner.query(`
+            CREATE INDEX "IDX_57e82579dc42b2a7e332d47b2f" ON "User" ("user_type_id")
+        `);
+    await queryRunner.query(`
+            CREATE INDEX "IDX_775147058c769ea57efe923d28" ON "User" ("role_id")
+        `);
+    await queryRunner.query(`
+            CREATE INDEX "IDX_4a257d2c9837248d70640b3e36" ON "User" ("email")
+        `);
+    await queryRunner.query(`
+            CREATE INDEX "IDX_cefd410393729bb8436c91bede" ON "User" ("hash")
+        `);
+    await queryRunner.query(`
+            CREATE TABLE "Store" (
+                "id" SERIAL NOT NULL,
+                "user_id" integer NOT NULL,
+                "approved" boolean NOT NULL DEFAULT false,
+                "name" text NOT NULL,
+                "last_activity" date NOT NULL DEFAULT now(),
+                "updated_at" date DEFAULT now(),
+                CONSTRAINT "UQ_24b77135d0ceb5b544b8c614d8e" UNIQUE ("user_id"),
                 CONSTRAINT "UQ_9eaca0d487c79c671de2e536066" UNIQUE ("name"),
-                CONSTRAINT "UQ_8b8dd14b60ab45a5863f26e4cf2" UNIQUE ("NIF"),
+                CONSTRAINT "REL_24b77135d0ceb5b544b8c614d8" UNIQUE ("user_id"),
                 CONSTRAINT "PK_f20e3845680debc547e49355a89" PRIMARY KEY ("id")
             )
         `);
     await queryRunner.query(`
-            CREATE INDEX "IDX_2d4b489e686ed3dd1ad2acb5f0" ON "Store" ("email")
+            CREATE INDEX "IDX_24b77135d0ceb5b544b8c614d8" ON "Store" ("user_id")
         `);
     await queryRunner.query(`
             CREATE INDEX "IDX_9eaca0d487c79c671de2e53606" ON "Store" ("name")
-        `);
-    await queryRunner.query(`
-            CREATE INDEX "IDX_944eca6651844bae297b62481e" ON "Store" ("hash")
         `);
     await queryRunner.query(`
             CREATE TABLE "Location" (
@@ -82,17 +155,6 @@ export class CreateTables1687884195847 implements MigrationInterface {
             CREATE INDEX "IDX_966409202478432786fdf607ea" ON "Keyword" ("book_id")
         `);
     await queryRunner.query(`
-            CREATE TABLE "Image" (
-                "id" SERIAL NOT NULL,
-                "url" text NOT NULL,
-                "book_id" integer NOT NULL,
-                CONSTRAINT "PK_ddecd6b02f6dd0d3d10a0a74717" PRIMARY KEY ("id")
-            )
-        `);
-    await queryRunner.query(`
-            CREATE INDEX "IDX_e4174c535992fe14b0b1f588cf" ON "Image" ("book_id")
-        `);
-    await queryRunner.query(`
             CREATE TABLE "Book" (
                 "id" SERIAL NOT NULL,
                 "ref" integer NOT NULL,
@@ -131,39 +193,15 @@ export class CreateTables1687884195847 implements MigrationInterface {
             CREATE INDEX "IDX_a8057e34852fe1a3f422e04656" ON "Book" ("status_id")
         `);
     await queryRunner.query(`
-            CREATE TABLE "Customer" (
+            CREATE TABLE "Image" (
                 "id" SERIAL NOT NULL,
-                "is_admin" boolean NOT NULL DEFAULT false,
-                "email" text NOT NULL,
-                "password" text,
-                "provider" character varying NOT NULL DEFAULT 'email',
-                "social_id" text,
-                "first_name" text,
-                "last_name" text,
-                "DNI" text,
-                "address" text,
-                "phone_number" text,
-                "hash" text,
-                "email_confirmed" boolean NOT NULL DEFAULT false,
-                "created_at" date NOT NULL DEFAULT now(),
-                "updated_at" date DEFAULT now(),
-                "deleted_at" date,
-                CONSTRAINT "UQ_9cfb4c775b9158522c466ef8d60" UNIQUE ("email"),
-                CONSTRAINT "UQ_846a5cdb371a1e8fe34248aafa8" UNIQUE ("DNI"),
-                CONSTRAINT "PK_60596e16740e1fa20dbf0154ec7" PRIMARY KEY ("id")
+                "url" text NOT NULL,
+                "book_id" integer NOT NULL,
+                CONSTRAINT "PK_ddecd6b02f6dd0d3d10a0a74717" PRIMARY KEY ("id")
             )
         `);
     await queryRunner.query(`
-            CREATE INDEX "IDX_9cfb4c775b9158522c466ef8d6" ON "Customer" ("email")
-        `);
-    await queryRunner.query(`
-            CREATE INDEX "IDX_0a75a9ec86ce60aa15a196577f" ON "Customer" ("social_id")
-        `);
-    await queryRunner.query(`
-            CREATE INDEX "IDX_846a5cdb371a1e8fe34248aafa" ON "Customer" ("DNI")
-        `);
-    await queryRunner.query(`
-            CREATE INDEX "IDX_6d820c5f383258256f1654071d" ON "Customer" ("hash")
+            CREATE INDEX "IDX_e4174c535992fe14b0b1f588cf" ON "Image" ("book_id")
         `);
     await queryRunner.query(`
             CREATE TABLE "Topic_of_Book" (
@@ -179,16 +217,32 @@ export class CreateTables1687884195847 implements MigrationInterface {
             CREATE INDEX "IDX_ff3831b17779b3aa1e2f51ca50" ON "Topic_of_Book" ("topic_id")
         `);
     await queryRunner.query(`
+            ALTER TABLE "Forgot"
+            ADD CONSTRAINT "FK_e748f84f8974537d8ef198d661b" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE
+        `);
+    await queryRunner.query(`
+            ALTER TABLE "Customer"
+            ADD CONSTRAINT "FK_8171a61aa570303df5ba3ba8d37" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE
+        `);
+    await queryRunner.query(`
+            ALTER TABLE "User"
+            ADD CONSTRAINT "FK_57e82579dc42b2a7e332d47b2fb" FOREIGN KEY ("user_type_id") REFERENCES "User_Type"("id") ON DELETE RESTRICT ON UPDATE CASCADE
+        `);
+    await queryRunner.query(`
+            ALTER TABLE "User"
+            ADD CONSTRAINT "FK_775147058c769ea57efe923d288" FOREIGN KEY ("role_id") REFERENCES "Role"("id") ON DELETE RESTRICT ON UPDATE CASCADE
+        `);
+    await queryRunner.query(`
+            ALTER TABLE "Store"
+            ADD CONSTRAINT "FK_24b77135d0ceb5b544b8c614d8e" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE
+        `);
+    await queryRunner.query(`
             ALTER TABLE "Language"
             ADD CONSTRAINT "FK_409bc9fd2ae130114c2e098a930" FOREIGN KEY ("book_id") REFERENCES "Book"("id") ON DELETE CASCADE ON UPDATE CASCADE
         `);
     await queryRunner.query(`
             ALTER TABLE "Keyword"
             ADD CONSTRAINT "FK_966409202478432786fdf607eab" FOREIGN KEY ("book_id") REFERENCES "Book"("id") ON DELETE CASCADE ON UPDATE CASCADE
-        `);
-    await queryRunner.query(`
-            ALTER TABLE "Image"
-            ADD CONSTRAINT "FK_e4174c535992fe14b0b1f588cf9" FOREIGN KEY ("book_id") REFERENCES "Book"("id") ON DELETE CASCADE ON UPDATE CASCADE
         `);
     await queryRunner.query(`
             ALTER TABLE "Book"
@@ -201,6 +255,10 @@ export class CreateTables1687884195847 implements MigrationInterface {
     await queryRunner.query(`
             ALTER TABLE "Book"
             ADD CONSTRAINT "FK_a8057e34852fe1a3f422e046562" FOREIGN KEY ("status_id") REFERENCES "Status"("id") ON DELETE RESTRICT ON UPDATE CASCADE
+        `);
+    await queryRunner.query(`
+            ALTER TABLE "Image"
+            ADD CONSTRAINT "FK_e4174c535992fe14b0b1f588cf9" FOREIGN KEY ("book_id") REFERENCES "Book"("id") ON DELETE CASCADE ON UPDATE CASCADE
         `);
     await queryRunner.query(`
             ALTER TABLE "Topic_of_Book"
@@ -220,6 +278,9 @@ export class CreateTables1687884195847 implements MigrationInterface {
             ALTER TABLE "Topic_of_Book" DROP CONSTRAINT "FK_78c0f439caaae08089d04052648"
         `);
     await queryRunner.query(`
+            ALTER TABLE "Image" DROP CONSTRAINT "FK_e4174c535992fe14b0b1f588cf9"
+        `);
+    await queryRunner.query(`
             ALTER TABLE "Book" DROP CONSTRAINT "FK_a8057e34852fe1a3f422e046562"
         `);
     await queryRunner.query(`
@@ -229,13 +290,25 @@ export class CreateTables1687884195847 implements MigrationInterface {
             ALTER TABLE "Book" DROP CONSTRAINT "FK_dde618087261cdf6072ba2169a7"
         `);
     await queryRunner.query(`
-            ALTER TABLE "Image" DROP CONSTRAINT "FK_e4174c535992fe14b0b1f588cf9"
-        `);
-    await queryRunner.query(`
             ALTER TABLE "Keyword" DROP CONSTRAINT "FK_966409202478432786fdf607eab"
         `);
     await queryRunner.query(`
             ALTER TABLE "Language" DROP CONSTRAINT "FK_409bc9fd2ae130114c2e098a930"
+        `);
+    await queryRunner.query(`
+            ALTER TABLE "Store" DROP CONSTRAINT "FK_24b77135d0ceb5b544b8c614d8e"
+        `);
+    await queryRunner.query(`
+            ALTER TABLE "User" DROP CONSTRAINT "FK_775147058c769ea57efe923d288"
+        `);
+    await queryRunner.query(`
+            ALTER TABLE "User" DROP CONSTRAINT "FK_57e82579dc42b2a7e332d47b2fb"
+        `);
+    await queryRunner.query(`
+            ALTER TABLE "Customer" DROP CONSTRAINT "FK_8171a61aa570303df5ba3ba8d37"
+        `);
+    await queryRunner.query(`
+            ALTER TABLE "Forgot" DROP CONSTRAINT "FK_e748f84f8974537d8ef198d661b"
         `);
     await queryRunner.query(`
             DROP INDEX "public"."IDX_ff3831b17779b3aa1e2f51ca50"
@@ -247,19 +320,10 @@ export class CreateTables1687884195847 implements MigrationInterface {
             DROP TABLE "Topic_of_Book"
         `);
     await queryRunner.query(`
-            DROP INDEX "public"."IDX_6d820c5f383258256f1654071d"
+            DROP INDEX "public"."IDX_e4174c535992fe14b0b1f588cf"
         `);
     await queryRunner.query(`
-            DROP INDEX "public"."IDX_846a5cdb371a1e8fe34248aafa"
-        `);
-    await queryRunner.query(`
-            DROP INDEX "public"."IDX_0a75a9ec86ce60aa15a196577f"
-        `);
-    await queryRunner.query(`
-            DROP INDEX "public"."IDX_9cfb4c775b9158522c466ef8d6"
-        `);
-    await queryRunner.query(`
-            DROP TABLE "Customer"
+            DROP TABLE "Image"
         `);
     await queryRunner.query(`
             DROP INDEX "public"."IDX_a8057e34852fe1a3f422e04656"
@@ -272,12 +336,6 @@ export class CreateTables1687884195847 implements MigrationInterface {
         `);
     await queryRunner.query(`
             DROP TABLE "Book"
-        `);
-    await queryRunner.query(`
-            DROP INDEX "public"."IDX_e4174c535992fe14b0b1f588cf"
-        `);
-    await queryRunner.query(`
-            DROP TABLE "Image"
         `);
     await queryRunner.query(`
             DROP INDEX "public"."IDX_966409202478432786fdf607ea"
@@ -301,16 +359,52 @@ export class CreateTables1687884195847 implements MigrationInterface {
             DROP TABLE "Location"
         `);
     await queryRunner.query(`
-            DROP INDEX "public"."IDX_944eca6651844bae297b62481e"
-        `);
-    await queryRunner.query(`
             DROP INDEX "public"."IDX_9eaca0d487c79c671de2e53606"
         `);
     await queryRunner.query(`
-            DROP INDEX "public"."IDX_2d4b489e686ed3dd1ad2acb5f0"
+            DROP INDEX "public"."IDX_24b77135d0ceb5b544b8c614d8"
         `);
     await queryRunner.query(`
             DROP TABLE "Store"
+        `);
+    await queryRunner.query(`
+            DROP INDEX "public"."IDX_cefd410393729bb8436c91bede"
+        `);
+    await queryRunner.query(`
+            DROP INDEX "public"."IDX_4a257d2c9837248d70640b3e36"
+        `);
+    await queryRunner.query(`
+            DROP INDEX "public"."IDX_775147058c769ea57efe923d28"
+        `);
+    await queryRunner.query(`
+            DROP INDEX "public"."IDX_57e82579dc42b2a7e332d47b2f"
+        `);
+    await queryRunner.query(`
+            DROP TABLE "User"
+        `);
+    await queryRunner.query(`
+            DROP INDEX "public"."IDX_0a75a9ec86ce60aa15a196577f"
+        `);
+    await queryRunner.query(`
+            DROP INDEX "public"."IDX_8171a61aa570303df5ba3ba8d3"
+        `);
+    await queryRunner.query(`
+            DROP TABLE "Customer"
+        `);
+    await queryRunner.query(`
+            DROP TABLE "User_Type"
+        `);
+    await queryRunner.query(`
+            DROP TABLE "Role"
+        `);
+    await queryRunner.query(`
+            DROP INDEX "public"."IDX_c4770d66a9d43e7af538f615da"
+        `);
+    await queryRunner.query(`
+            DROP INDEX "public"."IDX_e748f84f8974537d8ef198d661"
+        `);
+    await queryRunner.query(`
+            DROP TABLE "Forgot"
         `);
   }
 }

@@ -14,8 +14,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { JWTService } from './jwt.service';
-import { AuthLoginEmailStoreDto } from './dtos/auth-login-email-store.dto';
-import { AuthLoginEmailCustomerDto } from './dtos/auth-login-email-customer.dto';
+import { AuthLoginEmailDto } from './dtos/auth-login-email.dto';
 import { AuthRegisterStoreDto } from './dtos/auth-register-store.dto';
 import { AuthRegisterCustomerDto } from './dtos/auth-register-customer.dto';
 import { AuthForgotPasswordDto } from './dtos/auth-forgot-password.dto';
@@ -24,19 +23,25 @@ import { AuthResetPasswordDto } from './dtos/auth-reset-password.dto';
 import { AuthUpdatePasswordDto } from './dtos/auth-update-password.dto';
 import { AuthUpdateStoreDto } from './dtos/auth-update-store.dto';
 import { AuthUpdateCustomerDto } from './dtos/auth-update-customer.dto';
+import { GeneralUser } from 'src/users/users.types';
+import { UserTypesEnum } from 'src/users/user-types/user_types.enum';
 import { LoginResponseType } from '../auth.types';
 import { NullableType } from 'src/utils/types/nullable.type';
-import { User, UserType } from 'src/users/users.types';
 
 @Controller()
 export class JwtController {
   constructor(private readonly service: JWTService) {}
 
   private async login(
-    userType: UserType,
-    loginDto: AuthLoginEmailStoreDto | AuthLoginEmailCustomerDto,
+    userType: UserTypesEnum,
+    loginDto: AuthLoginEmailDto,
+    onlyAdmin: boolean,
   ): Promise<LoginResponseType> {
-    const result = await this.service.validateLogin(loginDto, userType);
+    const result = await this.service.validateLogin(
+      loginDto,
+      userType,
+      onlyAdmin,
+    );
     if (typeof result === 'string' && result === 'userNotFound') {
       throw new NotFoundException('user not found');
     }
@@ -52,23 +57,24 @@ export class JwtController {
   // *   ######## LOGIN ########
   @Post('stores/login')
   public async loginStore(
-    @Body() loginDto: AuthLoginEmailStoreDto,
+    @Body() loginDto: AuthLoginEmailDto,
   ): Promise<LoginResponseType> {
-    return await this.login('store', loginDto);
+    return await this.login(UserTypesEnum.store, loginDto, false);
   }
 
   @Post('customers/login')
   public async loginCustomer(
-    @Body() loginDto: AuthLoginEmailCustomerDto,
+    @Body() loginDto: AuthLoginEmailDto,
   ): Promise<LoginResponseType> {
-    return await this.login('customer', loginDto);
+    return await this.login(UserTypesEnum.customer, loginDto, false);
   }
 
-  // TODO: Admin login
-  //   @Post('admin/email/login')
-  //   public adminLogin(@Body() loginDTO: AuthEmailLoginDto): Promise<JWTPayload> {
-  //     return this.service.validateLogin(loginDTO, true);
-  //   }
+  @Post('admin/email/login')
+  public adminLogin(
+    @Body() loginDTO: AuthLoginEmailDto,
+  ): Promise<LoginResponseType> {
+    return this.login(UserTypesEnum.admin, loginDTO, true);
+  }
 
   // *   ######## REGISTER ########
 
@@ -92,88 +98,83 @@ export class JwtController {
     return customer as LoginResponseType;
   }
 
+  // TODO: When the global user contains the email_confirmed column, make this for all users
   @Post('customers/register/confirm')
   async confirmEmail(
     @Body() confirmEmailDto: AuthConfirmEmailDto,
-  ): Promise<boolean> {
-    const result = await this.service.confirmEmail(confirmEmailDto);
-    if (result === 'userNotFound') {
-      throw new NotFoundException('user not found');
+  ): Promise<void> {
+    try {
+      const result = await this.service.confirmEmail(confirmEmailDto);
+      if (result === 'userNotFound') {
+        throw new NotFoundException('user not found');
+      }
+    } catch (e) {
+      throw new InternalServerErrorException(e);
     }
-    return true;
   }
 
   // *   ######## FORGOT PASSWORD ########
   @Post('stores/password/forgot')
   async forgotStorePassword(
     @Body() forgotPasswordDto: AuthForgotPasswordDto,
-  ): Promise<boolean> {
+  ): Promise<void> {
     const result = await this.service.forgotPassword(
-      'store',
+      UserTypesEnum.store,
       forgotPasswordDto,
     );
     if (result === 'userNotFound') {
       throw new UnprocessableEntityException('user not found');
     }
-    return true;
   }
 
   @Post('customers/password/forgot')
   async forgotCustomerPassword(
     @Body() forgotPasswordDto: AuthForgotPasswordDto,
-  ): Promise<boolean> {
+  ): Promise<void> {
     const result = await this.service.forgotPassword(
-      'customer',
+      UserTypesEnum.customer,
       forgotPasswordDto,
     );
     if (result === 'userNotFound') {
       throw new UnprocessableEntityException('user not found');
     }
-    return true;
   }
 
   @Post('stores/password/reset')
   async resetStorePassword(
     @Body() resetPasswordDto: AuthResetPasswordDto,
-  ): Promise<boolean> {
-    const result = await this.service.resetPassword('store', resetPasswordDto);
+  ): Promise<void> {
+    const result = await this.service.resetPassword(resetPasswordDto);
     if (result === 'userNotFound') {
       throw new UnprocessableEntityException('user not found');
     }
-    return true;
   }
 
   @Post('customers/password/reset')
   async resetCustomerPassword(
     @Body() resetPasswordDto: AuthResetPasswordDto,
-  ): Promise<boolean> {
-    const result = await this.service.resetPassword(
-      'customer',
-      resetPasswordDto,
-    );
+  ): Promise<void> {
+    const result = await this.service.resetPassword(resetPasswordDto);
     if (result === 'userNotFound') {
       throw new UnprocessableEntityException('user not found');
     }
-    return true;
   }
 
   // *   ######## ME (whoami, update) ########
   @Post('me/logout')
   @UseGuards(AuthGuard('jwt'))
-  async logoutStore(@Request() req): Promise<boolean> {
+  async logoutStore(@Request() req): Promise<void> {
     // TODO: check if this works
-    req.logout((err: string) => {
+    await req.logout((err: string) => {
       if (err) {
         throw new InternalServerErrorException(err);
       }
-      return true;
     });
-    return true;
   }
 
   @Get('me')
   @UseGuards(AuthGuard('jwt'))
-  public me(@Request() req): Promise<NullableType<User>> {
+  public me(@Request() req): Promise<NullableType<GeneralUser>> {
     return this.service.me(req.user);
   }
 
@@ -182,21 +183,21 @@ export class JwtController {
   public async updateStore(
     @Request() req,
     @Body() storeDto: AuthUpdateStoreDto,
-  ): Promise<NullableType<User>> {
+  ): Promise<void> {
     const store = await this.service.updateStore(req.user, storeDto);
     if (typeof store === 'string') {
       //  result is invalidCustomerUpdate | invalidStoreUpdate
       throw new UnprocessableEntityException(store);
     }
-    return store;
   }
+
   @Patch('customers/update')
   @UseGuards(AuthGuard('jwt'))
   public async updateCustomer(
     @Request() req,
     @Body() customerDto: AuthUpdateCustomerDto,
-  ): Promise<NullableType<User>> {
-    return this.service.updateCustomer(req.user, customerDto);
+  ): Promise<void> {
+    await this.service.updateCustomer(req.user, customerDto);
   }
 
   @Patch('me/password')
@@ -204,18 +205,17 @@ export class JwtController {
   public async updatePassword(
     @Request() req,
     @Body() passwordDto: AuthUpdatePasswordDto,
-  ): Promise<boolean> {
+  ): Promise<void> {
     const result = await this.service.updatePassword(req.user, passwordDto);
     if (result) {
       //  result is userNotFound | incorrectPassword | missingOldPassword
       throw new UnprocessableEntityException(result);
     }
-    return true;
   }
 
   @Delete('me')
   @UseGuards(AuthGuard('jwt'))
-  public async delete(@Request() req): Promise<boolean> {
-    return this.service.softDelete(req.user);
+  public async delete(@Request() req): Promise<void> {
+    await this.service.softDelete(req.user);
   }
 }

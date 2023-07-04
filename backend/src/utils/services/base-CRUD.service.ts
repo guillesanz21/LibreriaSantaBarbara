@@ -18,18 +18,22 @@ export class BaseCRUDService<InjectedEntity extends EntityHelper> {
   // Find one
   findOne(
     fields: FindOptionsWhere<InjectedEntity>,
+    // relations?: string[],
   ): Promise<NullableType<InjectedEntity>> {
     return this.repository.findOne({
-      where: fields,
+      // relations,
+      where: { ...fields },
     });
   }
 
   // Find many without pagination
   findMany(
     fields: FindOptionsWhere<InjectedEntity>,
+    // relations?: string[],
   ): Promise<NullableType<InjectedEntity[]>> {
     return this.repository.find({
       where: fields,
+      // relations,
     });
   }
 
@@ -37,9 +41,11 @@ export class BaseCRUDService<InjectedEntity extends EntityHelper> {
   findManyWithPagination(
     fields: FindOptionsWhere<InjectedEntity>,
     paginationOptions: IPaginationOptions,
+    // relations?: string[],
   ): Promise<InjectedEntity[]> {
     return this.repository.find({
       where: fields,
+      // relations,
       skip: (paginationOptions.page - 1) * paginationOptions.limit,
       take: paginationOptions.limit,
     });

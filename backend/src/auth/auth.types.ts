@@ -1,4 +1,6 @@
-import { RoleType, User } from 'src/users/users.types';
+import { GeneralUser } from 'src/users/users.types';
+import { RolesEnum } from 'src/users/roles/roles.enum';
+import { UserTypesEnum } from 'src/users/user-types/user_types.enum';
 
 // Add new auth providers here
 export enum AuthProvidersEnum {
@@ -18,8 +20,8 @@ export interface SocialInterface {
 
 export type JWTPayload = {
   id: number;
-  userType: 'store' | 'customer';
-  role: RoleType;
+  userType: UserTypesEnum;
+  role: RolesEnum;
   provider?: AuthProvidersEnum | undefined; // Only for customers
 };
 
@@ -30,5 +32,5 @@ export type JWTPayloadType = JWTPayload & {
 
 export type LoginResponseType = Readonly<{
   token: string | null;
-  user: User | null;
+  user: GeneralUser | null;
 }>;

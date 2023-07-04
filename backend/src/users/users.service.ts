@@ -1,65 +1,41 @@
 import { Injectable } from '@nestjs/common';
-import { DeepPartial, FindOptionsWhere } from 'typeorm';
-import { StoresService } from './stores/stores.service';
-import { CustomersService } from './customers/customers.service';
-import { User, UserType } from './users.types';
-import { NullableType } from 'src/utils/types/nullable.type';
+import { ConfigService } from '@nestjs/config';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from './entities/user.entity';
+import { BaseCRUDService } from 'src/utils/services/base-CRUD.service';
+import { UpdateUserDto } from './dtos/update-user.dto';
+import { hashPassword } from 'src/utils/hash-password';
 
 @Injectable()
-// TODO: Refactor USERS SERVICE
-export class UsersService {
+export class UsersService extends BaseCRUDService<User> {
   constructor(
-    private readonly storesService: StoresService,
-    private readonly customersService: CustomersService,
-  ) {}
-
-  // Create user
-  async create(
-    type: UserType,
-    data: Partial<User>,
-  ): Promise<NullableType<User>> {
-    if (type === 'store') {
-      return await this.storesService.create(data);
-    }
-    if (type === 'customer') {
-      return await this.customersService.create(data);
-    }
+    @InjectRepository(User) protected readonly repository: Repository<User>,
+    private configService: ConfigService,
+  ) {
+    super(repository);
   }
 
-  // Find user by field (id, email, etc.)
-  async findOne(
-    type: UserType,
-    fields: FindOptionsWhere<User>,
-  ): Promise<NullableType<User>> {
-    if (type === 'store') {
-      return await this.storesService.findOne(fields);
-    }
-    if (type === 'customer') {
-      return await this.customersService.findOne(fields);
-    }
+  private async hashPassword(password: string): Promise<string> {
+    const pepper = this.configService.get('auth.pepper', { infer: true });
+    const saltRounds = this.configService.get('auth.salt_rounds', {
+      infer: true,
+    });
+    return await hashPassword(password, pepper, +saltRounds);
   }
 
-  // Update
-  async update(
-    type: UserType,
-    id: number,
-    data: DeepPartial<User>,
-  ): Promise<User> {
-    if (type === 'store') {
-      return await this.storesService.update(id, data);
+  // * [U] Update methods
+  // Override the update method from the BaseCRUDService
+  async update(user_id: number, payload: UpdateUserDto): Promise<User> {
+    if (payload.password) {
+      payload.password = await this.hashPassword(payload.password);
     }
-    if (type === 'customer') {
-      return await this.customersService.update(id, data);
-    }
-  }
 
-  // Soft Delete
-  async softDelete(type: UserType, id: number): Promise<boolean> {
-    if (type === 'store') {
-      return await this.storesService.softDelete(id);
-    }
-    if (type === 'customer') {
-      return await this.customersService.softDelete(id);
-    }
+    return this.repository.save(
+      this.repository.create({
+        id: user_id,
+        ...payload,
+      }),
+    );
   }
 }

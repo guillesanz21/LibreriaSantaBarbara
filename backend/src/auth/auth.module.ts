@@ -1,7 +1,6 @@
 import { RouterModule } from '@nestjs/core';
 import { Module } from '@nestjs/common';
 import { JWTModule } from './jwt/jwt.module';
-import { UsersModule } from 'src/users/users.module';
 
 const routes = [
   {
@@ -17,7 +16,7 @@ const routes = [
 ];
 
 @Module({
-  imports: [UsersModule, JWTModule, RouterModule.register(routes)],
+  imports: [JWTModule, RouterModule.register(routes)],
   providers: [],
   exports: [],
 })

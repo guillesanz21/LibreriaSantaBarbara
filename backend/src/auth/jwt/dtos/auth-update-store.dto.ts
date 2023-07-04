@@ -7,9 +7,10 @@ import {
   IsString,
   MaxLength,
 } from 'class-validator';
-import { userConstraints } from 'src/config/constants/database.constraint_values';
 import { lowerCaseTransformer } from 'src/utils/transformers/lower-case.transformer';
+import { IsCompositeUnique } from 'src/utils/validators/isCompositeUnique.validator';
 import { IsUnique } from 'src/utils/validators/isUnique.validator';
+import { userConstraints } from 'src/config/constants/database.constraint_values';
 
 const { common: commonConstraints } = userConstraints;
 const { store: storeConstraints } = userConstraints;
@@ -17,16 +18,17 @@ const { store: storeConstraints } = userConstraints;
 export class AuthUpdateStoreDto {
   @IsOptional()
   @Transform(lowerCaseTransformer)
-  @IsUnique('Store')
   @IsEmail()
+  @MaxLength(commonConstraints.email.maxLength)
+  @IsCompositeUnique('User', 'user_type')
   email?: string;
 
   @IsOptional()
   @IsNotEmpty()
-  @IsString()
-  @MaxLength(storeConstraints.name.maxLength)
+  @IsAlphanumeric()
+  @MaxLength(commonConstraints.NIF.maxLength)
   @IsUnique('Store')
-  name?: string;
+  NIF?: string;
 
   @IsOptional()
   @IsNotEmpty()
@@ -35,10 +37,9 @@ export class AuthUpdateStoreDto {
 
   @IsOptional()
   @IsNotEmpty()
-  @IsAlphanumeric()
-  @MaxLength(storeConstraints.NIF.maxLength)
+  @MaxLength(storeConstraints.name.maxLength)
   @IsUnique('Store')
-  NIF?: string;
+  name?: string;
 
   @IsOptional()
   @IsString()

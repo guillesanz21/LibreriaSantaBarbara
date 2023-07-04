@@ -2,7 +2,7 @@ import { registerAs } from '@nestjs/config';
 import { getValue } from './utils';
 
 type appConfigType = {
-  nodeEnv: string;
+  env: string;
   apiPrefix: string;
   name: string;
   port: number;
@@ -11,7 +11,7 @@ type appConfigType = {
 
 export default registerAs('app', () => {
   const appConfig: appConfigType = {
-    nodeEnv: getValue('NODE_ENV'),
+    env: getValue('NODE_ENV'),
     apiPrefix: getValue('API_PREFIX'),
     name: getValue('APP_NAME'),
     port: parseInt(getValue('APP_PORT'), 10),

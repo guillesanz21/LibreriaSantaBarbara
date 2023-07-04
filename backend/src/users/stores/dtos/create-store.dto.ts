@@ -5,36 +5,38 @@ import {
   IsEmail,
   IsNotEmpty,
   IsOptional,
-  IsString,
   MaxLength,
   MinLength,
 } from 'class-validator';
 import { lowerCaseTransformer } from 'src/utils/transformers/lower-case.transformer';
+import { IsCompositeUnique } from 'src/utils/validators/isCompositeUnique.validator';
 import { IsUnique } from 'src/utils/validators/isUnique.validator';
+import { CreateUserDto } from 'src/users/dtos/create-user.dto';
+import { UserTypesEnum } from 'src/users/user-types/user_types.enum';
 import { userConstraints } from 'src/config/constants/database.constraint_values';
 
 const { store: storeConstraints } = userConstraints;
 const { common: commonConstraints } = userConstraints;
 
-export class CreateStoreDto {
-  @IsOptional()
-  @IsBoolean()
-  is_admin?: boolean;
-
-  @Transform(lowerCaseTransformer)
+export class CreateStoreDto extends CreateUserDto {
   @IsNotEmpty()
+  @Transform(lowerCaseTransformer)
   @IsEmail()
   @MaxLength(commonConstraints.email.maxLength)
-  @IsUnique('Store')
+  @IsCompositeUnique('User', 'user_type_id', UserTypesEnum.store)
   email: string;
 
+  @IsOptional()
+  @IsAlphanumeric()
+  @MaxLength(commonConstraints.NIF.maxLength)
+  @IsCompositeUnique('User', 'user_type_id', UserTypesEnum.store)
+  NIF?: string;
+
   @IsNotEmpty()
-  @IsString()
   @MinLength(commonConstraints.password.minLength)
   password: string;
 
   @IsNotEmpty()
-  @IsString()
   @MaxLength(storeConstraints.name.maxLength)
   @IsUnique('Store')
   name: string;
@@ -42,20 +44,4 @@ export class CreateStoreDto {
   @IsOptional()
   @IsBoolean()
   approved?: boolean;
-
-  @IsOptional()
-  @IsAlphanumeric()
-  @MaxLength(storeConstraints.NIF.maxLength)
-  @IsUnique('Store')
-  NIF?: string;
-
-  @IsOptional()
-  @IsString()
-  @MaxLength(commonConstraints.address.maxLength)
-  address?: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @MaxLength(commonConstraints.phone_number.maxLength)
-  phone_number: string;
 }

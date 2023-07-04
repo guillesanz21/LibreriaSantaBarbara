@@ -3,22 +3,24 @@ import {
   IsEmail,
   IsNotEmpty,
   IsOptional,
-  IsString,
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { IsUnique } from 'src/utils/validators/isUnique.validator';
 import { Transform } from 'class-transformer';
 import { lowerCaseTransformer } from 'src/utils/transformers/lower-case.transformer';
+import { IsCompositeUnique } from 'src/utils/validators/isCompositeUnique.validator';
+import { UserTypesEnum } from 'src/users/user-types/user_types.enum';
 import { userConstraints } from 'src/config/constants/database.constraint_values';
 
 const { common: commonConstraints } = userConstraints;
 const { customer: customerConstraints } = userConstraints;
 
 export class AuthRegisterCustomerDto {
+  @IsNotEmpty()
   @Transform(lowerCaseTransformer)
-  @IsUnique('Customer')
   @IsEmail()
+  @MaxLength(commonConstraints.email.maxLength)
+  @IsCompositeUnique('User', 'user_type_id', UserTypesEnum.customer)
   email: string;
 
   @IsNotEmpty()
@@ -26,27 +28,24 @@ export class AuthRegisterCustomerDto {
   password: string;
 
   @IsOptional()
-  @MaxLength(commonConstraints.phone_number.maxLength)
-  phone_number: string;
-
-  @IsOptional()
   @IsAlphanumeric()
-  @MaxLength(customerConstraints.DNI.maxLength)
-  @IsUnique('Customer')
-  DNI?: string;
+  @MaxLength(commonConstraints.NIF.maxLength)
+  @IsCompositeUnique('User', 'user_type_id', UserTypesEnum.customer)
+  NIF?: string;
 
   @IsOptional()
-  @IsString()
+  @MaxLength(commonConstraints.phone_number.maxLength)
+  phone_number?: string;
+
+  @IsOptional()
   @MaxLength(customerConstraints.first_name.maxLength)
   first_name?: string;
 
   @IsOptional()
-  @IsString()
   @MaxLength(customerConstraints.last_name.maxLength)
   last_name?: string;
 
   @IsOptional()
-  @IsString()
   @MaxLength(commonConstraints.address.maxLength)
   address?: string;
 }

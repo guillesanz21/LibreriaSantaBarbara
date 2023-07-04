@@ -15,6 +15,7 @@ import { Store } from './entities/store.entity';
 import { StoresService } from './stores.service';
 import { CreateStoreDto } from './dtos/create-store.dto';
 import { UpdateStoreDto } from './dtos/update-store.dto';
+import { DestructureUser } from '../interceptors/destructure-user.interceptor';
 import { NullableType } from 'src/utils/types/nullable.type';
 import { InfinityPaginationResultType } from 'src/utils/types/infinity-pagination-result.type';
 import { infinityPagination } from 'src/utils/infinity-pagination';
@@ -29,35 +30,40 @@ export class StoresController {
     return this.storesService.create(body);
   }
 
+  @DestructureUser()
   @Get()
   findMany(
     @Query('email') email?: string,
     @Query('NIF') NIF?: string,
-    @Query('name') name?: string,
     @Query('address') address?: string,
     @Query('phone') phone_number?: string,
-    @Query('is-admin') is_admin?: boolean,
+    @Query('name') name?: string,
+    @Query('role') role?: string,
+    @Query('approved') approved?: boolean,
   ): Promise<Store[]> {
     return this.storesService.findMany({
       email,
       NIF,
-      name,
       address,
       phone_number,
-      is_admin,
+      name,
+      role,
+      approved,
     });
   }
 
+  @DestructureUser()
   @Get('/pagination')
   async findManyWithPagination(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
     @Query('email') email?: string,
     @Query('NIF') NIF?: string,
-    @Query('name') name?: string,
     @Query('address') address?: string,
     @Query('phone') phone_number?: string,
-    @Query('is-admin') is_admin?: boolean,
+    @Query('name') name?: string,
+    @Query('role') role?: string,
+    @Query('approved') approved?: boolean,
   ): Promise<InfinityPaginationResultType<Store>> {
     if (limit > 50) {
       limit = 50;
@@ -67,10 +73,11 @@ export class StoresController {
         {
           email,
           NIF,
-          name,
           address,
           phone_number,
-          is_admin,
+          name,
+          role,
+          approved,
         },
         {
           page,
@@ -81,6 +88,7 @@ export class StoresController {
     );
   }
 
+  @DestructureUser()
   @Get(':id')
   async findOne(@Param('id') id: number): Promise<NullableType<Store>> {
     const store = await this.storesService.findOne({ id: +id });

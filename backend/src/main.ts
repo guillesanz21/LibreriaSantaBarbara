@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { useContainer } from 'class-validator';
-import morgan from 'morgan';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
 import validationOptions from './utils/validation-options';
@@ -26,7 +25,11 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe(validationOptions));
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
-  app.use(morgan('dev'));
+  if (configService.get('app.env') === 'development') {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const morgan = require('morgan');
+    app.use(morgan('dev'));
+  }
 
   const port = configService.get('app.port', { infer: true });
 

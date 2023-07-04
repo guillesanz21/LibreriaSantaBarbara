@@ -1,29 +1,28 @@
 import {
   Column,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   Index,
+  JoinColumn,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { EntityHelper } from 'src/utils/entities/entity-helper.entity';
 import { AuthProvidersEnum } from 'src/auth/auth.types';
+import { User } from '../../entities/user.entity';
 
 @Entity('Customer')
 export class Customer extends EntityHelper {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: false, default: false })
-  is_admin: boolean;
-
   @Index()
-  @Column({ type: 'text', nullable: false, unique: true })
-  email: string;
+  @Column({ type: 'int', nullable: false, unique: true })
+  user_id: number;
 
-  @Column({ type: 'text', nullable: true })
-  password: string;
+  // TODO: Make this column global for all users
+  @Column({ nullable: false, default: false })
+  email_confirmed: boolean;
 
   @Column({ default: AuthProvidersEnum.email })
   provider: string;
@@ -38,29 +37,18 @@ export class Customer extends EntityHelper {
   @Column({ type: 'text', nullable: true })
   last_name: string;
 
-  @Index()
-  @Column({ type: 'text', nullable: true, unique: true })
-  DNI: string;
-
-  @Column({ type: 'text', nullable: true })
-  address: string;
-
-  @Column({ type: 'text', nullable: true })
-  phone_number: string;
-
-  @Column({ type: 'text', nullable: true, default: null })
-  @Index()
-  hash: string;
-
-  @Column({ nullable: false, default: false })
-  email_confirmed: boolean;
-
-  @CreateDateColumn({ type: 'date', nullable: false })
-  created_at: Date;
-
+  // * Dates
   @UpdateDateColumn({ type: 'date', nullable: true })
   updated_at: Date;
 
-  @DeleteDateColumn({ type: 'date', nullable: true })
-  deleted_at: Date;
+  // * Relations
+  @OneToOne(() => User, (user) => user.customer, {
+    eager: true,
+    cascade: true,
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
+    orphanedRowAction: 'delete',
+  })
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 }
