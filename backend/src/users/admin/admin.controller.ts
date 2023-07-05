@@ -14,91 +14,80 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { Customer } from './entities/customer.entity';
-import { CustomersService } from './customers.service';
-import { CreateCustomerDto } from './dtos/create-customer.dto';
-import { UpdateCustomerDto } from './dtos/update-customer.dto';
+import { User } from '../entities/user.entity';
+import { UsersService } from '../users.service';
+import { CreateUserAdminDto } from './dtos/create-user.admin.dto';
+import { UpdateUserAdminDto } from './dtos/update-user.admin.dto';
 import { Roles } from 'src/auth/decorators/roles.decorator';
-import { DestructureUser } from '../interceptors/destructure-user.interceptor';
 import { RolesEnum } from '../roles/roles.enum';
 import { NullableType } from 'src/utils/types/nullable.type';
 import { InfinityPaginationResultType } from 'src/utils/types/infinity-pagination-result.type';
 import { infinityPagination } from 'src/utils/infinity-pagination';
 
-@Roles(RolesEnum.admin)
 @Controller()
-export class CustomersController {
-  constructor(private readonly customersService: CustomersService) {}
+@Roles(RolesEnum.admin)
+export class AdminController {
+  constructor(private readonly usersService: UsersService) {}
 
   @SerializeOptions({
     groups: ['admin'],
   })
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() body: CreateCustomerDto): Promise<Customer> {
-    return this.customersService.create(body);
+  create(@Body() body: CreateUserAdminDto): Promise<User> {
+    return this.usersService.create(body);
   }
 
   @SerializeOptions({
     groups: ['admin'],
   })
-  @DestructureUser()
   @Get()
   @HttpCode(HttpStatus.OK)
   findMany(
+    @Query('user-type') user_type_id?: number,
+    @Query('role') role_id?: number,
     @Query('email') email?: string,
     @Query('NIF') NIF?: string,
-    @Query('first-name') first_name?: string,
-    @Query('last-name') last_name?: string,
     @Query('address') address?: string,
     @Query('phone') phone_number?: string,
-    @Query('role') role?: string,
-    @Query('email-confirmed') email_confirmed?: boolean,
-  ): Promise<Customer[]> {
-    return this.customersService.findMany({
+  ): Promise<User[]> {
+    return this.usersService.findMany({
+      user_type_id: +user_type_id ? +user_type_id : undefined,
+      role_id: role_id ? +role_id : undefined,
       email,
       NIF,
-      first_name,
-      last_name,
       address,
       phone_number,
-      email_confirmed,
-      role,
     });
   }
 
   @SerializeOptions({
     groups: ['admin'],
   })
-  @DestructureUser()
   @Get('/pagination')
   @HttpCode(HttpStatus.OK)
   async findManyWithPagination(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+    @Query('user-type') user_type_id?: number,
+    @Query('role') role_id?: number,
     @Query('email') email?: string,
     @Query('NIF') NIF?: string,
-    @Query('first-name') first_name?: string,
-    @Query('last-name') last_name?: string,
     @Query('address') address?: string,
     @Query('phone') phone_number?: string,
-    @Query('role') role?: string,
-    @Query('email-confirmed') email_confirmed?: boolean,
-  ): Promise<InfinityPaginationResultType<Customer>> {
+  ): Promise<InfinityPaginationResultType<User>> {
     if (limit > 50) {
       limit = 50;
     }
     return infinityPagination(
-      await this.customersService.findManyWithPagination(
+      await this.usersService.findManyWithPagination(
         {
+          user_type_id: +user_type_id ? +user_type_id : undefined,
+          role_id: role_id ? +role_id : undefined,
           email,
           NIF,
-          first_name,
-          last_name,
           address,
           phone_number,
-          email_confirmed,
-          role,
         },
         {
           page,
@@ -112,26 +101,25 @@ export class CustomersController {
   @SerializeOptions({
     groups: ['admin'],
   })
-  @DestructureUser()
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  async findOne(@Param('id') id: number): Promise<NullableType<Customer>> {
-    const customer = await this.customersService.findOne({ id: +id });
-    if (!customer) {
-      throw new NotFoundException('customer not found');
+  async findOne(@Param('id') id: number): Promise<NullableType<User>> {
+    const store = await this.usersService.findOne({ id: +id });
+    if (!store) {
+      throw new NotFoundException('store not found');
     }
-    return customer;
+    return store;
   }
 
   @Patch(':id')
   @HttpCode(HttpStatus.OK)
   async update(
     @Param('id') id: number,
-    @Body() body: UpdateCustomerDto,
+    @Body() body: UpdateUserAdminDto,
   ): Promise<void> {
-    const result = await this.customersService.update(id, body);
+    const result = await this.usersService.update(id, body);
     if (!result) {
-      throw new NotFoundException('customer not found');
+      throw new NotFoundException('store not found');
     }
   }
 
@@ -143,21 +131,21 @@ export class CustomersController {
   ): Promise<void> {
     let result: boolean;
     if (deleteMode && deleteMode === 'hard') {
-      result = await this.customersService.hardDelete(id);
+      result = await this.usersService.hardDelete(id);
     } else {
-      result = await this.customersService.softDelete(id);
+      result = await this.usersService.softDelete(id);
     }
     if (!result) {
-      throw new NotFoundException('customer not found');
+      throw new NotFoundException('store not found');
     }
   }
 
   @Patch(':id/restore')
   @HttpCode(HttpStatus.NO_CONTENT)
   async restore(@Param('id') id: number): Promise<void> {
-    const result = await this.customersService.restore(id);
+    const result = await this.usersService.restore(id);
     if (!result) {
-      throw new NotFoundException('customer not found');
+      throw new NotFoundException('store not found');
     }
   }
 }

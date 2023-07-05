@@ -4,8 +4,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { BaseCRUDService } from 'src/utils/services/base-CRUD.service';
-import { CreateUserAdminDto } from './dtos/create-user.admin.dto';
-import { UpdateUserAdminDto } from './dtos/update-user.admin.dto';
+import { CreateUserAdminDto } from './admin/dtos/create-user.admin.dto';
+import { UpdateUserAdminDto } from './admin/dtos/update-user.admin.dto';
 import { hashPassword } from 'src/utils/hash-password';
 
 @Injectable()

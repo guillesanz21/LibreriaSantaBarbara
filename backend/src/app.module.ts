@@ -1,3 +1,4 @@
+import { RouterModule } from '@nestjs/core';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -5,8 +6,9 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 import { appConfig, authConfig, CORS, dbConfig } from './config';
 import { TypeOrmConfigService } from './database/typeorm-config.service';
 import { UsersModule } from './users/users.module';
-import { BooksModule } from './books/books.module';
 import { AuthModule } from './auth/auth.module';
+import { BooksModule } from './books/books.module';
+import { routes } from './routes';
 
 @Module({
   imports: [
@@ -24,6 +26,7 @@ import { AuthModule } from './auth/auth.module';
     UsersModule,
     AuthModule,
     BooksModule,
+    RouterModule.register(routes),
   ],
 })
 export class AppModule {}

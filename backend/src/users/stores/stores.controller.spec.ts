@@ -175,10 +175,7 @@ describe('Store Controller', () => {
       name: 'Test Store Updated',
     };
 
-    expect(await controller.update(1, updateFields)).toEqual({
-      id: 1,
-      ...updateFields,
-    });
+    expect(await controller.update(1, updateFields)).toBeUndefined();
 
     expect(mockStoresService.update).toHaveBeenCalledWith(1, updateFields);
   });
@@ -216,24 +213,21 @@ describe('Store Controller', () => {
 
   it('should soft delete a store and return true', async () => {
     const returnedStore = await controller.remove(1);
-    expect(typeof returnedStore).toBe('boolean');
-    expect(returnedStore).toBe(true);
+    expect(returnedStore).toBeUndefined();
 
     expect(mockStoresService.softDelete).toHaveBeenCalledWith(1);
   });
 
   it('should hard delete a store and return true', async () => {
     const returnedStore = await controller.remove(1, 'hard');
-    expect(typeof returnedStore).toBe('boolean');
-    expect(returnedStore).toBe(true);
+    expect(returnedStore).toBeUndefined();
 
     expect(mockStoresService.softDelete).toHaveBeenCalledWith(1);
   });
 
   it('should restore a store and return true', async () => {
     const returnedStore = await controller.restore(1);
-    expect(typeof returnedStore).toBe('boolean');
-    expect(returnedStore).toBe(true);
+    expect(returnedStore).toBeUndefined();
 
     expect(mockStoresService.restore).toHaveBeenCalledWith(1);
   });
@@ -241,5 +235,20 @@ describe('Store Controller', () => {
   it('findOne throws an error if user with given id is not found', async () => {
     mockStoresService.findOne = jest.fn().mockResolvedValue(null);
     await expect(controller.findOne(1)).rejects.toThrow(NotFoundException);
+  });
+
+  it('update throws an error if user with given id is not found', async () => {
+    mockStoresService.update = jest.fn().mockResolvedValue(null);
+    await expect(controller.update(1, {})).rejects.toThrow(NotFoundException);
+  });
+
+  it('remove throws an error if user with given id is not found', async () => {
+    mockStoresService.softDelete = jest.fn().mockResolvedValue(null);
+    await expect(controller.remove(1)).rejects.toThrow(NotFoundException);
+  });
+
+  it('restore throws an error if user with given id is not found', async () => {
+    mockStoresService.restore = jest.fn().mockResolvedValue(null);
+    await expect(controller.restore(1)).rejects.toThrow(NotFoundException);
   });
 });

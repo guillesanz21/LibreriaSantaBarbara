@@ -1,3 +1,4 @@
+import { Expose } from 'class-transformer';
 import {
   Column,
   Entity,
@@ -16,19 +17,22 @@ export class Customer extends EntityHelper {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Index()
   @Column({ type: 'int', nullable: false, unique: true })
+  @Index()
   user_id: number;
 
   // TODO: Make this column global for all users
+  @Expose({ groups: ['me', 'admin'] })
   @Column({ nullable: false, default: false })
   email_confirmed: boolean;
 
+  @Expose({ groups: ['me', 'admin'] })
   @Column({ default: AuthProvidersEnum.email })
   provider: string;
 
-  @Index()
+  @Expose({ groups: ['me', 'admin'] })
   @Column({ type: 'text', nullable: true, default: null })
+  @Index()
   social_id: string;
 
   @Column({ type: 'text', nullable: true })
@@ -38,6 +42,7 @@ export class Customer extends EntityHelper {
   last_name: string;
 
   // * Dates
+  @Expose({ groups: ['me', 'admin'] })
   @UpdateDateColumn({ type: 'date', nullable: true })
   updated_at: Date;
 

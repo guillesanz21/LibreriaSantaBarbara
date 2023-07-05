@@ -87,7 +87,6 @@ export class JWTService {
     ) {
       return 'userNotFound';
     }
-
     if (userType === UserTypesEnum.customer) {
       const customer = await this.customersService.findOne({
         user_id: +user.id,
@@ -95,6 +94,17 @@ export class JWTService {
       if (customer.provider !== AuthProvidersEnum.email) {
         return `needLoginViaProvider:${customer.provider}`;
       }
+    }
+    if (userType === UserTypesEnum.store) {
+      const store = await this.storesService.findOne({
+        user_id: +user.id,
+      });
+      if (!store.approved) {
+        return 'storeNotApproved';
+      }
+    }
+    if (!user.password) {
+      return 'userWithoutPassword';
     }
 
     const isValidPassword = await compareHashedPassword(
@@ -275,10 +285,10 @@ export class JWTService {
       return null;
     }
     if (token.userType === UserTypesEnum.customer) {
-      return await this.customersService.findOne({ id: token.id });
+      return await this.customersService.findOne({ user_id: token.id });
     }
     if (token.userType === UserTypesEnum.store) {
-      return await this.storesService.findOne({ id: token.id });
+      return await this.storesService.findOne({ user_id: token.id });
     }
     return null;
   }

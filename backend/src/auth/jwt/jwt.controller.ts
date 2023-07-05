@@ -4,15 +4,17 @@ import {
   Get,
   Request,
   Post,
-  UseGuards,
   Patch,
   Delete,
   NotFoundException,
   UnprocessableEntityException,
   UnauthorizedException,
   InternalServerErrorException,
+  SerializeOptions,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { Public } from '../decorators/public.decorator';
 import { JWTService } from './jwt.service';
 import { AuthLoginEmailDto } from './dtos/auth-login-email.dto';
 import { AuthRegisterStoreDto } from './dtos/auth-register-store.dto';
@@ -27,6 +29,7 @@ import { GeneralUser } from 'src/users/users.types';
 import { UserTypesEnum } from 'src/users/user-types/user_types.enum';
 import { LoginResponseType } from '../auth.types';
 import { NullableType } from 'src/utils/types/nullable.type';
+import { DestructureUser } from 'src/users/interceptors/destructure-user.interceptor';
 
 @Controller()
 export class JwtController {
@@ -51,25 +54,46 @@ export class JwtController {
     if (typeof result === 'string' && result === 'incorrectPassword') {
       throw new UnprocessableEntityException('incorret password');
     }
+    if (typeof result === 'string' && result === 'storeNotApproved') {
+      throw new UnprocessableEntityException('store not approved');
+    }
+    if (typeof result === 'string' && result === 'userWithoutPassword') {
+      throw new UnprocessableEntityException('user without password');
+    }
     return result ? (result as LoginResponseType) : null;
   }
 
   // *   ######## LOGIN ########
+  @SerializeOptions({
+    groups: ['me'],
+  })
   @Post('stores/login')
+  @Public()
+  @HttpCode(HttpStatus.OK)
   public async loginStore(
     @Body() loginDto: AuthLoginEmailDto,
   ): Promise<LoginResponseType> {
     return await this.login(UserTypesEnum.store, loginDto, false);
   }
 
+  @SerializeOptions({
+    groups: ['me'],
+  })
   @Post('customers/login')
+  @Public()
+  @HttpCode(HttpStatus.OK)
   public async loginCustomer(
     @Body() loginDto: AuthLoginEmailDto,
   ): Promise<LoginResponseType> {
     return await this.login(UserTypesEnum.customer, loginDto, false);
   }
 
-  @Post('admin/email/login')
+  @SerializeOptions({
+    groups: ['me'],
+  })
+  @Post('admin/login')
+  @Public()
+  @HttpCode(HttpStatus.OK)
   public adminLogin(
     @Body() loginDTO: AuthLoginEmailDto,
   ): Promise<LoginResponseType> {
@@ -77,8 +101,9 @@ export class JwtController {
   }
 
   // *   ######## REGISTER ########
-
   @Post('stores/register')
+  @HttpCode(HttpStatus.OK)
+  @Public()
   async registerStore(
     @Body() createUserDto: AuthRegisterStoreDto,
   ): Promise<LoginResponseType> {
@@ -89,6 +114,8 @@ export class JwtController {
   }
 
   @Post('customers/register')
+  @HttpCode(HttpStatus.OK)
+  @Public()
   async registerCustomer(
     @Body() createUserDto: AuthRegisterCustomerDto,
   ): Promise<LoginResponseType> {
@@ -100,6 +127,8 @@ export class JwtController {
 
   // TODO: When the global user contains the email_confirmed column, make this for all users
   @Post('customers/register/confirm')
+  @Public()
+  @HttpCode(HttpStatus.NO_CONTENT)
   async confirmEmail(
     @Body() confirmEmailDto: AuthConfirmEmailDto,
   ): Promise<void> {
@@ -115,6 +144,8 @@ export class JwtController {
 
   // *   ######## FORGOT PASSWORD ########
   @Post('stores/password/forgot')
+  @Public()
+  @HttpCode(HttpStatus.NO_CONTENT)
   async forgotStorePassword(
     @Body() forgotPasswordDto: AuthForgotPasswordDto,
   ): Promise<void> {
@@ -128,6 +159,8 @@ export class JwtController {
   }
 
   @Post('customers/password/forgot')
+  @Public()
+  @HttpCode(HttpStatus.NO_CONTENT)
   async forgotCustomerPassword(
     @Body() forgotPasswordDto: AuthForgotPasswordDto,
   ): Promise<void> {
@@ -141,6 +174,8 @@ export class JwtController {
   }
 
   @Post('stores/password/reset')
+  @Public()
+  @HttpCode(HttpStatus.NO_CONTENT)
   async resetStorePassword(
     @Body() resetPasswordDto: AuthResetPasswordDto,
   ): Promise<void> {
@@ -151,6 +186,8 @@ export class JwtController {
   }
 
   @Post('customers/password/reset')
+  @Public()
+  @HttpCode(HttpStatus.NO_CONTENT)
   async resetCustomerPassword(
     @Body() resetPasswordDto: AuthResetPasswordDto,
   ): Promise<void> {
@@ -161,10 +198,12 @@ export class JwtController {
   }
 
   // *   ######## ME (whoami, update) ########
+  @SerializeOptions({
+    groups: ['me'],
+  })
   @Post('me/logout')
-  @UseGuards(AuthGuard('jwt'))
+  @HttpCode(HttpStatus.NO_CONTENT)
   async logoutStore(@Request() req): Promise<void> {
-    // TODO: check if this works
     await req.logout((err: string) => {
       if (err) {
         throw new InternalServerErrorException(err);
@@ -172,14 +211,18 @@ export class JwtController {
     });
   }
 
+  @SerializeOptions({
+    groups: ['me'],
+  })
+  @DestructureUser()
   @Get('me')
-  @UseGuards(AuthGuard('jwt'))
+  @HttpCode(HttpStatus.OK)
   public me(@Request() req): Promise<NullableType<GeneralUser>> {
     return this.service.me(req.user);
   }
 
   @Patch('stores/update')
-  @UseGuards(AuthGuard('jwt'))
+  @HttpCode(HttpStatus.NO_CONTENT)
   public async updateStore(
     @Request() req,
     @Body() storeDto: AuthUpdateStoreDto,
@@ -192,7 +235,7 @@ export class JwtController {
   }
 
   @Patch('customers/update')
-  @UseGuards(AuthGuard('jwt'))
+  @HttpCode(HttpStatus.NO_CONTENT)
   public async updateCustomer(
     @Request() req,
     @Body() customerDto: AuthUpdateCustomerDto,
@@ -201,7 +244,7 @@ export class JwtController {
   }
 
   @Patch('me/password')
-  @UseGuards(AuthGuard('jwt'))
+  @HttpCode(HttpStatus.NO_CONTENT)
   public async updatePassword(
     @Request() req,
     @Body() passwordDto: AuthUpdatePasswordDto,
@@ -214,7 +257,7 @@ export class JwtController {
   }
 
   @Delete('me')
-  @UseGuards(AuthGuard('jwt'))
+  @HttpCode(HttpStatus.NO_CONTENT)
   public async delete(@Request() req): Promise<void> {
     await this.service.softDelete(req.user);
   }

@@ -1,4 +1,4 @@
-import { Transform } from 'class-transformer';
+import { Exclude, Expose, Transform } from 'class-transformer';
 import {
   Column,
   CreateDateColumn,
@@ -27,41 +27,50 @@ export class User extends EntityHelper {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Index()
   @Column({ type: 'int', nullable: false })
+  @Index()
   user_type_id: number;
 
   @Index()
   @Column({ type: 'int', nullable: false })
   role_id: number;
 
+  @Expose({ groups: ['me', 'store', 'admin'] })
   @Index()
   @Column({ type: 'text', nullable: false })
   email: string;
 
+  @Exclude({ toPlainOnly: true })
   @Column({ type: 'text', nullable: true })
   password: string;
 
+  @Expose({ groups: ['me', 'store', 'admin'] })
   @Column({ type: 'text', nullable: true })
   NIF: string;
 
+  @Expose({ groups: ['me', 'store', 'admin'] })
   @Column({ type: 'text', nullable: true })
   address: string;
 
+  @Expose({ groups: ['me', 'store', 'admin'] })
   @Column({ type: 'text', nullable: true })
   phone_number: string;
 
+  @Exclude({ toPlainOnly: true })
   @Column({ type: 'text', nullable: true, default: null })
   @Index()
   hash: string;
 
   // * Dates
+  @Expose({ groups: ['me', 'admin'] })
   @CreateDateColumn({ type: 'date', nullable: false })
   created_at: Date;
 
+  @Expose({ groups: ['me', 'admin'] })
   @UpdateDateColumn({ type: 'date', nullable: true })
   updated_at: Date;
 
+  @Expose({ groups: ['me', 'admin'] })
   @DeleteDateColumn({ type: 'date', nullable: true })
   deleted_at: Date;
 

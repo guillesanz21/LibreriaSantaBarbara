@@ -1,3 +1,4 @@
+import { Expose } from 'class-transformer';
 import {
   Column,
   CreateDateColumn,
@@ -26,6 +27,7 @@ export class Store extends EntityHelper {
   })
   user_id: number;
 
+  @Expose({ groups: ['me', 'admin'] })
   @Column({ type: 'boolean', nullable: false, default: false })
   approved: boolean;
 
@@ -33,10 +35,12 @@ export class Store extends EntityHelper {
   @Column({ type: 'text', nullable: false, unique: true })
   name: string;
 
+  @Expose({ groups: ['me', 'admin'] })
   @CreateDateColumn({ type: 'date', nullable: false })
   last_activity: Date;
 
   // * Dates
+  @Expose({ groups: ['me', 'admin'] })
   @UpdateDateColumn({ type: 'date', nullable: true })
   updated_at: Date;
 

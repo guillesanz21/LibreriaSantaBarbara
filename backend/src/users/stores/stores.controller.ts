@@ -10,28 +10,41 @@ import {
   DefaultValuePipe,
   ParseIntPipe,
   NotFoundException,
+  SerializeOptions,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { Store } from './entities/store.entity';
 import { StoresService } from './stores.service';
 import { CreateStoreDto } from './dtos/create-store.dto';
 import { UpdateStoreDto } from './dtos/update-store.dto';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 import { DestructureUser } from '../interceptors/destructure-user.interceptor';
 import { NullableType } from 'src/utils/types/nullable.type';
+import { RolesEnum } from '../roles/roles.enum';
 import { InfinityPaginationResultType } from 'src/utils/types/infinity-pagination-result.type';
 import { infinityPagination } from 'src/utils/infinity-pagination';
 
-// TODO: Admin only
+@Roles(RolesEnum.admin)
 @Controller()
 export class StoresController {
   constructor(private readonly storesService: StoresService) {}
 
+  @SerializeOptions({
+    groups: ['admin'],
+  })
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   create(@Body() body: CreateStoreDto): Promise<Store> {
     return this.storesService.create(body);
   }
 
+  @SerializeOptions({
+    groups: ['admin'],
+  })
   @DestructureUser()
   @Get()
+  @HttpCode(HttpStatus.OK)
   findMany(
     @Query('email') email?: string,
     @Query('NIF') NIF?: string,
@@ -52,8 +65,12 @@ export class StoresController {
     });
   }
 
+  @SerializeOptions({
+    groups: ['admin'],
+  })
   @DestructureUser()
   @Get('/pagination')
+  @HttpCode(HttpStatus.OK)
   async findManyWithPagination(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
@@ -88,8 +105,12 @@ export class StoresController {
     );
   }
 
+  @SerializeOptions({
+    groups: ['admin'],
+  })
   @DestructureUser()
   @Get(':id')
+  @HttpCode(HttpStatus.OK)
   async findOne(@Param('id') id: number): Promise<NullableType<Store>> {
     const store = await this.storesService.findOne({ id: +id });
     if (!store) {
@@ -99,27 +120,40 @@ export class StoresController {
   }
 
   @Patch(':id')
-  update(
+  @HttpCode(HttpStatus.OK)
+  async update(
     @Param('id') id: number,
     @Body() body: UpdateStoreDto,
-  ): Promise<Store> {
-    return this.storesService.update(id, body);
+  ): Promise<void> {
+    const result = await this.storesService.update(id, body);
+    if (!result) {
+      throw new NotFoundException('store not found');
+    }
   }
 
   @Delete(':id')
-  remove(
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(
     @Param('id') id: number,
     @Query('mode') deleteMode?: string,
-  ): Promise<boolean> {
+  ): Promise<void> {
+    let result: boolean;
     if (deleteMode && deleteMode === 'hard') {
-      return this.storesService.hardDelete(id);
+      result = await this.storesService.hardDelete(id);
     } else {
-      return this.storesService.softDelete(id);
+      result = await this.storesService.softDelete(id);
+    }
+    if (!result) {
+      throw new NotFoundException('store not found');
     }
   }
 
   @Patch(':id/restore')
-  restore(@Param('id') id: number): Promise<boolean> {
-    return this.storesService.restore(id);
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async restore(@Param('id') id: number): Promise<void> {
+    const result = await this.storesService.restore(id);
+    if (!result) {
+      throw new NotFoundException('store not found');
+    }
   }
 }
