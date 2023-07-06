@@ -14,6 +14,19 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiExtraModels,
+  ApiForbiddenResponse,
+  ApiNoContentResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+  ApiUnauthorizedResponse,
+  ApiUnprocessableEntityResponse,
+} from '@nestjs/swagger';
 import { Customer } from './entities/customer.entity';
 import { CustomersService } from './customers.service';
 import { CreateCustomerDto } from './dtos/create-customer.dto';
@@ -24,12 +37,34 @@ import { RolesEnum } from '../roles/roles.enum';
 import { NullableType } from 'src/utils/types/nullable.type';
 import { InfinityPaginationResultType } from 'src/utils/types/infinity-pagination-result.type';
 import { infinityPagination } from 'src/utils/infinity-pagination';
+import { CustomerResponseSchema } from '../../utils/schemas/users.schema';
 
+@ApiTags('Users/Customers')
+@ApiExtraModels(Customer)
+@ApiUnauthorizedResponse({
+  description: 'The admin is not logged in.',
+})
+@ApiForbiddenResponse({
+  description: "The user hasn't the right role (admin).",
+})
+@ApiBearerAuth()
 @Roles(RolesEnum.admin)
 @Controller()
 export class CustomersController {
   constructor(private readonly customersService: CustomersService) {}
 
+  // * ######  POST /users/customers ######
+  @ApiOperation({
+    summary: 'Create a new customer',
+    description: 'Create a new customer.',
+  })
+  @ApiCreatedResponse({
+    description: 'The record has been successfully created.',
+    schema: CustomerResponseSchema,
+  })
+  @ApiUnprocessableEntityResponse({
+    description: 'The email is not valid.',
+  })
   @SerializeOptions({
     groups: ['admin'],
   })
@@ -39,6 +74,32 @@ export class CustomersController {
     return this.customersService.create(body);
   }
 
+  // * ######  GET /users/customers ######
+  @ApiOperation({
+    summary: 'Get all the customers by filtering them',
+    description: 'Get all the filtered customers',
+  })
+  @ApiQuery({ name: 'email', required: false })
+  @ApiQuery({ name: 'NIF', required: false })
+  @ApiQuery({ name: 'first-name', required: false })
+  @ApiQuery({ name: 'last-name', required: false })
+  @ApiQuery({ name: 'address', required: false })
+  @ApiQuery({ name: 'phone', required: false })
+  @ApiQuery({
+    name: 'role',
+    description:
+      'Role (1: Admin, 2: Store, 3: Customer, 4: Unapproved Store, 5: Unapproved Customer, 6: Guest)',
+    required: false,
+    enum: RolesEnum,
+  })
+  @ApiQuery({ name: 'email-confirmed', required: false })
+  @ApiOkResponse({
+    description: 'The records have been successfully retrieved.',
+    schema: {
+      type: 'array',
+      items: CustomerResponseSchema,
+    },
+  })
   @SerializeOptions({
     groups: ['admin'],
   })
@@ -67,6 +128,43 @@ export class CustomersController {
     });
   }
 
+  // * ######  GET /users/customers/pagination ######
+  @ApiOperation({
+    summary: 'Get all the customers by filtering them (with pagination)',
+    description: 'Get all the filtered customers (with pagination).',
+  })
+  @ApiQuery({ name: 'page', description: 'Page number', required: true })
+  @ApiQuery({ name: 'limit', description: 'Results/page', required: true })
+  @ApiQuery({ name: 'email', required: false })
+  @ApiQuery({ name: 'NIF', required: false })
+  @ApiQuery({ name: 'first-name', required: false })
+  @ApiQuery({ name: 'last-name', required: false })
+  @ApiQuery({ name: 'address', required: false })
+  @ApiQuery({ name: 'phone', required: false })
+  @ApiQuery({
+    name: 'role',
+    description:
+      'Role (1: Admin, 2: Store, 3: Customer, 4: Unapproved Store, 5: Unapproved Customer, 6: Guest)',
+    required: false,
+    enum: RolesEnum,
+  })
+  @ApiQuery({ name: 'email-confirmed', required: false })
+  @ApiOkResponse({
+    description: 'The records have been successfully retrieved.',
+    schema: {
+      allOf: [
+        {
+          properties: {
+            data: {
+              type: 'array',
+              items: CustomerResponseSchema,
+            },
+            hasNextPage: { type: 'boolean' },
+          },
+        },
+      ],
+    },
+  })
   @SerializeOptions({
     groups: ['admin'],
   })
@@ -109,6 +207,15 @@ export class CustomersController {
     );
   }
 
+  // * ######  GET /users/customers/:id ######
+  @ApiOperation({
+    summary: 'Get a customer by ID',
+    description: 'Get the specified customer by its ID (customer_id).',
+  })
+  @ApiOkResponse({
+    description: 'The record has been successfully retrieved.',
+    schema: CustomerResponseSchema,
+  })
   @SerializeOptions({
     groups: ['admin'],
   })
@@ -123,6 +230,18 @@ export class CustomersController {
     return customer;
   }
 
+  // * ######  PATCH /users/customers/:id ######
+  @ApiOperation({
+    summary: 'Update a customer.',
+    description:
+      'Update the specified customer by its ID (customer_id) with the specified data.',
+  })
+  @ApiOkResponse({
+    description: 'The record has been successfully updated.',
+  })
+  @ApiUnprocessableEntityResponse({
+    description: 'The email is not valid.',
+  })
   @Patch(':id')
   @HttpCode(HttpStatus.OK)
   async update(
@@ -135,6 +254,20 @@ export class CustomersController {
     }
   }
 
+  // * ######  DELETE /users/customers/:id ######
+  @ApiOperation({
+    summary: 'Delete a customer',
+    description: 'Delete the specified customer by its ID (customer_id).',
+  })
+  @ApiQuery({
+    name: 'mode',
+    description: 'Delete mode (soft or hard). Default: soft',
+    required: false,
+    enum: ['soft', 'hard'],
+  })
+  @ApiNoContentResponse({
+    description: 'The record has been successfully deleted.',
+  })
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async remove(
@@ -152,6 +285,15 @@ export class CustomersController {
     }
   }
 
+  // * ######  PATCH /users/customers/:id/restore ######
+  @ApiOperation({
+    summary: 'Restore a customer',
+    description:
+      'Restore a soft deleted customer specified  by its ID (customer_id).',
+  })
+  @ApiNoContentResponse({
+    description: 'The record has been successfully restored.',
+  })
   @Patch(':id/restore')
   @HttpCode(HttpStatus.NO_CONTENT)
   async restore(@Param('id') id: number): Promise<void> {

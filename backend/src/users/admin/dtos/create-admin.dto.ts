@@ -1,37 +1,61 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import {
   IsAlphanumeric,
+  IsDefined,
   IsEmail,
   IsNotEmpty,
   IsOptional,
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { IsUnique } from 'src/utils/validators/isUnique.validator';
-import { Transform } from 'class-transformer';
 import { lowerCaseTransformer } from 'src/utils/transformers/lower-case.transformer';
+import { IsExists } from 'src/utils/validators/isExists.validator';
 import { IsCompositeUnique } from 'src/utils/validators/isCompositeUnique.validator';
+import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 import { UserTypesEnum } from 'src/users/user-types/user_types.enum';
+import { RolesEnum } from 'src/users/roles/roles.enum';
 import { userConstraints } from 'src/config/constants/database.constraint_values';
 
 const { common: commonConstraints } = userConstraints;
-const { store: storeConstraints } = userConstraints;
 
-export class AuthRegisterStoreDto {
+export class CreateAdminDto extends CreateUserDto {
+  @ApiProperty({
+    example: 1,
+    default: 1,
+    description: 'The role ID.',
+    enum: RolesEnum,
+  })
+  @IsDefined()
+  @IsExists('Role', 'id')
+  role_id: number;
+
+  @ApiPropertyOptional({
+    example: 1,
+    default: 1,
+    description: 'The user type ID.',
+    enum: UserTypesEnum,
+  })
+  @IsDefined()
+  @IsExists('User_Type', 'id')
+  user_type_id?: number;
+
   @ApiProperty({
     example: 'example@example.com',
-    description: 'The email of the store. Should be unique among stores.',
+    required: true,
+    description: 'The email of the admin. Should be unique.',
     maxLength: commonConstraints.email.maxLength,
   })
   @IsNotEmpty()
   @Transform(lowerCaseTransformer)
   @IsEmail()
   @MaxLength(commonConstraints.email.maxLength)
-  @IsCompositeUnique('User', 'user_type_id', UserTypesEnum.store)
+  @IsCompositeUnique('User', 'user_type_id', UserTypesEnum.admin)
   email: string;
 
   @ApiProperty({
     example: 'powerfulPassword1234#',
+    required: true,
     description: 'The password of the store.',
     minLength: commonConstraints.password.minLength,
   })
@@ -39,43 +63,16 @@ export class AuthRegisterStoreDto {
   @MinLength(commonConstraints.password.minLength)
   password: string;
 
-  @ApiProperty({
-    example: '+34661122334',
-    description: 'The phone number of the store.',
-    maxLength: commonConstraints.phone_number.maxLength,
-  })
-  @IsNotEmpty()
-  @MaxLength(commonConstraints.phone_number.maxLength)
-  phone_number: string;
-
-  @ApiProperty({
-    example: '12345678A',
+  @ApiPropertyOptional({
+    example: null,
+    default: null,
     description:
       'The NIF of the store. Should be alphanumeric and unique among stores.',
     maxLength: commonConstraints.NIF.maxLength,
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsAlphanumeric()
   @MaxLength(commonConstraints.NIF.maxLength)
-  @IsCompositeUnique('User', 'user_type_id', UserTypesEnum.store)
-  NIF: string;
-
-  @ApiProperty({
-    example: 'Store Name',
-    description: 'The name of the store. Should be unique among stores.',
-    maxLength: storeConstraints.name.maxLength,
-  })
-  @IsNotEmpty()
-  @MaxLength(storeConstraints.name.maxLength)
-  @IsUnique('Store')
-  name: string;
-
-  @ApiPropertyOptional({
-    example: 'Calle de la tienda, 123',
-    description: 'The address of the store.',
-    maxLength: commonConstraints.address.maxLength,
-  })
-  @IsOptional()
-  @MaxLength(commonConstraints.address.maxLength)
-  address?: string;
+  @IsCompositeUnique('User', 'user_type_id', UserTypesEnum.admin)
+  NIF?: string;
 }

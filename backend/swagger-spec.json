@@ -1,0 +1,2992 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/users/admin": {
+      "post": {
+        "operationId": "AdminController_create",
+        "summary": "Create a new user",
+        "description": "Create a new user (default: admin).",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAdminDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The record has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The user is not logged in."
+          },
+          "403": {
+            "description": "The user hasn't the right role (admin)."
+          },
+          "422": {
+            "description": "The email is not valid."
+          }
+        },
+        "tags": [
+          "Users/Admin"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "AdminController_findMany",
+        "summary": "Get all the users by filtering them",
+        "description": "Get all the filtered users (doesn't return user type specific fields).",
+        "parameters": [
+          {
+            "name": "user-type",
+            "required": false,
+            "in": "query",
+            "description": "User Type (1: Admin, 2: Store, 3: Customer)",
+            "schema": {
+              "enum": [
+                1,
+                2,
+                3
+              ],
+              "type": "number"
+            }
+          },
+          {
+            "name": "role",
+            "required": false,
+            "in": "query",
+            "description": "Role (1: Admin, 2: Store, 3: Customer, 4: Unapproved Store, 5: Unapproved Customer, 6: Guest)",
+            "schema": {
+              "enum": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "type": "number"
+            }
+          },
+          {
+            "name": "email",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "NIF",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "phone",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The records have been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The user is not logged in."
+          },
+          "403": {
+            "description": "The user hasn't the right role (admin)."
+          },
+          "422": {
+            "description": "The email is not valid."
+          }
+        },
+        "tags": [
+          "Users/Admin"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/users/admin/pagination": {
+      "get": {
+        "operationId": "AdminController_findManyWithPagination",
+        "summary": "Get all the users by filtering them (with pagination)",
+        "description": "Get all the filtered users (with pagination) (doesn't return user type specific fields).",
+        "parameters": [
+          {
+            "name": "page",
+            "required": true,
+            "in": "query",
+            "description": "Page number",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": true,
+            "in": "query",
+            "description": "Results/page",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "user-type",
+            "required": false,
+            "in": "query",
+            "description": "User Type (1: Admin, 2: Store, 3: Customer)",
+            "schema": {
+              "enum": [
+                1,
+                2,
+                3
+              ],
+              "type": "number"
+            }
+          },
+          {
+            "name": "role",
+            "required": false,
+            "in": "query",
+            "description": "Role (1: Admin, 2: Store, 3: Customer, 4: Unapproved Store, 5: Unapproved Customer, 6: Guest)",
+            "schema": {
+              "enum": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "type": "number"
+            }
+          },
+          {
+            "name": "email",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "NIF",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "phone",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The records have been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/User"
+                          }
+                        },
+                        "hasNextPage": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The user is not logged in."
+          },
+          "403": {
+            "description": "The user hasn't the right role (admin)."
+          },
+          "422": {
+            "description": "The email is not valid."
+          }
+        },
+        "tags": [
+          "Users/Admin"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/users/admin/{id}": {
+      "get": {
+        "operationId": "AdminController_findOne",
+        "summary": "Get a user by ID",
+        "description": "Get the specified user by its ID (user_id).",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The record has been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The user is not logged in."
+          },
+          "403": {
+            "description": "The user hasn't the right role (admin)."
+          },
+          "422": {
+            "description": "The email is not valid."
+          }
+        },
+        "tags": [
+          "Users/Admin"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "AdminController_update",
+        "summary": "Update a user.",
+        "description": "Update the specified user by its ID (user_id) with the specified data.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAdminDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The record has been successfully updated."
+          },
+          "401": {
+            "description": "The user is not logged in."
+          },
+          "403": {
+            "description": "The user hasn't the right role (admin)."
+          },
+          "422": {
+            "description": "The email is not valid."
+          }
+        },
+        "tags": [
+          "Users/Admin"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "AdminController_remove",
+        "summary": "Delete a user",
+        "description": "Delete the specified user by its ID (user_id).",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "mode",
+            "required": false,
+            "in": "query",
+            "description": "Delete mode (soft or hard). Default: soft",
+            "schema": {
+              "enum": [
+                "soft",
+                "hard"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The record has been successfully deleted."
+          },
+          "401": {
+            "description": "The user is not logged in."
+          },
+          "403": {
+            "description": "The user hasn't the right role (admin)."
+          },
+          "422": {
+            "description": "The email is not valid."
+          }
+        },
+        "tags": [
+          "Users/Admin"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/users/admin/{id}/restore": {
+      "patch": {
+        "operationId": "AdminController_restore",
+        "summary": "Restore a user",
+        "description": "Restore a soft deleted user specified  by its ID (user_id).",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The record has been successfully restored."
+          },
+          "401": {
+            "description": "The user is not logged in."
+          },
+          "403": {
+            "description": "The user hasn't the right role (admin)."
+          },
+          "422": {
+            "description": "The email is not valid."
+          }
+        },
+        "tags": [
+          "Users/Admin"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/users/customers": {
+      "post": {
+        "operationId": "CustomersController_create",
+        "summary": "Create a new customer",
+        "description": "Create a new customer.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCustomerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The record has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/User"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Customer"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The admin is not logged in."
+          },
+          "403": {
+            "description": "The user hasn't the right role (admin)."
+          },
+          "422": {
+            "description": "The email is not valid."
+          }
+        },
+        "tags": [
+          "Users/Customers"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "CustomersController_findMany",
+        "summary": "Get all the customers by filtering them",
+        "description": "Get all the filtered customers",
+        "parameters": [
+          {
+            "name": "email",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "NIF",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "first-name",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "last-name",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "phone",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "role",
+            "required": false,
+            "in": "query",
+            "description": "Role (1: Admin, 2: Store, 3: Customer, 4: Unapproved Store, 5: Unapproved Customer, 6: Guest)",
+            "schema": {
+              "enum": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "type": "number"
+            }
+          },
+          {
+            "name": "email-confirmed",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The records have been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/User"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Customer"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The admin is not logged in."
+          },
+          "403": {
+            "description": "The user hasn't the right role (admin)."
+          }
+        },
+        "tags": [
+          "Users/Customers"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/users/customers/pagination": {
+      "get": {
+        "operationId": "CustomersController_findManyWithPagination",
+        "summary": "Get all the customers by filtering them (with pagination)",
+        "description": "Get all the filtered customers (with pagination).",
+        "parameters": [
+          {
+            "name": "page",
+            "required": true,
+            "in": "query",
+            "description": "Page number",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": true,
+            "in": "query",
+            "description": "Results/page",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "email",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "NIF",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "first-name",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "last-name",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "phone",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "role",
+            "required": false,
+            "in": "query",
+            "description": "Role (1: Admin, 2: Store, 3: Customer, 4: Unapproved Store, 5: Unapproved Customer, 6: Guest)",
+            "schema": {
+              "enum": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "type": "number"
+            }
+          },
+          {
+            "name": "email-confirmed",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The records have been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "allOf": [
+                              {
+                                "$ref": "#/components/schemas/User"
+                              },
+                              {
+                                "$ref": "#/components/schemas/Customer"
+                              }
+                            ]
+                          }
+                        },
+                        "hasNextPage": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The admin is not logged in."
+          },
+          "403": {
+            "description": "The user hasn't the right role (admin)."
+          }
+        },
+        "tags": [
+          "Users/Customers"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/users/customers/{id}": {
+      "get": {
+        "operationId": "CustomersController_findOne",
+        "summary": "Get a customer by ID",
+        "description": "Get the specified customer by its ID (customer_id).",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The record has been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/User"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Customer"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The admin is not logged in."
+          },
+          "403": {
+            "description": "The user hasn't the right role (admin)."
+          }
+        },
+        "tags": [
+          "Users/Customers"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "CustomersController_update",
+        "summary": "Update a customer.",
+        "description": "Update the specified customer by its ID (customer_id) with the specified data.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCustomerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The record has been successfully updated."
+          },
+          "401": {
+            "description": "The admin is not logged in."
+          },
+          "403": {
+            "description": "The user hasn't the right role (admin)."
+          },
+          "422": {
+            "description": "The email is not valid."
+          }
+        },
+        "tags": [
+          "Users/Customers"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "CustomersController_remove",
+        "summary": "Delete a customer",
+        "description": "Delete the specified customer by its ID (customer_id).",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "mode",
+            "required": false,
+            "in": "query",
+            "description": "Delete mode (soft or hard). Default: soft",
+            "schema": {
+              "enum": [
+                "soft",
+                "hard"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The record has been successfully deleted."
+          },
+          "401": {
+            "description": "The admin is not logged in."
+          },
+          "403": {
+            "description": "The user hasn't the right role (admin)."
+          }
+        },
+        "tags": [
+          "Users/Customers"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/users/customers/{id}/restore": {
+      "patch": {
+        "operationId": "CustomersController_restore",
+        "summary": "Restore a customer",
+        "description": "Restore a soft deleted customer specified  by its ID (customer_id).",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The record has been successfully restored."
+          },
+          "401": {
+            "description": "The admin is not logged in."
+          },
+          "403": {
+            "description": "The user hasn't the right role (admin)."
+          }
+        },
+        "tags": [
+          "Users/Customers"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/users/stores": {
+      "post": {
+        "operationId": "StoresController_create",
+        "summary": "Create a new store",
+        "description": "Create a new store.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateStoreDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The record has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/User"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Store"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The admin is not logged in."
+          },
+          "403": {
+            "description": "The user hasn't the right role (admin)."
+          },
+          "422": {
+            "description": "The email is not valid."
+          }
+        },
+        "tags": [
+          "Users/Stores"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "StoresController_findMany",
+        "summary": "Get all the stores by filtering them",
+        "description": "Get all the filtered stores.",
+        "parameters": [
+          {
+            "name": "email",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "NIF",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "phone",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "role",
+            "required": false,
+            "in": "query",
+            "description": "Role (1: Admin, 2: Store, 3: Customer, 4: Unapproved Store, 5: Unapproved Customer, 6: Guest)",
+            "schema": {
+              "enum": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "type": "number"
+            }
+          },
+          {
+            "name": "approved",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The records have been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/User"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Store"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The admin is not logged in."
+          },
+          "403": {
+            "description": "The user hasn't the right role (admin)."
+          },
+          "422": {
+            "description": "The email is not valid."
+          }
+        },
+        "tags": [
+          "Users/Stores"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/users/stores/pagination": {
+      "get": {
+        "operationId": "StoresController_findManyWithPagination",
+        "summary": "Get all the stores by filtering them (with pagination)",
+        "description": "Get all the filtered stores (with pagination).",
+        "parameters": [
+          {
+            "name": "page",
+            "required": true,
+            "in": "query",
+            "description": "Page number",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": true,
+            "in": "query",
+            "description": "Results/page",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "email",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "NIF",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "phone",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "role",
+            "required": false,
+            "in": "query",
+            "description": "Role (1: Admin, 2: Store, 3: Customer, 4: Unapproved Store, 5: Unapproved Customer, 6: Guest)",
+            "schema": {
+              "enum": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "type": "number"
+            }
+          },
+          {
+            "name": "approved",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The records have been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "allOf": [
+                              {
+                                "$ref": "#/components/schemas/User"
+                              },
+                              {
+                                "$ref": "#/components/schemas/Store"
+                              }
+                            ]
+                          }
+                        },
+                        "hasNextPage": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The admin is not logged in."
+          },
+          "403": {
+            "description": "The user hasn't the right role (admin)."
+          },
+          "422": {
+            "description": "The email is not valid."
+          }
+        },
+        "tags": [
+          "Users/Stores"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/users/stores/{id}": {
+      "get": {
+        "operationId": "StoresController_findOne",
+        "summary": "Get a store by ID",
+        "description": "Get the specified store by its ID (store_id).",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The record has been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/User"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Store"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The admin is not logged in."
+          },
+          "403": {
+            "description": "The user hasn't the right role (admin)."
+          },
+          "422": {
+            "description": "The email is not valid."
+          }
+        },
+        "tags": [
+          "Users/Stores"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "StoresController_update",
+        "summary": "Update a store.",
+        "description": "Update the specified store by its ID (store_id) with the specified data.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateStoreDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The record has been successfully updated."
+          },
+          "401": {
+            "description": "The admin is not logged in."
+          },
+          "403": {
+            "description": "The user hasn't the right role (admin)."
+          },
+          "422": {
+            "description": "The email is not valid."
+          }
+        },
+        "tags": [
+          "Users/Stores"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "StoresController_remove",
+        "summary": "Delete a store",
+        "description": "Delete the specified store by its ID (store_id).",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "mode",
+            "required": false,
+            "in": "query",
+            "description": "Delete mode (soft or hard). Default: soft",
+            "schema": {
+              "enum": [
+                "soft",
+                "hard"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The record has been successfully deleted."
+          },
+          "401": {
+            "description": "The admin is not logged in."
+          },
+          "403": {
+            "description": "The user hasn't the right role (admin)."
+          },
+          "422": {
+            "description": "The email is not valid."
+          }
+        },
+        "tags": [
+          "Users/Stores"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/users/stores/{id}/restore": {
+      "patch": {
+        "operationId": "StoresController_restore",
+        "summary": "Restore a store",
+        "description": "Restore a soft deleted store specified  by its ID (store_id).",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The record has been successfully restored."
+          },
+          "401": {
+            "description": "The admin is not logged in."
+          },
+          "403": {
+            "description": "The user hasn't the right role (admin)."
+          },
+          "422": {
+            "description": "The email is not valid."
+          }
+        },
+        "tags": [
+          "Users/Stores"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/auth/email/stores/login": {
+      "post": {
+        "operationId": "JwtController_loginStore",
+        "summary": "Store login",
+        "description": "Login a store with email and password.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthLoginEmailDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The store has been successfully logged in.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "properties": {
+                        "token": {
+                          "type": "string",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+                        },
+                        "user": {
+                          "$ref": "#/components/schemas/User"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The store was not found."
+          },
+          "422": {
+            "description": "Incorrect password."
+          }
+        },
+        "tags": [
+          "Authentication/Email"
+        ]
+      }
+    },
+    "/api/auth/email/customers/login": {
+      "post": {
+        "operationId": "JwtController_loginCustomer",
+        "summary": "Customer login",
+        "description": "Login a customer with email and password.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthLoginEmailDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The customer has been successfully logged in.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "properties": {
+                        "token": {
+                          "type": "string",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+                        },
+                        "user": {
+                          "$ref": "#/components/schemas/User"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The customer was not found."
+          },
+          "422": {
+            "description": "Incorrect password."
+          }
+        },
+        "tags": [
+          "Authentication/Email"
+        ]
+      }
+    },
+    "/api/auth/email/admin/login": {
+      "post": {
+        "operationId": "JwtController_adminLogin",
+        "summary": "Admin login",
+        "description": "Login an admin with email and password.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthLoginEmailDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The admin has been successfully logged in.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "properties": {
+                        "token": {
+                          "type": "string",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+                        },
+                        "user": {
+                          "$ref": "#/components/schemas/User"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The user was not found."
+          },
+          "422": {
+            "description": "Incorrect password."
+          }
+        },
+        "tags": [
+          "Authentication/Email"
+        ]
+      }
+    },
+    "/api/auth/email/stores/register": {
+      "post": {
+        "operationId": "JwtController_registerStore",
+        "summary": "Store registration",
+        "description": "Register a store with email and password.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthRegisterStoreDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The store has been successfully registered.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "properties": {
+                        "token": {
+                          "type": "string",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+                        },
+                        "user": {
+                          "$ref": "#/components/schemas/User"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "The password must be at least 8 characters long."
+          },
+          "500": {
+            "description": "Error creating user."
+          }
+        },
+        "tags": [
+          "Authentication/Email"
+        ]
+      }
+    },
+    "/api/auth/email/customers/register": {
+      "post": {
+        "operationId": "JwtController_registerCustomer",
+        "summary": "Customer registration",
+        "description": "Register a customer with email and password.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthRegisterCustomerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The customer has been successfully registered.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "properties": {
+                        "token": {
+                          "type": "string",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+                        },
+                        "user": {
+                          "$ref": "#/components/schemas/User"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "The password must be at least 8 characters long."
+          },
+          "500": {
+            "description": "Error creating user."
+          }
+        },
+        "tags": [
+          "Authentication/Email"
+        ]
+      }
+    },
+    "/api/auth/email/customers/register/confirm": {
+      "post": {
+        "operationId": "JwtController_confirmEmail",
+        "summary": "Email confirmation",
+        "description": "Confirm the email of a customer to complete the registration process.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthConfirmEmailDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The email has been successfully confirmed."
+          },
+          "404": {
+            "description": "The customer was not found."
+          },
+          "422": {
+            "description": "The hash is empty."
+          },
+          "500": {
+            "description": "Error confirming email."
+          }
+        },
+        "tags": [
+          "Authentication/Email"
+        ]
+      }
+    },
+    "/api/auth/email/stores/password/forgot": {
+      "post": {
+        "operationId": "JwtController_forgotStorePassword",
+        "summary": "Store forgot password",
+        "description": "Send an email to the store with a link to reset the password.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthForgotPasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The email has been successfully sent."
+          },
+          "404": {
+            "description": "The store was not found."
+          },
+          "422": {
+            "description": "The email is not valid."
+          }
+        },
+        "tags": [
+          "Authentication/Email"
+        ]
+      }
+    },
+    "/api/auth/email/customers/password/forgot": {
+      "post": {
+        "operationId": "JwtController_forgotCustomerPassword",
+        "summary": "Customer forgot password",
+        "description": "Send an email to the customer with a link to reset the password.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthForgotPasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The email has been successfully sent."
+          },
+          "404": {
+            "description": "The customer was not found."
+          },
+          "422": {
+            "description": "The email is not valid."
+          }
+        },
+        "tags": [
+          "Authentication/Email"
+        ]
+      }
+    },
+    "/api/auth/email/stores/password/reset": {
+      "post": {
+        "operationId": "JwtController_resetStorePassword",
+        "summary": "Store reset password",
+        "description": "Reset the password of a store with the hash sent by email.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthResetPasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The password has been successfully reset."
+          },
+          "404": {
+            "description": "The store was not found."
+          },
+          "422": {
+            "description": "The password must be at least 8 characters long."
+          }
+        },
+        "tags": [
+          "Authentication/Email"
+        ]
+      }
+    },
+    "/api/auth/email/customers/password/reset": {
+      "post": {
+        "operationId": "JwtController_resetCustomerPassword",
+        "summary": "Customer reset password",
+        "description": "Reset the password of a customer with the hash sent by email.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthResetPasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The password has been successfully reset."
+          },
+          "404": {
+            "description": "The customer was not found."
+          },
+          "422": {
+            "description": "The password must be at least 8 characters long."
+          }
+        },
+        "tags": [
+          "Authentication/Email"
+        ]
+      }
+    },
+    "/api/auth/email/me/logout": {
+      "post": {
+        "operationId": "JwtController_logoutStore",
+        "summary": "Logout",
+        "description": "Logout the user by removing the token from the request object.",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "The user has been successfully logged out."
+          },
+          "401": {
+            "description": "The user is not logged in."
+          },
+          "500": {
+            "description": "Error logging out."
+          }
+        },
+        "tags": [
+          "Authentication/Email"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/auth/email/me": {
+      "get": {
+        "operationId": "JwtController_me",
+        "summary": "Me",
+        "description": "Get the user data of the user in the request object.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The user data has been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/User"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Store"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The user is not logged in."
+          }
+        },
+        "tags": [
+          "Authentication/Email"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "JwtController_delete",
+        "summary": "Delete",
+        "description": "Soft-delete the user in the request object.",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "The user has been successfully deleted."
+          },
+          "401": {
+            "description": "The user is not logged in."
+          }
+        },
+        "tags": [
+          "Authentication/Email"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/auth/email/me/stores": {
+      "patch": {
+        "operationId": "JwtController_updateStore",
+        "summary": "Update store",
+        "description": "Update the store data of the user in the request object.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthUpdateStoreDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The store data has been successfully updated."
+          },
+          "401": {
+            "description": "The user is not logged in."
+          },
+          "422": {
+            "description": "Invalid data"
+          }
+        },
+        "tags": [
+          "Authentication/Email"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/auth/email/me/customers": {
+      "patch": {
+        "operationId": "JwtController_updateCustomer",
+        "summary": "Update customer",
+        "description": "Update the customer data of the user in the request object.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthUpdateCustomerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The customer data has been successfully updated."
+          },
+          "401": {
+            "description": "The user is not logged in."
+          },
+          "422": {
+            "description": "The email is not valid."
+          }
+        },
+        "tags": [
+          "Authentication/Email"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/auth/email/me/password": {
+      "patch": {
+        "operationId": "JwtController_updatePassword",
+        "summary": "Update password",
+        "description": "Update the password of the user in the request object.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthUpdatePasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The password has been successfully updated."
+          },
+          "401": {
+            "description": "The user is not logged in."
+          },
+          "404": {
+            "description": "The user was not found."
+          },
+          "422": {
+            "description": "Incorret password"
+          }
+        },
+        "tags": [
+          "Authentication/Email"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Librería Santa Bárbara API",
+    "description": "API documentation for Librería Santa Bárbara",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "CreateAdminDto": {
+        "type": "object",
+        "properties": {
+          "role_id": {
+            "type": "number",
+            "example": 1,
+            "description": "The role ID.",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "default": 1
+          },
+          "password": {
+            "type": "string",
+            "example": "powerfulPassword1234#",
+            "description": "The password of the store.",
+            "minLength": 8
+          },
+          "address": {
+            "type": "string",
+            "example": "Calle Princesa 12B",
+            "description": "The address of the user",
+            "maxLength": 300
+          },
+          "phone_number": {
+            "type": "string",
+            "example": "+34661122334",
+            "description": "The phone number of the user",
+            "maxLength": 15
+          },
+          "hash": {
+            "type": "string",
+            "example": null,
+            "default": null,
+            "description": "Hash used to verify the email of the user at registration"
+          },
+          "user_type_id": {
+            "type": "number",
+            "example": 1,
+            "default": 1,
+            "description": "The user type ID.",
+            "enum": [
+              1,
+              2,
+              3
+            ]
+          },
+          "email": {
+            "type": "string",
+            "example": "example@example.com",
+            "description": "The email of the admin. Should be unique.",
+            "maxLength": 300
+          },
+          "NIF": {
+            "type": "string",
+            "example": null,
+            "default": null,
+            "description": "The NIF of the store. Should be alphanumeric and unique among stores.",
+            "maxLength": 15
+          }
+        },
+        "required": [
+          "role_id",
+          "password",
+          "email"
+        ]
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1,
+            "description": "The id of the user"
+          },
+          "user_type_id": {
+            "type": "number",
+            "example": 1,
+            "description": "The id of the user type"
+          },
+          "role_id": {
+            "type": "number",
+            "example": 1,
+            "description": "The id of the role"
+          },
+          "email": {
+            "type": "string",
+            "example": "example@example.com",
+            "description": "The email of the user"
+          },
+          "NIF": {
+            "type": "string",
+            "example": "12345678A",
+            "description": "The NIF of the user"
+          },
+          "address": {
+            "type": "string",
+            "example": "Calle Princesa 12B",
+            "description": "The address of the user"
+          },
+          "phone_number": {
+            "type": "string",
+            "example": "+34661122334",
+            "description": "The phone number"
+          },
+          "hash": {
+            "type": "string",
+            "example": null,
+            "description": "Hash used to verify email at registration"
+          },
+          "created_at": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2021-01-01",
+            "description": "The date when the user was created"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "type": "string",
+            "example": null,
+            "description": "The date when the user has been updated"
+          },
+          "deleted_at": {
+            "format": "date-time",
+            "type": "string",
+            "example": null,
+            "description": "The date when the user has been (soft) deleted"
+          }
+        },
+        "required": [
+          "id",
+          "user_type_id",
+          "role_id",
+          "email",
+          "NIF",
+          "address",
+          "phone_number",
+          "hash",
+          "created_at",
+          "updated_at",
+          "deleted_at"
+        ]
+      },
+      "UpdateAdminDto": {
+        "type": "object",
+        "properties": {
+          "role_id": {
+            "type": "number",
+            "example": 1,
+            "description": "The role ID.",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "default": 1
+          },
+          "password": {
+            "type": "string",
+            "example": "powerfulPassword1234#",
+            "description": "The password of the store.",
+            "minLength": 8
+          },
+          "address": {
+            "type": "string",
+            "example": "Calle Princesa 12B",
+            "description": "The address of the user",
+            "maxLength": 300
+          },
+          "phone_number": {
+            "type": "string",
+            "example": "+34661122334",
+            "description": "The phone number of the user",
+            "maxLength": 15
+          },
+          "hash": {
+            "type": "string",
+            "example": null,
+            "default": null,
+            "description": "Hash used to verify the email of the user at registration"
+          },
+          "user_type_id": {
+            "type": "number",
+            "example": 1,
+            "default": 1,
+            "description": "The user type ID.",
+            "enum": [
+              1,
+              2,
+              3
+            ]
+          },
+          "email": {
+            "type": "string",
+            "example": "example@example.com",
+            "description": "The email of the admin. Should be unique.",
+            "maxLength": 300
+          },
+          "NIF": {
+            "type": "string",
+            "example": null,
+            "default": null,
+            "description": "The NIF of the store. Should be alphanumeric and unique among stores.",
+            "maxLength": 15
+          }
+        }
+      },
+      "Customer": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1,
+            "description": "The id of the customer"
+          },
+          "user_id": {
+            "type": "number",
+            "example": 1,
+            "description": "The id of the user"
+          },
+          "email_confirmed": {
+            "type": "boolean",
+            "example": false,
+            "description": "The email confirmation status of the customer"
+          },
+          "provider": {
+            "type": "string",
+            "example": "email",
+            "description": "The login provider of the customer"
+          },
+          "social_id": {
+            "type": "string",
+            "example": null,
+            "description": "The social id associated to a provider of the customer"
+          },
+          "first_name": {
+            "type": "string",
+            "example": "John",
+            "description": "The first name of the customer"
+          },
+          "last_name": {
+            "type": "string",
+            "example": "Doe Doe",
+            "description": "The last(s) name of the customer"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "type": "string",
+            "example": null,
+            "description": "Date when the customer has been updated"
+          }
+        },
+        "required": [
+          "id",
+          "user_id",
+          "email_confirmed",
+          "provider",
+          "social_id",
+          "first_name",
+          "last_name",
+          "updated_at"
+        ]
+      },
+      "CreateCustomerDto": {
+        "type": "object",
+        "properties": {
+          "role_id": {
+            "type": "number",
+            "example": 2,
+            "description": "The id of the role that the user will have",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ]
+          },
+          "password": {
+            "type": "string",
+            "example": "powerfulPassword1234#",
+            "description": "The password of the user",
+            "minLength": 8
+          },
+          "address": {
+            "type": "string",
+            "example": "Calle Princesa 12B",
+            "description": "The address of the user",
+            "maxLength": 300
+          },
+          "phone_number": {
+            "type": "string",
+            "example": "+34661122334",
+            "description": "The phone number of the user",
+            "maxLength": 15
+          },
+          "hash": {
+            "type": "string",
+            "example": null,
+            "default": null,
+            "description": "Hash used to verify the email of the user at registration"
+          },
+          "email": {
+            "type": "string",
+            "example": "example@example.com",
+            "description": "The email of the customer. Should be unique among customers.",
+            "maxLength": 300
+          },
+          "NIF": {
+            "type": "string",
+            "example": "12345678A",
+            "description": "The NIF of the customer. Should be alphanumeric and unique among customers.",
+            "maxLength": 15
+          },
+          "email_confirmed": {
+            "type": "boolean",
+            "example": false,
+            "default": false,
+            "description": "Whether the email of the customer has been confirmed or not by the user."
+          },
+          "provider": {
+            "type": "string",
+            "example": "email",
+            "default": "email",
+            "description": "The provider of the customer.",
+            "enum": [
+              "email"
+            ]
+          },
+          "social_id": {
+            "type": "string",
+            "example": null,
+            "default": null,
+            "description": "The social id of the customer associated with the provider."
+          },
+          "first_name": {
+            "type": "string",
+            "example": "John",
+            "description": "The first name of the customer.",
+            "maxLength": 100
+          },
+          "last_name": {
+            "type": "string",
+            "example": "Doe Doe",
+            "description": "The last name(s) of the customer.",
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "role_id",
+          "email"
+        ]
+      },
+      "UpdateCustomerDto": {
+        "type": "object",
+        "properties": {
+          "role_id": {
+            "type": "number",
+            "example": 2,
+            "description": "The id of the role that the user will have",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ]
+          },
+          "password": {
+            "type": "string",
+            "example": "powerfulPassword1234#",
+            "description": "The password of the user",
+            "minLength": 8
+          },
+          "address": {
+            "type": "string",
+            "example": "Calle Princesa 12B",
+            "description": "The address of the user",
+            "maxLength": 300
+          },
+          "phone_number": {
+            "type": "string",
+            "example": "+34661122334",
+            "description": "The phone number of the user",
+            "maxLength": 15
+          },
+          "hash": {
+            "type": "string",
+            "example": null,
+            "default": null,
+            "description": "Hash used to verify the email of the user at registration"
+          },
+          "email": {
+            "type": "string",
+            "example": "example@example.com",
+            "description": "The email of the customer. Should be unique among customers.",
+            "maxLength": 300
+          },
+          "NIF": {
+            "type": "string",
+            "example": "12345678A",
+            "description": "The NIF of the customer. Should be alphanumeric and unique among customers.",
+            "maxLength": 15
+          },
+          "email_confirmed": {
+            "type": "boolean",
+            "example": false,
+            "default": false,
+            "description": "Whether the email of the customer has been confirmed or not by the user."
+          },
+          "provider": {
+            "type": "string",
+            "example": "email",
+            "default": "email",
+            "description": "The provider of the customer.",
+            "enum": [
+              "email"
+            ]
+          },
+          "social_id": {
+            "type": "string",
+            "example": null,
+            "default": null,
+            "description": "The social id of the customer associated with the provider."
+          },
+          "first_name": {
+            "type": "string",
+            "example": "John",
+            "description": "The first name of the customer.",
+            "maxLength": 100
+          },
+          "last_name": {
+            "type": "string",
+            "example": "Doe Doe",
+            "description": "The last name(s) of the customer.",
+            "maxLength": 200
+          }
+        }
+      },
+      "Store": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1,
+            "description": "The id of the store"
+          },
+          "user_id": {
+            "type": "number",
+            "example": 1,
+            "description": "The id of the user"
+          },
+          "approved": {
+            "type": "boolean",
+            "example": false,
+            "description": "Store approval store by a admin"
+          },
+          "name": {
+            "type": "string",
+            "example": "Store name",
+            "description": "The name of the store"
+          },
+          "last_activity": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2021-01-01",
+            "description": "Date when the store has interactuated with the app"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "type": "string",
+            "example": null,
+            "description": "Date when the store has been updated"
+          }
+        },
+        "required": [
+          "id",
+          "user_id",
+          "approved",
+          "name",
+          "last_activity",
+          "updated_at"
+        ]
+      },
+      "CreateStoreDto": {
+        "type": "object",
+        "properties": {
+          "role_id": {
+            "type": "number",
+            "example": 2,
+            "description": "The id of the role that the user will have",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ]
+          },
+          "password": {
+            "type": "string",
+            "example": "powerfulPassword1234#",
+            "description": "The password of the store.",
+            "minLength": 8
+          },
+          "address": {
+            "type": "string",
+            "example": "Calle Princesa 12B",
+            "description": "The address of the user",
+            "maxLength": 300
+          },
+          "phone_number": {
+            "type": "string",
+            "example": "+34661122334",
+            "description": "The phone number of the user",
+            "maxLength": 15
+          },
+          "hash": {
+            "type": "string",
+            "example": null,
+            "default": null,
+            "description": "Hash used to verify the email of the user at registration"
+          },
+          "email": {
+            "type": "string",
+            "example": "example@example.com",
+            "description": "The email of the store. Should be unique among stores.",
+            "maxLength": 300
+          },
+          "NIF": {
+            "type": "string",
+            "example": "12345678A",
+            "description": "The NIF of the store. Should be alphanumeric and unique among stores.",
+            "maxLength": 15
+          },
+          "name": {
+            "type": "string",
+            "example": "Librería San Pablo",
+            "description": "The name of the store. Should be unique among stores.",
+            "maxLength": 100
+          },
+          "approved": {
+            "type": "boolean",
+            "example": false,
+            "default": false,
+            "description": "Whether the store has been approved by an admin or not."
+          }
+        },
+        "required": [
+          "role_id",
+          "password",
+          "email",
+          "name"
+        ]
+      },
+      "UpdateStoreDto": {
+        "type": "object",
+        "properties": {
+          "role_id": {
+            "type": "number",
+            "example": 2,
+            "description": "The id of the role that the user will have",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ]
+          },
+          "password": {
+            "type": "string",
+            "example": "powerfulPassword1234#",
+            "description": "The password of the store.",
+            "minLength": 8
+          },
+          "address": {
+            "type": "string",
+            "example": "Calle Princesa 12B",
+            "description": "The address of the user",
+            "maxLength": 300
+          },
+          "phone_number": {
+            "type": "string",
+            "example": "+34661122334",
+            "description": "The phone number of the user",
+            "maxLength": 15
+          },
+          "hash": {
+            "type": "string",
+            "example": null,
+            "default": null,
+            "description": "Hash used to verify the email of the user at registration"
+          },
+          "email": {
+            "type": "string",
+            "example": "example@example.com",
+            "description": "The email of the store. Should be unique among stores.",
+            "maxLength": 300
+          },
+          "NIF": {
+            "type": "string",
+            "example": "12345678A",
+            "description": "The NIF of the store. Should be alphanumeric and unique among stores.",
+            "maxLength": 15
+          },
+          "name": {
+            "type": "string",
+            "example": "Librería San Pablo",
+            "description": "The name of the store. Should be unique among stores.",
+            "maxLength": 100
+          },
+          "approved": {
+            "type": "boolean",
+            "example": false,
+            "default": false,
+            "description": "Whether the store has been approved by an admin or not."
+          }
+        }
+      },
+      "AuthLoginEmailDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "example@example.com",
+            "description": "The email of the user that forgot the password. Should exist."
+          },
+          "password": {
+            "type": "string",
+            "example": "powerfulPassword1234#",
+            "description": "The password of the user."
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "AuthRegisterStoreDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "example@example.com",
+            "description": "The email of the store. Should be unique among stores.",
+            "maxLength": 300
+          },
+          "password": {
+            "type": "string",
+            "example": "powerfulPassword1234#",
+            "description": "The password of the store.",
+            "minLength": 8
+          },
+          "phone_number": {
+            "type": "string",
+            "example": "+34661122334",
+            "description": "The phone number of the store.",
+            "maxLength": 15
+          },
+          "NIF": {
+            "type": "string",
+            "example": "12345678A",
+            "description": "The NIF of the store. Should be alphanumeric and unique among stores.",
+            "maxLength": 15
+          },
+          "name": {
+            "type": "string",
+            "example": "Store Name",
+            "description": "The name of the store. Should be unique among stores.",
+            "maxLength": 100
+          },
+          "address": {
+            "type": "string",
+            "example": "Calle de la tienda, 123",
+            "description": "The address of the store.",
+            "maxLength": 300
+          }
+        },
+        "required": [
+          "email",
+          "password",
+          "phone_number",
+          "NIF",
+          "name"
+        ]
+      },
+      "AuthRegisterCustomerDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "example@example.com",
+            "description": "The email of the customer. Should be unique among customers.",
+            "maxLength": 300
+          },
+          "password": {
+            "type": "string",
+            "example": "powerfulPassword1234#",
+            "description": "The password of the customer.",
+            "minLength": 8
+          },
+          "NIF": {
+            "type": "string",
+            "example": "12345678A",
+            "description": "The NIF of the customer. Should be alphanumeric and unique among customers.",
+            "maxLength": 15
+          },
+          "phone_number": {
+            "type": "string",
+            "example": "+34661122334",
+            "description": "The phone number of the customer.",
+            "maxLength": 15
+          },
+          "first_name": {
+            "type": "string",
+            "example": "John",
+            "description": "The first name of the customer.",
+            "maxLength": 100
+          },
+          "last_name": {
+            "type": "string",
+            "example": "Doe Doe",
+            "description": "The last name(s) of the customer.",
+            "maxLength": 200
+          },
+          "address": {
+            "type": "string",
+            "example": "Calle Princesa 12B",
+            "description": "The address of the customer.",
+            "maxLength": 300
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "AuthConfirmEmailDto": {
+        "type": "object",
+        "properties": {
+          "hash": {
+            "type": "string",
+            "example": "1a2b3c4d5e6f",
+            "description": "The hash used to verify the email of the user at registration"
+          }
+        },
+        "required": [
+          "hash"
+        ]
+      },
+      "AuthForgotPasswordDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "example@example.com",
+            "description": "The email of the user that forgot the password. Should exist."
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "AuthResetPasswordDto": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "example": "powerfulPassword1234#",
+            "description": "The new password of the user.",
+            "minLength": 8
+          },
+          "hash": {
+            "type": "string",
+            "example": "1a2b3c4d5e6f",
+            "description": "The hash used to reset the password of the user."
+          }
+        },
+        "required": [
+          "password",
+          "hash"
+        ]
+      },
+      "AuthUpdateStoreDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "example@example.com",
+            "description": "The email of the store. Should be unique among stores.",
+            "maxLength": 300
+          },
+          "NIF": {
+            "type": "string",
+            "example": "12345678A",
+            "description": "The NIF of the store. Should be alphanumeric and unique among stores.",
+            "maxLength": 15
+          },
+          "phone_number": {
+            "type": "string",
+            "example": "+34661122334",
+            "description": "The phone number of the store.",
+            "maxLength": 15
+          },
+          "name": {
+            "type": "string",
+            "example": "Librería San Pablo",
+            "description": "The name of the store.",
+            "maxLength": 100
+          },
+          "address": {
+            "type": "string",
+            "example": "Calle Princesa 12B",
+            "description": "The address of the store.",
+            "maxLength": 300
+          }
+        }
+      },
+      "AuthUpdateCustomerDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "example@example.com",
+            "description": "The email of the customer. Should be unique among customers.",
+            "maxLength": 300
+          },
+          "NIF": {
+            "type": "string",
+            "example": "12345678A",
+            "description": "The NIF of the customer. Should be alphanumeric and unique among customers.",
+            "maxLength": 15
+          },
+          "phone_number": {
+            "type": "string",
+            "example": "+34661122334",
+            "description": "The phone number of the customer.",
+            "maxLength": 15
+          },
+          "first_name": {
+            "type": "string",
+            "example": "John",
+            "description": "The first name of the customer.",
+            "maxLength": 100
+          },
+          "last_name": {
+            "type": "string",
+            "example": "Doe Doe",
+            "description": "The last name of the customer.",
+            "maxLength": 200
+          },
+          "address": {
+            "type": "string",
+            "example": "Calle Princesa 12B",
+            "description": "The address of the customer.",
+            "maxLength": 300
+          }
+        }
+      },
+      "AuthUpdatePasswordDto": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "example": "powerfulPassword1234#",
+            "description": "The new password of the user.",
+            "minLength": 8
+          },
+          "oldPassword": {
+            "type": "string",
+            "example": "oldPassword1234#",
+            "description": "The old password of the user."
+          }
+        },
+        "required": [
+          "password",
+          "oldPassword"
+        ]
+      }
+    }
+  }
+}

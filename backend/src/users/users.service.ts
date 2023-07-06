@@ -4,8 +4,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { BaseCRUDService } from 'src/utils/services/base-CRUD.service';
-import { CreateUserAdminDto } from './admin/dtos/create-user.admin.dto';
-import { UpdateUserAdminDto } from './admin/dtos/update-user.admin.dto';
+import { CreateAdminDto } from './admin/dtos/create-admin.dto';
+import { UpdateAdminDto } from './admin/dtos/update-admin.dto';
 import { hashPassword } from 'src/utils/hash-password';
 
 @Injectable()
@@ -26,14 +26,14 @@ export class UsersService extends BaseCRUDService<User> {
   }
 
   // * [C] Create methods
-  async create(userDto: CreateUserAdminDto): Promise<User> {
+  async create(userDto: CreateAdminDto): Promise<User> {
     userDto.password = await this.hashPassword(userDto.password);
     return this.repository.save(this.repository.create(userDto));
   }
 
   // * [U] Update methods
   // Override the update method from the BaseCRUDService
-  async update(user_id: number, payload: UpdateUserAdminDto): Promise<User> {
+  async update(user_id: number, payload: UpdateAdminDto): Promise<User> {
     if (payload.password) {
       payload.password = await this.hashPassword(payload.password);
     }

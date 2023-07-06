@@ -1,3 +1,4 @@
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import {
   IsAlphanumeric,
@@ -19,6 +20,11 @@ const { store: storeConstraints } = userConstraints;
 const { common: commonConstraints } = userConstraints;
 
 export class CreateStoreDto extends CreateUserDto {
+  @ApiProperty({
+    example: 'example@example.com',
+    description: 'The email of the store. Should be unique among stores.',
+    maxLength: commonConstraints.email.maxLength,
+  })
   @IsNotEmpty()
   @Transform(lowerCaseTransformer)
   @IsEmail()
@@ -26,21 +32,43 @@ export class CreateStoreDto extends CreateUserDto {
   @IsCompositeUnique('User', 'user_type_id', UserTypesEnum.store)
   email: string;
 
+  @ApiPropertyOptional({
+    example: '12345678A',
+    description:
+      'The NIF of the store. Should be alphanumeric and unique among stores.',
+    maxLength: commonConstraints.NIF.maxLength,
+  })
   @IsOptional()
   @IsAlphanumeric()
   @MaxLength(commonConstraints.NIF.maxLength)
   @IsCompositeUnique('User', 'user_type_id', UserTypesEnum.store)
   NIF?: string;
 
+  @ApiProperty({
+    example: 'powerfulPassword1234#',
+    required: true,
+    description: 'The password of the store.',
+    minLength: commonConstraints.password.minLength,
+  })
   @IsNotEmpty()
   @MinLength(commonConstraints.password.minLength)
   password: string;
 
+  @ApiProperty({
+    example: 'Librería San Pablo',
+    description: 'The name of the store. Should be unique among stores.',
+    maxLength: storeConstraints.name.maxLength,
+  })
   @IsNotEmpty()
   @MaxLength(storeConstraints.name.maxLength)
   @IsUnique('Store')
   name: string;
 
+  @ApiPropertyOptional({
+    example: false,
+    default: false,
+    description: 'Whether the store has been approved by an admin or not.',
+  })
   @IsOptional()
   @IsBoolean()
   approved?: boolean;
