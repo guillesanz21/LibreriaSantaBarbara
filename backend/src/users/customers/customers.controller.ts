@@ -88,7 +88,7 @@ export class CustomersController {
   @ApiQuery({
     name: 'role',
     description:
-      'Role (1: Admin, 2: Store, 3: Customer, 4: Unapproved Store, 5: Unapproved Customer, 6: Guest)',
+      'Role (1: Admin, 2: Store, 3: Customer, 4: Unapproved Store, 5: Unconfirmed, 6: Guest)',
     required: false,
     enum: RolesEnum,
   })
@@ -114,7 +114,7 @@ export class CustomersController {
     @Query('address') address?: string,
     @Query('phone') phone_number?: string,
     @Query('role') role?: string,
-    @Query('email-confirmed') email_confirmed?: boolean,
+    @Query('email-confirmed') email_confirmed?: NullableType<boolean>,
   ): Promise<Customer[]> {
     return this.customersService.findMany({
       email,
@@ -144,7 +144,7 @@ export class CustomersController {
   @ApiQuery({
     name: 'role',
     description:
-      'Role (1: Admin, 2: Store, 3: Customer, 4: Unapproved Store, 5: Unapproved Customer, 6: Guest)',
+      'Role (1: Admin, 2: Store, 3: Customer, 4: Unapproved Store, 5: Unconfirmed, 6: Guest)',
     required: false,
     enum: RolesEnum,
   })
@@ -181,7 +181,7 @@ export class CustomersController {
     @Query('address') address?: string,
     @Query('phone') phone_number?: string,
     @Query('role') role?: string,
-    @Query('email-confirmed') email_confirmed?: boolean,
+    @Query('email-confirmed') email_confirmed?: NullableType<boolean>,
   ): Promise<InfinityPaginationResultType<Customer>> {
     if (limit > 50) {
       limit = 50;

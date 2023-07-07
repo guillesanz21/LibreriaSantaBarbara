@@ -77,6 +77,7 @@ export class StoresService {
     phone_number = null,
     name = null,
     role = null,
+    email_confirmed = null,
     approved = null,
   }): Promise<NullableType<Store[]>> {
     const fields = {
@@ -87,11 +88,13 @@ export class StoresService {
         NIF,
         address,
         phone_number,
+        email_confirmed,
         role: { role },
         id: Not(IsNull()),
         deleted_at: IsNull(),
       },
     };
+    console.log(fields);
     return this.repository.find({
       where: fields,
       relations: ['user'],
@@ -106,6 +109,7 @@ export class StoresService {
       phone_number = null,
       name = null,
       role = null,
+      email_confirmed = null,
       approved = null,
     },
     paginationOptions: IPaginationOptions,
@@ -118,6 +122,7 @@ export class StoresService {
         NIF,
         address,
         phone_number,
+        ...(email_confirmed !== null && { email_confirmed }),
         role: { role },
         id: Not(IsNull()),
         deleted_at: IsNull(),

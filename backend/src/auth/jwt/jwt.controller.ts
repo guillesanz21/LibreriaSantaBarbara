@@ -200,7 +200,35 @@ export class JwtController {
   }
 
   // * ######  POST /auth/email/customers/register/confirm ######
-  // TODO: When the global user contains the email_confirmed column, make this for all users
+  @ApiOperation({
+    summary: 'Email confirmation',
+    description:
+      'Confirm the email of a store to complete the registration process.',
+  })
+  @ApiNoContentResponse({
+    description: 'The email has been successfully confirmed.',
+  })
+  @ApiNotFoundResponse({ description: 'The store was not found.' })
+  @ApiInternalServerErrorResponse({ description: 'Error confirming email.' })
+  @ApiUnprocessableEntityResponse({
+    description: 'The hash is empty.',
+  })
+  @Post('stores/register/confirm')
+  @Public()
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async confirmStoreEmail(
+    @Body() confirmEmailDto: AuthConfirmEmailDto,
+  ): Promise<void> {
+    try {
+      const result = await this.service.confirmEmail(confirmEmailDto);
+      if (result === 'userNotFound') {
+        throw new NotFoundException('user not found');
+      }
+    } catch (e) {
+      throw new InternalServerErrorException(e);
+    }
+  }
+
   @ApiOperation({
     summary: 'Email confirmation',
     description:
@@ -217,7 +245,7 @@ export class JwtController {
   @Post('customers/register/confirm')
   @Public()
   @HttpCode(HttpStatus.NO_CONTENT)
-  async confirmEmail(
+  async confirmCustomerEmail(
     @Body() confirmEmailDto: AuthConfirmEmailDto,
   ): Promise<void> {
     try {

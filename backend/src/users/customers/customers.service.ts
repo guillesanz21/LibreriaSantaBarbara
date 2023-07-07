@@ -88,12 +88,12 @@ export class CustomersService {
     const fields = {
       first_name,
       last_name,
-      email_confirmed,
       user: {
         email,
         NIF,
         address,
         phone_number,
+        email_confirmed,
         role: { role },
         id: Not(IsNull()),
         deleted_at: IsNull(),
@@ -121,12 +121,12 @@ export class CustomersService {
     const fields = {
       first_name,
       last_name,
-      email_confirmed,
       user: {
         email,
         NIF,
         address,
         phone_number,
+        email_confirmed,
         role: { role },
         id: Not(IsNull()),
         deleted_at: IsNull(),

@@ -87,10 +87,11 @@ export class StoresController {
   @ApiQuery({
     name: 'role',
     description:
-      'Role (1: Admin, 2: Store, 3: Customer, 4: Unapproved Store, 5: Unapproved Customer, 6: Guest)',
+      'Role (1: Admin, 2: Store, 3: Customer, 4: Unapproved Store, 5: Unconfirmed, 6: Guest)',
     required: false,
     enum: RolesEnum,
   })
+  @ApiQuery({ name: 'email-confirmed', required: false })
   @ApiQuery({ name: 'approved', required: false })
   @ApiOkResponse({
     description: 'The records have been successfully retrieved.',
@@ -112,8 +113,10 @@ export class StoresController {
     @Query('phone') phone_number?: string,
     @Query('name') name?: string,
     @Query('role') role?: string,
-    @Query('approved') approved?: boolean,
+    @Query('email-confirmed') email_confirmed?: NullableType<boolean>,
+    @Query('approved') approved?: NullableType<boolean>,
   ): Promise<Store[]> {
+    console.log('email_confirmed', email_confirmed);
     return this.storesService.findMany({
       email,
       NIF,
@@ -121,6 +124,7 @@ export class StoresController {
       phone_number,
       name,
       role,
+      email_confirmed,
       approved,
     });
   }
@@ -140,10 +144,11 @@ export class StoresController {
   @ApiQuery({
     name: 'role',
     description:
-      'Role (1: Admin, 2: Store, 3: Customer, 4: Unapproved Store, 5: Unapproved Customer, 6: Guest)',
+      'Role (1: Admin, 2: Store, 3: Customer, 4: Unapproved Store, 5: Unconfirmed, 6: Guest)',
     required: false,
     enum: RolesEnum,
   })
+  @ApiQuery({ name: 'email-confirmed', required: false })
   @ApiQuery({ name: 'approved', required: false })
   @ApiOkResponse({
     description: 'The records have been successfully retrieved.',
@@ -176,7 +181,8 @@ export class StoresController {
     @Query('phone') phone_number?: string,
     @Query('name') name?: string,
     @Query('role') role?: string,
-    @Query('approved') approved?: boolean,
+    @Query('email-confirmed') email_confirmed?: NullableType<boolean>,
+    @Query('approved') approved?: NullableType<boolean>,
   ): Promise<InfinityPaginationResultType<Store>> {
     if (limit > 50) {
       limit = 50;
@@ -190,6 +196,7 @@ export class StoresController {
           phone_number,
           name,
           role,
+          email_confirmed,
           approved,
         },
         {

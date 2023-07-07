@@ -6,6 +6,7 @@ import { ForgotModule } from './forgot/forgot.module';
 import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 import { AdminController } from './admin/admin.controller';
+import { AdminService } from './admin/admin.service';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { AdminController } from './admin/admin.controller';
     ForgotModule,
   ],
   exports: [UsersService],
-  providers: [UsersService],
+  providers: [UsersService, AdminService],
   controllers: [AdminController],
 })
 export class UsersModule {}

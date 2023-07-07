@@ -13,12 +13,14 @@ import {
   SerializeOptions,
   HttpCode,
   HttpStatus,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiNoContentResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiQuery,
@@ -27,9 +29,11 @@ import {
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 import { User } from '../entities/user.entity';
+import { AdminService } from './admin.service';
 import { UsersService } from '../users.service';
 import { CreateAdminDto } from './dtos/create-admin.dto';
 import { UpdateAdminDto } from './dtos/update-admin.dto';
+import { AproveRejectStroreDto } from './dtos/aprove-reject-store.dto';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { RolesEnum } from '../roles/roles.enum';
 import { UserTypesEnum } from '../user-types/user_types.enum';
@@ -51,8 +55,65 @@ import { infinityPagination } from 'src/utils/infinity-pagination';
 @Controller()
 @Roles(RolesEnum.admin)
 export class AdminController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly adminService: AdminService,
+  ) {}
 
+  //~ ######  Admin specific endpoints ######
+  // * ######  POST /users/admin/stores/approve ######
+  @ApiOperation({
+    summary: 'Approve a store',
+    description: 'Approve a store.',
+  })
+  @ApiNoContentResponse({
+    description: 'The store has been successfully approved.',
+  })
+  @ApiUnprocessableEntityResponse({
+    description: 'The store is already approved.',
+  })
+  @ApiNotFoundResponse({
+    description: 'The user is not found.',
+  })
+  @Post('/stores/approve')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async aproveStore(@Body() body: AproveRejectStroreDto): Promise<void> {
+    const result = await this.adminService.aproveStore(body);
+    if (['UserNotFound', 'StoreNotFound'].includes(result)) {
+      throw new NotFoundException(result);
+    }
+    if (result) {
+      throw new UnprocessableEntityException(result);
+    }
+  }
+
+  // * ######  POST /users/admin/stores/reject ######
+  @ApiOperation({
+    summary: 'Reject a store',
+    description: 'Reject a store.',
+  })
+  @ApiNoContentResponse({
+    description: 'The store has been successfully rejected.',
+  })
+  @ApiUnprocessableEntityResponse({
+    description: 'The store is already rejected.',
+  })
+  @ApiNotFoundResponse({
+    description: 'The user is not found.',
+  })
+  @Post('/stores/reject')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async rejectStore(@Body() body: AproveRejectStroreDto): Promise<void> {
+    const result = await this.adminService.rejectStore(body);
+    if (['UserNotFound', 'StoreNotFound'].includes(result)) {
+      throw new NotFoundException(result);
+    }
+    if (result) {
+      throw new UnprocessableEntityException(result);
+    }
+  }
+
+  //~ ######  Usual CRUD ######
   // * ######  POST /users/admin ######
   @ApiOperation({
     summary: 'Create a new user',
@@ -86,7 +147,7 @@ export class AdminController {
   @ApiQuery({
     name: 'role',
     description:
-      'Role (1: Admin, 2: Store, 3: Customer, 4: Unapproved Store, 5: Unapproved Customer, 6: Guest)',
+      'Role (1: Admin, 2: Store, 3: Customer, 4: Unapproved Store, 5: Unconfirmed, 6: Guest)',
     required: false,
     enum: RolesEnum,
   })
@@ -94,6 +155,7 @@ export class AdminController {
   @ApiQuery({ name: 'NIF', required: false })
   @ApiQuery({ name: 'address', required: false })
   @ApiQuery({ name: 'phone', required: false })
+  @ApiQuery({ name: 'email-confirmed', required: false })
   @ApiOkResponse({
     description: 'The records have been successfully retrieved.',
     type: [User],
@@ -110,6 +172,7 @@ export class AdminController {
     @Query('NIF') NIF?: string,
     @Query('address') address?: string,
     @Query('phone') phone_number?: string,
+    @Query('email-confirmed') email_confirmed?: NullableType<boolean>,
   ): Promise<User[]> {
     return this.usersService.findMany({
       user_type_id: +user_type_id ? +user_type_id : undefined,
@@ -118,6 +181,7 @@ export class AdminController {
       NIF,
       address,
       phone_number,
+      email_confirmed,
     });
   }
 
@@ -138,7 +202,7 @@ export class AdminController {
   @ApiQuery({
     name: 'role',
     description:
-      'Role (1: Admin, 2: Store, 3: Customer, 4: Unapproved Store, 5: Unapproved Customer, 6: Guest)',
+      'Role (1: Admin, 2: Store, 3: Customer, 4: Unapproved Store, 5: Unconfirmed, 6: Guest)',
     required: false,
     enum: RolesEnum,
   })
@@ -146,6 +210,7 @@ export class AdminController {
   @ApiQuery({ name: 'NIF', required: false })
   @ApiQuery({ name: 'address', required: false })
   @ApiQuery({ name: 'phone', required: false })
+  @ApiQuery({ name: 'email-confirmed', required: false })
   @ApiOkResponse({
     description: 'The records have been successfully retrieved.',
     schema: {
@@ -176,6 +241,7 @@ export class AdminController {
     @Query('NIF') NIF?: string,
     @Query('address') address?: string,
     @Query('phone') phone_number?: string,
+    @Query('email-confirmed') email_confirmed?: NullableType<boolean>,
   ): Promise<InfinityPaginationResultType<User>> {
     if (limit > 50) {
       limit = 50;
@@ -189,6 +255,7 @@ export class AdminController {
           NIF,
           address,
           phone_number,
+          email_confirmed,
         },
         {
           page,

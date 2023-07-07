@@ -96,6 +96,14 @@ export class User extends EntityHelper {
   phone_number: string;
 
   @ApiProperty({
+    example: false,
+    description: 'The email confirmation status of the user',
+  })
+  @Expose({ groups: [ExposeGroupsEnum.me, ExposeGroupsEnum.admin] })
+  @Column({ nullable: false, default: false })
+  email_confirmed: boolean;
+
+  @ApiProperty({
     example: null,
     description: 'Hash used to verify email at registration',
   })

@@ -25,15 +25,6 @@ export class Customer extends EntityHelper {
   @Index()
   user_id: number;
 
-  // TODO: Make this column global for all users
-  @ApiProperty({
-    example: false,
-    description: 'The email confirmation status of the customer',
-  })
-  @Expose({ groups: [ExposeGroupsEnum.me, ExposeGroupsEnum.admin] })
-  @Column({ nullable: false, default: false })
-  email_confirmed: boolean;
-
   @ApiProperty({
     example: 'email',
     description: 'The login provider of the customer',
@@ -75,12 +66,6 @@ export class Customer extends EntityHelper {
   updated_at: Date;
 
   // * Relations
-  // DELETE:
-  // @ApiProperty({
-  //   description: 'The user associated to the customer',
-  //   oneOf: [{ $ref: '#/components/schemas/User' }],
-  //   type: () => User,
-  // })
   @OneToOne(() => User, (user) => user.customer, {
     eager: true,
     cascade: true,

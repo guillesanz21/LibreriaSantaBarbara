@@ -2,7 +2,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import {
   IsAlphanumeric,
-  IsBoolean,
   IsEmail,
   IsEnum,
   IsNotEmpty,
@@ -44,16 +43,6 @@ export class CreateCustomerDto extends CreateUserDto {
   @MaxLength(commonConstraints.NIF.maxLength)
   @IsCompositeUnique('User', 'user_type_id', UserTypesEnum.customer)
   NIF?: string;
-
-  @ApiPropertyOptional({
-    example: false,
-    default: false,
-    description:
-      'Whether the email of the customer has been confirmed or not by the user.',
-  })
-  @IsOptional()
-  @IsBoolean()
-  email_confirmed?: boolean;
 
   @ApiPropertyOptional({
     example: AuthProvidersEnum.email,

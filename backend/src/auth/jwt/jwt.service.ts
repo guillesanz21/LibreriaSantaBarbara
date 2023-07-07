@@ -47,6 +47,13 @@ export class JWTService {
     private configService: ConfigService,
   ) {}
 
+  private generateHash(): string {
+    return crypto
+      .createHash('sha256')
+      .update(randomStringGenerator())
+      .digest('hex');
+  }
+
   private generateToken(user: User): LoginResponseType {
     const userType = user.user_type_id;
     const role = user.role_id;
@@ -173,22 +180,21 @@ export class JWTService {
   async registerStore(
     registerDto: AuthRegisterStoreDto,
   ): Promise<string | LoginResponseType> {
+    const hash = this.generateHash();
     const createStoreDto: CreateStoreDto = {
-      role_id: RolesEnum.unapprovedStore,
+      role_id: RolesEnum.unconfirmed,
+      email_confirmed: false,
       approved: false,
+      hash,
       ...registerDto,
     };
-
     const store = await this.storesService.create(createStoreDto);
     if (!store) {
       return 'errorCreatingUser';
     }
-    // TODO: When the global user contains the email_confirmed column, generate and include hash
-    // TODO: Send email to the user
+    // TODO: Send email to the user instead of logging the hash
+    console.log(`hash: ${hash}`);
     // await this.mailService.userSignUp({ to: dto.email, data: { hash } });
-    // TODO: Send email to the admin
-    // TODO: Create an admin route to handle this
-
     // After registration, if everything went well, it will automatically log in
     return this.generateToken(store.user);
   }
@@ -196,43 +202,52 @@ export class JWTService {
   async registerCustomer(
     registerDto: AuthRegisterCustomerDto,
   ): Promise<string | LoginResponseType> {
-    const hash = crypto
-      .createHash('sha256')
-      .update(randomStringGenerator())
-      .digest('hex');
-
+    const hash = this.generateHash();
     const createCustomerDto: CreateCustomerDto = {
-      role_id: RolesEnum.unconfirmedCustomer,
+      role_id: RolesEnum.unconfirmed,
       email_confirmed: false,
       provider: AuthProvidersEnum.email,
       social_id: null,
       hash,
       ...registerDto,
     };
-
     const customer = await this.customersService.create(createCustomerDto);
     if (!customer) {
       return 'errorCreatingUser';
     }
-
     // TODO: Send email to the user instead of logging the hash
     console.log(`hash: ${hash}`);
     // await this.mailService.userSignUp({ to: dto.email, data: { hash } });
-
     // After registration, if everything went well, it will automatically log in
     return this.generateToken(customer.user);
   }
 
   async confirmEmail({ hash }: AuthConfirmEmailDto): Promise<string> {
-    // TODO: When the global user contains the email_confirmed column, make it global
-    const customer = await this.customersService.findOne({ hash });
-    if (!customer) {
+    const user = await this.usersService.findOne({ hash });
+    if (!user) {
       return 'userNotFound';
     }
-
-    customer.user.hash = null;
-    customer.email_confirmed = true;
-    await this.customersService.update(customer.id, customer);
+    if (user.user_type_id === UserTypesEnum.customer) {
+      user.hash = null;
+      user.email_confirmed = true;
+      user.role_id = RolesEnum.customer;
+      await this.usersService.update(user.id, user);
+    }
+    if (user.user_type_id === UserTypesEnum.store) {
+      const store = await this.storesService.findOne({ user_id: user.id });
+      store.user.email_confirmed = true;
+      if (store.approved) {
+        store.user.hash = null;
+        store.user.role_id = RolesEnum.store;
+      } else {
+        store.user.hash = this.generateHash();
+        store.user.role_id = RolesEnum.unapprovedStore;
+        // TODO: Send email to the admin instead of logging the hash
+        // await this.mailService.newStore({ to: adminEmail, data: { hash } });
+        console.log(`hash: ${store.user.hash}`);
+      }
+      await this.storesService.update(store.id, store);
+    }
     return '';
   }
 
@@ -245,21 +260,14 @@ export class JWTService {
     if (!user) {
       return 'userNotFound';
     }
-
-    const hash = crypto
-      .createHash('sha256')
-      .update(randomStringGenerator())
-      .digest('hex');
-
+    const hash = this.generateHash();
     await this.forgotService.create({
       hash,
       user_id: user.id,
     });
-
     // TODO: Send email to the user instead of logging the hash
     console.log(`hash: ${hash}`);
     // await this.mailService.forgotPassword({ to: email, data: { hash} });
-
     return '';
   }
 
@@ -271,12 +279,10 @@ export class JWTService {
     if (!forgot) {
       return 'userNotFound';
     }
-
     await this.usersService.update(forgot.user_id, {
       password,
     });
     await this.forgotService.softDelete(forgot.id);
-
     return '';
   }
 
@@ -327,19 +333,15 @@ export class JWTService {
 
   updateStore(token: JWTPayload, storeDto: AuthUpdateStoreDto): Promise<Store> {
     const updateStoreDto: UpdateStoreDto = storeDto;
-    // TODO: When the global user contains the email_confirmed column, uncomment this
-    //   if (storeDto.email) {
-    //     const hash = crypto
-    //     .createHash('sha256')
-    //     .update(randomStringGenerator())
-    //     .digest('hex');
+    if (storeDto.email) {
+      const hash = this.generateHash();
 
-    //   updateStoreDto.email_confirmed = false;
-    //   updateStoreDto.role_id = RolesEnum.unconfirmedCustomer;
-    //   updateStoreDto.hash = hash;
-    //   // TODO: Send email to the user
-    //   // await this.mailService.userSignUp({ to: dto.email, data: { hash } });
-    // }
+      updateStoreDto.email_confirmed = false;
+      updateStoreDto.role_id = RolesEnum.unconfirmed;
+      updateStoreDto.hash = hash;
+      // TODO: Send email to the user
+      // await this.mailService.userSignUp({ to: dto.email, data: { hash } });
+    }
     return this.storesService.update(token.id, updateStoreDto, 'user');
   }
 
@@ -349,13 +351,10 @@ export class JWTService {
   ): Promise<Customer> {
     const updateCustomerDto: UpdateCustomerDto = customerDto;
     if (customerDto.email) {
-      const hash = crypto
-        .createHash('sha256')
-        .update(randomStringGenerator())
-        .digest('hex');
+      const hash = this.generateHash();
 
       updateCustomerDto.email_confirmed = false;
-      updateCustomerDto.role_id = RolesEnum.unconfirmedCustomer;
+      updateCustomerDto.role_id = RolesEnum.unconfirmed;
       updateCustomerDto.hash = hash;
       // TODO: Send email to the user instead of logging the hash
       console.log(`hash: ${hash}`);

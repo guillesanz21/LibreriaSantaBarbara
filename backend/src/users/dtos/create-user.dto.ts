@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
+  IsBoolean,
   IsDefined,
   IsOptional,
   IsString,
@@ -48,6 +49,16 @@ export class CreateUserDto {
   @IsOptional()
   @MaxLength(commonConstraints.phone_number.maxLength)
   phone_number?: string;
+
+  @ApiPropertyOptional({
+    example: false,
+    default: false,
+    description:
+      'Whether the email of the user has been confirmed or not by the himself.',
+  })
+  @IsOptional()
+  @IsBoolean()
+  email_confirmed?: boolean;
 
   @ApiPropertyOptional({
     example: null,

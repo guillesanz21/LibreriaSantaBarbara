@@ -3,7 +3,7 @@ export enum RolesEnum {
   store = 2,
   customer = 3,
   unapprovedStore = 4,
-  unconfirmedCustomer = 5,
+  unconfirmed = 5,
   guest = 6,
 }
 
@@ -12,5 +12,5 @@ export type RoleType =
   | 'customer'
   | 'store'
   | 'unapprovedStore'
-  | 'unconfirmedCustomer'
+  | 'unconfirmed'
   | 'guest';

@@ -18,7 +18,7 @@ export class InsertStaticValues9000000000001 implements MigrationInterface {
             INSERT INTO "Role" ("id", "role") VALUES (4, 'unapprovedStore')
         `);
     await queryRunner.query(`
-            INSERT INTO "Role" ("id", "role") VALUES (5, 'unconfirmedCustomer')
+            INSERT INTO "Role" ("id", "role") VALUES (5, 'unconfirmed')
         `);
     await queryRunner.query(`
             INSERT INTO "Role" ("id", "role") VALUES (6, 'guest')
