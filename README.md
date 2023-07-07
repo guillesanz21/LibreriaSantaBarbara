@@ -10,6 +10,11 @@ In this application, the bookseller could create books, import and export the da
 
 [Architecture documentation here](./docs/Architecture.md)
 
+## Version
+
+Version number: **0.1**
+([Version changelog](./docs/Changelogs/Version.0.1.md))
+
 ## Run
 
-TODO
+Read the README of the backend.
