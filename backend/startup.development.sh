@@ -7,6 +7,6 @@ echo "DEVELOPMENT..."
 
 # cp .env.development .env
 npm run migration:run
-# npm run seed:run
+npm run seed:run
 
 npm run start:dev

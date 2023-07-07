@@ -7,7 +7,7 @@ echo "TEST..."
 
 # cp .env.test .env
 npm run migration:run
-# npm run seed:run
+npm run seed:run
 
 npm run lint
 npm run test
