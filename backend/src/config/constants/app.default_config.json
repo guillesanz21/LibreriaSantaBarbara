@@ -15,5 +15,14 @@
   "DATABASE_SYNCHRONIZE": false,
   "DATABASE_MAX_CONNECTIONS": 100,
   "SALT_ROUNDS": 10,
-  "AUTH_JWT_TOKEN_EXPIRES_IN": "1m"
+  "AUTH_JWT_TOKEN_EXPIRES_IN": "1m",
+  "MAIL_HOST": "maildev",
+  "MAIL_PORT": 1025,
+  "MAIL_USER": "maildev",
+  "MAIL_IGNORE_TLS": true,
+  "MAIL_SECURE": false,
+  "MAIL_REQUIRE_TLS": false,
+  "MAIL_DEFAULT_EMAIL": "noreply@example.com",
+  "MAIL_DEFAULT_NAME": "Api",
+  "MAIL_CLIENT_PORT": 1080
 }

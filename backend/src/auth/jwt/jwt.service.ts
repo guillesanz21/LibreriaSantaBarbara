@@ -10,6 +10,7 @@ import { UsersService } from '../../users/users.service';
 import { StoresService } from 'src/users/stores/stores.service';
 import { CustomersService } from 'src/users/customers/customers.service';
 import { ForgotService } from 'src/users/forgot/forgot.service';
+import { MailService } from 'src/mail/mail.service';
 import { AuthLoginEmailDto } from './dtos/auth-login-email.dto';
 import { AuthRegisterStoreDto } from './dtos/auth-register-store.dto';
 import { AuthRegisterCustomerDto } from './dtos/auth-register-customer.dto';
@@ -44,6 +45,7 @@ export class JWTService {
     private readonly storesService: StoresService,
     private readonly customersService: CustomersService,
     private readonly forgotService: ForgotService,
+    private readonly mailService: MailService,
     private configService: ConfigService,
   ) {}
 
@@ -192,9 +194,11 @@ export class JWTService {
     if (!store) {
       return 'errorCreatingUser';
     }
-    // TODO: Send email to the user instead of logging the hash
-    console.log(`hash: ${hash}`);
-    // await this.mailService.userSignUp({ to: dto.email, data: { hash } });
+    // Send email to the user
+    await this.mailService.confirmEmail({
+      to: createStoreDto.email,
+      data: { hash },
+    });
     // After registration, if everything went well, it will automatically log in
     return this.generateToken(store.user);
   }
@@ -215,9 +219,11 @@ export class JWTService {
     if (!customer) {
       return 'errorCreatingUser';
     }
-    // TODO: Send email to the user instead of logging the hash
-    console.log(`hash: ${hash}`);
-    // await this.mailService.userSignUp({ to: dto.email, data: { hash } });
+    // Send email to the user
+    await this.mailService.confirmEmail({
+      to: createCustomerDto.email,
+      data: { hash },
+    });
     // After registration, if everything went well, it will automatically log in
     return this.generateToken(customer.user);
   }
@@ -240,10 +246,21 @@ export class JWTService {
         store.user.hash = null;
         store.user.role_id = RolesEnum.store;
       } else {
+        const admin = await this.usersService.findOne({
+          role_id: RolesEnum.admin,
+        });
         store.user.hash = this.generateHash();
         store.user.role_id = RolesEnum.unapprovedStore;
-        // TODO: Send email to the admin instead of logging the hash
-        // await this.mailService.newStore({ to: adminEmail, data: { hash } });
+        await this.mailService.newStore({
+          to: admin.email,
+          data: {
+            name: store.name,
+            email: user.email,
+            NIF: user.email,
+            phone_number: user.phone_number,
+            hash,
+          },
+        });
         console.log(`hash: ${store.user.hash}`);
       }
       await this.storesService.update(store.id, store);
@@ -265,9 +282,8 @@ export class JWTService {
       hash,
       user_id: user.id,
     });
-    // TODO: Send email to the user instead of logging the hash
-    console.log(`hash: ${hash}`);
-    // await this.mailService.forgotPassword({ to: email, data: { hash} });
+    // Send email to the user
+    await this.mailService.forgotPassword({ to: email, data: { hash } });
     return '';
   }
 
@@ -331,7 +347,10 @@ export class JWTService {
     return '';
   }
 
-  updateStore(token: JWTPayload, storeDto: AuthUpdateStoreDto): Promise<Store> {
+  async updateStore(
+    token: JWTPayload,
+    storeDto: AuthUpdateStoreDto,
+  ): Promise<Store> {
     const updateStoreDto: UpdateStoreDto = storeDto;
     if (storeDto.email) {
       const hash = this.generateHash();
@@ -339,13 +358,16 @@ export class JWTService {
       updateStoreDto.email_confirmed = false;
       updateStoreDto.role_id = RolesEnum.unconfirmed;
       updateStoreDto.hash = hash;
-      // TODO: Send email to the user
-      // await this.mailService.userSignUp({ to: dto.email, data: { hash } });
+      // Send email to the user
+      await this.mailService.confirmEmail({
+        to: storeDto.email,
+        data: { hash },
+      });
     }
     return this.storesService.update(token.id, updateStoreDto, 'user');
   }
 
-  updateCustomer(
+  async updateCustomer(
     token: JWTPayload,
     customerDto: AuthUpdateCustomerDto,
   ): Promise<Customer> {
@@ -356,9 +378,11 @@ export class JWTService {
       updateCustomerDto.email_confirmed = false;
       updateCustomerDto.role_id = RolesEnum.unconfirmed;
       updateCustomerDto.hash = hash;
-      // TODO: Send email to the user instead of logging the hash
-      console.log(`hash: ${hash}`);
-      // await this.mailService.userSignUp({ to: dto.email, data: { hash } });
+      // Send email to the user
+      await this.mailService.confirmEmail({
+        to: customerDto.email,
+        data: { hash },
+      });
     }
     return this.customersService.update(token.id, updateCustomerDto, 'user');
   }

@@ -29,10 +29,6 @@ export class UserSeedService {
       const saltRounds = this.configService.get('auth.salt_rounds', {
         infer: true,
       });
-      console.log('DELETE: ppeper');
-      console.log(pepper);
-      console.log('DELETE: saltrounds');
-      console.log(saltRounds);
       const hashedPassword = await hashPassword('admin', pepper, +saltRounds);
 
       await this.repository.save(

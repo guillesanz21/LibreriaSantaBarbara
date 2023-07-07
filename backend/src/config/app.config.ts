@@ -7,6 +7,7 @@ type appConfigType = {
   name: string;
   port: number;
   host: string;
+  workingDirectory: string;
 };
 
 export default registerAs('app', () => {
@@ -16,6 +17,7 @@ export default registerAs('app', () => {
     name: getValue('APP_NAME'),
     port: parseInt(getValue('APP_PORT'), 10),
     host: getValue('APP_HOST'),
+    workingDirectory: process.env.PWD || process.cwd(),
   };
 
   return appConfig;
