@@ -4,6 +4,7 @@ import { BooksModule } from './books/books.module';
 import { CustomersModule } from './users/customers/customers.module';
 import { StoresModule } from './users/stores/stores.module';
 import { JWTModule } from './auth/jwt/jwt.module';
+import { LanguagesModule } from './books/languages/languages.module';
 
 export const routes = [
   {
@@ -39,6 +40,12 @@ export const routes = [
       {
         path: 'books',
         module: BooksModule,
+        children: [
+          {
+            path: 'languages',
+            module: LanguagesModule,
+          },
+        ],
       },
     ],
   },

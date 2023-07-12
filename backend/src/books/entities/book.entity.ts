@@ -226,6 +226,7 @@ export class Book extends EntityHelper {
   @Transform(({ value }) => value?.location)
   @ManyToOne(() => Location, (location) => location.books, {
     eager: true,
+    cascade: true,
     onUpdate: 'CASCADE',
     onDelete: 'RESTRICT',
   })
@@ -235,19 +236,29 @@ export class Book extends EntityHelper {
   @Transform(({ value }) => value?.status)
   @ManyToOne(() => Status, (status) => status.books, {
     eager: true,
+    cascade: true,
     onUpdate: 'CASCADE',
     onDelete: 'RESTRICT',
   })
   @JoinColumn({ name: 'status_id' })
   status: Status;
 
-  @OneToMany(() => Keyword, (keyword) => keyword.book)
+  @OneToMany(() => Keyword, (keyword) => keyword.book, {
+    eager: true,
+    cascade: true,
+  })
   keywords: Keyword[];
 
-  @OneToMany(() => Image, (image) => image.book)
+  @OneToMany(() => Image, (image) => image.book, {
+    eager: true,
+    cascade: true,
+  })
   images: Image[];
 
-  @OneToMany(() => Language, (language) => language.book)
+  @OneToMany(() => Language, (language) => language.book, {
+    eager: true,
+    cascade: true,
+  })
   languages: Language[];
 
   @ManyToMany(() => Topic, (topic) => topic.books, {

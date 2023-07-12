@@ -2213,6 +2213,208 @@
           }
         ]
       }
+    },
+    "/api/books/languages/{id}": {
+      "get": {
+        "operationId": "LanguagesController_findOne",
+        "summary": "Get a language by id",
+        "description": "Get a language by id.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The language.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Language"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Books/Languages"
+        ]
+      },
+      "delete": {
+        "operationId": "LanguagesController_delete",
+        "summary": "Delete a language by id",
+        "description": "Delete a language by id.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The language has been deleted."
+          }
+        },
+        "tags": [
+          "Books/Languages"
+        ]
+      }
+    },
+    "/api/books/languages/static": {
+      "get": {
+        "operationId": "LanguagesController_getAllStatic",
+        "summary": "Get all the static languages",
+        "description": "Get all the static languages (all the world languages).",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "All the languages.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "ES": {
+                        "type": "string",
+                        "example": "spanish"
+                      },
+                      "EN": {
+                        "type": "string",
+                        "example": "english"
+                      },
+                      "CA": {
+                        "type": "string",
+                        "example": "catalan"
+                      },
+                      "GL": {
+                        "type": "string",
+                        "example": "galician"
+                      },
+                      "EU": {
+                        "type": "string",
+                        "example": "basque"
+                      },
+                      "FR": {
+                        "type": "string",
+                        "example": "french"
+                      },
+                      "DE": {
+                        "type": "string",
+                        "example": "german"
+                      },
+                      "IT": {
+                        "type": "string",
+                        "example": "italian"
+                      },
+                      "PT": {
+                        "type": "string",
+                        "example": "portuguese"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Books/Languages"
+        ]
+      }
+    },
+    "/api/books/languages/static/top": {
+      "get": {
+        "operationId": "LanguagesController_getMostUsedStatic",
+        "summary": "Get the main static languages",
+        "description": "Get the main static languages.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The main languages.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "ES": {
+                        "type": "string",
+                        "example": "spanish"
+                      },
+                      "EN": {
+                        "type": "string",
+                        "example": "english"
+                      },
+                      "CA": {
+                        "type": "string",
+                        "example": "catalan"
+                      },
+                      "GL": {
+                        "type": "string",
+                        "example": "galician"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Books/Languages"
+        ]
+      }
+    },
+    "/api/books/languages/static/{alpha2}": {
+      "get": {
+        "operationId": "LanguagesController_getOneStatic",
+        "summary": "Get a language by its alpha2 code",
+        "description": "Get a language by its alpha2 code.",
+        "parameters": [
+          {
+            "name": "alpha2",
+            "required": true,
+            "in": "query",
+            "example": "ES",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The language.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ES": {
+                      "type": "string",
+                      "example": "spanish"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Books/Languages"
+        ]
+      }
     }
   },
   "info": {
@@ -3159,6 +3361,31 @@
         "required": [
           "password",
           "oldPassword"
+        ]
+      },
+      "Language": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1,
+            "description": "The id of the language"
+          },
+          "book_id": {
+            "type": "number",
+            "example": 1,
+            "description": "The id of the book that the language references to"
+          },
+          "language": {
+            "type": "string",
+            "example": "EN",
+            "description": "ISO 639-1 Alpha-2 code of the language"
+          }
+        },
+        "required": [
+          "id",
+          "book_id",
+          "language"
         ]
       }
     }

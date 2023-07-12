@@ -11,9 +11,11 @@ import {
   Min,
   IsUrl,
   IsNotEmpty,
+  Length,
 } from 'class-validator';
 import { IsExists } from 'src/utils/validators/isExists.validator';
 import { IsCompositeUnique } from 'src/utils/validators/isCompositeUnique.validator';
+import { IsISO6391 } from 'src/utils/validators/isISO6391.validator';
 import { bookConstraints as constraints } from 'src/config/constants/database.constraint_values';
 import { IBook } from '../interfaces/book.interface';
 
@@ -200,6 +202,20 @@ export class CreateBookDto implements IBook {
     each: true,
   })
   keywords?: string[];
+
+  @ApiPropertyOptional({
+    example: ['ES', 'EN'],
+    description: 'The languages of the book',
+  })
+  @IsOptional()
+  @Transform(({ value }) =>
+    value.map((language: string) => language?.toUpperCase()),
+  )
+  @Length(constraints.language.length, constraints.language.length, {
+    each: true,
+  })
+  @IsISO6391({ each: true })
+  languages?: string[];
 
   @ApiPropertyOptional({
     example: ['https://example.com/image1.jpg'],
