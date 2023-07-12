@@ -2223,9 +2223,9 @@
           {
             "name": "id",
             "required": true,
-            "in": "query",
+            "in": "path",
             "schema": {
-              "type": "string"
+              "type": "number"
             }
           }
         ],
@@ -2253,9 +2253,9 @@
           {
             "name": "id",
             "required": true,
-            "in": "query",
+            "in": "path",
             "schema": {
-              "type": "string"
+              "type": "number"
             }
           }
         ],
@@ -2386,7 +2386,7 @@
           {
             "name": "alpha2",
             "required": true,
-            "in": "query",
+            "in": "path",
             "example": "ES",
             "schema": {
               "type": "string"
@@ -2414,6 +2414,182 @@
         "tags": [
           "Books/Languages"
         ]
+      }
+    },
+    "/api/books/topics": {
+      "get": {
+        "operationId": "TopicsController_findAll",
+        "summary": "Get all the topics",
+        "description": "Get all the topics.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The topics.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Topic"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "TopicsController_create",
+        "summary": "Create a topic",
+        "description": "Create a topic.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTopicDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The topic.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Topic"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/books/topics/{id}": {
+      "get": {
+        "operationId": "TopicsController_findOne",
+        "summary": "Get a topic by id",
+        "description": "Get a topic by id.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The topic.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Topic"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "TopicsController_update",
+        "summary": "Update a topic",
+        "description": "Update a topic.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTopicDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The topic.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Topic"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "TopicsController_delete",
+        "summary": "Delete a topic",
+        "description": "Delete a topic.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The topic.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Topic"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/books/topics/{id}/books": {
+      "get": {
+        "operationId": "TopicsController_findBooksByTopic",
+        "summary": "Get all the books of one topic",
+        "description": "Get all the books of one topic.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The books.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Book"
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   },
@@ -3387,6 +3563,209 @@
           "book_id",
           "language"
         ]
+      },
+      "Topic": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1,
+            "description": "The id of the topic"
+          },
+          "topic": {
+            "type": "string",
+            "example": "History",
+            "description": "The topic"
+          }
+        },
+        "required": [
+          "id",
+          "topic"
+        ]
+      },
+      "Book": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1,
+            "description": "The internal id of the book"
+          },
+          "user_id": {
+            "type": "number",
+            "example": 1,
+            "description": "The id of the store that have the book"
+          },
+          "location_id": {
+            "type": "number",
+            "example": 1,
+            "description": "The id of the location where book is stored"
+          },
+          "status_id": {
+            "type": "number",
+            "example": 1,
+            "description": "The id of the status of the book"
+          },
+          "ref": {
+            "type": "number",
+            "example": 1,
+            "description": "The external id/reference of the book"
+          },
+          "ISBN": {
+            "type": "string",
+            "example": "9789720046957",
+            "description": "The ISBN (13/9) of the book"
+          },
+          "title": {
+            "type": "string",
+            "example": "The Lord of the Rings",
+            "description": "The title of the book"
+          },
+          "author": {
+            "type": "string",
+            "example": "J. R. R. Tolkien",
+            "description": "The author of the book"
+          },
+          "publication_place": {
+            "type": "string",
+            "example": "Portugal",
+            "description": "The publication place (country, region, etc.) of the book"
+          },
+          "publisher": {
+            "type": "string",
+            "example": "Círculo de Leitores",
+            "description": "The publisher of the book"
+          },
+          "collection": {
+            "type": "string",
+            "example": "Colecção: Obras de J. R. R. Tolkien",
+            "description": "The collection of the book"
+          },
+          "year": {
+            "type": "number",
+            "example": 2012,
+            "description": "The publication year of the book"
+          },
+          "size": {
+            "type": "string",
+            "example": "20x13",
+            "description": "The size of the book (height x width)"
+          },
+          "weight": {
+            "type": "number",
+            "example": 500,
+            "description": "The weight of the book (in grams)"
+          },
+          "pages": {
+            "type": "number",
+            "example": 500,
+            "description": "The number of pages of the book"
+          },
+          "condition": {
+            "type": "string",
+            "example": "With dust jacket",
+            "description": "The condition of the book"
+          },
+          "description": {
+            "type": "string",
+            "example": "The Lord of the Rings is an epic high-fantasy novel",
+            "description": "The description of the book"
+          },
+          "price": {
+            "type": "number",
+            "example": 30,
+            "description": "The price of the book (euros)"
+          },
+          "stock": {
+            "type": "number",
+            "example": 2,
+            "description": "The stock of the book"
+          },
+          "binding": {
+            "type": "string",
+            "example": "Hardcover",
+            "description": "The type of binding of the book"
+          },
+          "private_note": {
+            "type": "string",
+            "example": "Erase the pencil marks",
+            "description": "A private note that only the store can see"
+          },
+          "created_at": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2021-01-01",
+            "description": "The date when the book was created"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "type": "string",
+            "example": null,
+            "description": "Date when the book has been updated"
+          },
+          "sold_at": {
+            "format": "date-time",
+            "type": "string",
+            "example": null,
+            "description": "The date when the book has been sold"
+          },
+          "deleted_at": {
+            "format": "date-time",
+            "type": "string",
+            "example": null,
+            "description": "The date when the book has been (soft) deleted"
+          }
+        },
+        "required": [
+          "id",
+          "user_id",
+          "location_id",
+          "status_id",
+          "ref",
+          "ISBN",
+          "title",
+          "author",
+          "publication_place",
+          "publisher",
+          "collection",
+          "year",
+          "size",
+          "weight",
+          "pages",
+          "condition",
+          "description",
+          "price",
+          "stock",
+          "binding",
+          "private_note",
+          "created_at",
+          "updated_at",
+          "sold_at",
+          "deleted_at"
+        ]
+      },
+      "CreateTopicDto": {
+        "type": "object",
+        "properties": {
+          "topic": {
+            "type": "string",
+            "example": "Fiction",
+            "description": "The topic of the book"
+          }
+        },
+        "required": [
+          "topic"
+        ]
+      },
+      "UpdateTopicDto": {
+        "type": "object",
+        "properties": {
+          "topic": {
+            "type": "string",
+            "example": "Fiction",
+            "description": "The topic of the book"
+          }
+        }
       }
     }
   }

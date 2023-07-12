@@ -4,13 +4,13 @@ import {
   Get,
   HttpCode,
   HttpStatus,
-  Query,
+  Param,
 } from '@nestjs/common';
 import {
   ApiNoContentResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiQuery,
+  ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
 import { LanguagesService } from './languages.service';
@@ -29,14 +29,13 @@ export class LanguagesController {
     summary: 'Get a language by id',
     description: 'Get a language by id.',
   })
-  @ApiQuery({ name: 'id' })
   @ApiOkResponse({
     description: 'The language.',
     type: Language,
   })
   @HttpCode(HttpStatus.OK)
   @Get(':id')
-  findOne(@Query('id') id: string): Promise<Language> {
+  findOne(@Param('id') id: number): Promise<Language> {
     return this.languagesService.findOneById(+id);
   }
 
@@ -45,13 +44,12 @@ export class LanguagesController {
     summary: 'Delete a language by id',
     description: 'Delete a language by id.',
   })
-  @ApiQuery({ name: 'id' })
   @ApiNoContentResponse({
     description: 'The language has been deleted.',
   })
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  delete(@Query('id') id: string): Promise<void> {
+  delete(@Param('id') id: number): Promise<void> {
     return this.languagesService.delete(+id);
   }
 
@@ -117,7 +115,7 @@ export class LanguagesController {
     summary: 'Get a language by its alpha2 code',
     description: 'Get a language by its alpha2 code.',
   })
-  @ApiQuery({ name: 'alpha2', example: 'ES' })
+  @ApiParam({ name: 'alpha2', example: 'ES' })
   @ApiOkResponse({
     description: 'The language.',
     schema: {
@@ -129,7 +127,7 @@ export class LanguagesController {
   })
   @HttpCode(HttpStatus.OK)
   @Get('static/:alpha2')
-  getOneStatic(@Query('alpha2') alpha2: string): string | undefined {
+  getOneStatic(@Param('alpha2') alpha2: string): string | undefined {
     return this.languagesService.getOneStatic(alpha2);
   }
 }

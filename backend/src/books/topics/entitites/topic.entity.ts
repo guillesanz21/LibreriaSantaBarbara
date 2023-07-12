@@ -16,6 +16,7 @@ export class Topic extends EntityHelper {
   // * Relations
   @ManyToMany(() => Book, (book) => book.topics, {
     eager: false,
+    cascade: true,
     onUpdate: 'CASCADE',
   })
   books: Book[];
