@@ -2436,7 +2436,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Books/Topics"
+        ]
       },
       "post": {
         "operationId": "TopicsController_create",
@@ -2463,8 +2466,22 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "The user is not logged in."
+          },
+          "403": {
+            "description": "The user hasn't the right role (store or admin)."
           }
-        }
+        },
+        "tags": [
+          "Books/Topics"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     },
     "/api/books/topics/{id}": {
@@ -2493,7 +2510,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Books/Topics"
+        ]
       },
       "patch": {
         "operationId": "TopicsController_update",
@@ -2529,8 +2549,22 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "The user is not logged in."
+          },
+          "403": {
+            "description": "The user hasn't the right role (store or admin)."
           }
-        }
+        },
+        "tags": [
+          "Books/Topics"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       },
       "delete": {
         "operationId": "TopicsController_delete",
@@ -2556,8 +2590,22 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "The user is not logged in."
+          },
+          "403": {
+            "description": "The user hasn't the right role (admin)."
           }
-        }
+        },
+        "tags": [
+          "Books/Topics"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     },
     "/api/books/topics/{id}/books": {
@@ -2589,7 +2637,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Books/Topics"
+        ]
       }
     }
   },

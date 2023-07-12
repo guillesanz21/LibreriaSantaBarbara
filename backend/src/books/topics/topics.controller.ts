@@ -11,16 +11,24 @@ import {
   Post,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
+  ApiForbiddenResponse,
   ApiNoContentResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { TopicsService } from './topics.service';
 import { Topic } from './entitites/topic.entity';
 import { Book } from '../entities/book.entity';
 import { CreateTopicDto } from './dtos/create-topic.dto';
 import { UpdateTopicDto } from './dtos/update-topic.dto';
+import { Public } from 'src/auth/decorators/public.decorator';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { RolesEnum } from 'src/users/roles/roles.enum';
 
+@ApiTags('Books/Topics')
 @Controller()
 export class TopicsController {
   constructor(private readonly topicsService: TopicsService) {}
@@ -34,6 +42,7 @@ export class TopicsController {
     description: 'The topics.',
     type: [Topic],
   })
+  @Public()
   @HttpCode(HttpStatus.OK)
   @Get()
   findAll(): Promise<Topic[]> {
@@ -49,6 +58,7 @@ export class TopicsController {
     description: 'The topic.',
     type: Topic,
   })
+  @Public()
   @HttpCode(HttpStatus.OK)
   @Get(':id')
   findOne(@Param('id') id: number): Promise<Topic> {
@@ -64,6 +74,7 @@ export class TopicsController {
     description: 'The books.',
     type: [Book],
   })
+  @Public()
   @HttpCode(HttpStatus.OK)
   @Get(':id/books')
   findBooksByTopic(@Param('id') id: number): Promise<Book[]> {
@@ -79,6 +90,14 @@ export class TopicsController {
     description: 'The topic.',
     type: Topic,
   })
+  @ApiUnauthorizedResponse({
+    description: 'The user is not logged in.',
+  })
+  @ApiForbiddenResponse({
+    description: "The user hasn't the right role (store or admin).",
+  })
+  @ApiBearerAuth()
+  @Roles(RolesEnum.store, RolesEnum.admin)
   @HttpCode(HttpStatus.OK)
   @Post()
   create(@Body() createTopicDto: CreateTopicDto): Promise<Topic> {
@@ -94,6 +113,14 @@ export class TopicsController {
     description: 'The topic.',
     type: Topic,
   })
+  @ApiUnauthorizedResponse({
+    description: 'The user is not logged in.',
+  })
+  @ApiForbiddenResponse({
+    description: "The user hasn't the right role (store or admin).",
+  })
+  @ApiBearerAuth()
+  @Roles(RolesEnum.store, RolesEnum.admin)
   @HttpCode(HttpStatus.OK)
   @Patch(':id')
   async update(
@@ -115,6 +142,14 @@ export class TopicsController {
     description: 'The topic.',
     type: Topic,
   })
+  @ApiUnauthorizedResponse({
+    description: 'The user is not logged in.',
+  })
+  @ApiForbiddenResponse({
+    description: "The user hasn't the right role (admin).",
+  })
+  @ApiBearerAuth()
+  @Roles(RolesEnum.admin)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async delete(@Param('id') id: number): Promise<void> {
