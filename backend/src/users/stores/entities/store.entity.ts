@@ -44,6 +44,7 @@ export class Store extends EntityHelper {
   @Column({ type: 'text', nullable: false, unique: true })
   name: string;
 
+  // * Dates
   @ApiProperty({
     example: '2021-01-01',
     description: 'Date when the store has interactuated with the app',
@@ -52,7 +53,6 @@ export class Store extends EntityHelper {
   @CreateDateColumn({ type: 'date', nullable: false })
   last_activity: Date;
 
-  // * Dates
   @ApiProperty({
     example: null,
     description: 'Date when the store has been updated',

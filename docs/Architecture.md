@@ -46,15 +46,16 @@ When accepting a pull request to the _production_ branch, it will also _build_ a
   - (FUTURE) Maybe GraphQL could be useful if the requests become complex.
 - Socket IO
 - ORM → TypeORM.
-- Authorization / authentication →
-  - Manually? Cookies? JWT?
-  - Passport? So in the future we could add OAuth?
+- Authorization / authentication → Passport
+  - JWT
+  - Roles
+  - (FUTURE) Policies / permissions?
 - (FUTURE) Payment handler → ??
 - Testing → Jest
 - API documentation → Swagger
 - Other interesting libraries:
   - File upload → Multer
-  - (FUTURE) Email sender → ??
+  - Email sender → Mailer
 
 ## Web
 

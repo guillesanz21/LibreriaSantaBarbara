@@ -1,15 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import { IsNotEmpty, MaxLength } from 'class-validator';
 import { IsUnique } from 'src/utils/validators/isUnique.validator';
 import { bookConstraints as constraints } from 'src/config/constants/database.constraint_values';
 
-export class CreateStatusDto {
+export class CreateTopicDto {
   @ApiProperty({
-    example: 'Available',
-    description: 'The status of the book',
+    example: 'Fiction',
+    description: 'The topic of the book',
   })
   @IsNotEmpty()
-  @MaxLength(constraints.status.maxLength)
-  @IsUnique('Status')
-  status: string;
+  @Transform(({ value }) => value?.toLowerCase())
+  @MaxLength(constraints.topic.maxLength)
+  @IsUnique('Topic')
+  topic: string;
 }

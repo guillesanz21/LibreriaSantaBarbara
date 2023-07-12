@@ -1,7 +1,9 @@
 export interface IBook {
   id?: number;
-  store_id: number;
-  ref: number;
+  store_id?: number;
+  location_id?: number;
+  status_id?: number;
+  ref?: number;
   ISBN: string;
   title: string;
   author?: string;
@@ -16,10 +18,7 @@ export interface IBook {
   description?: string;
   price: number;
   stock?: number;
-  location_id?: number;
-  status_id?: number;
   binding?: string;
   private_note?: string;
-  created_at: Date;
   sold_at?: Date;
 }
