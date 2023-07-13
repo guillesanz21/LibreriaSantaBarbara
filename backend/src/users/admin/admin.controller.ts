@@ -294,14 +294,14 @@ export class AdminController {
     description:
       'Update the specified user by its ID (user_id) with the specified data.',
   })
-  @ApiOkResponse({
+  @ApiNoContentResponse({
     description: 'The record has been successfully updated.',
   })
   @ApiUnprocessableEntityResponse({
     description: 'The email is not valid.',
   })
   @Patch(':id')
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async update(
     @Param('id') id: number,
     @Body() body: UpdateAdminDto,

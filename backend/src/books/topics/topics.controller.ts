@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
+  ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiNoContentResponse,
   ApiOkResponse,
@@ -86,7 +87,7 @@ export class TopicsController {
     summary: 'Create a topic',
     description: 'Create a topic.',
   })
-  @ApiOkResponse({
+  @ApiCreatedResponse({
     description: 'The topic.',
     type: Topic,
   })
@@ -98,7 +99,7 @@ export class TopicsController {
   })
   @ApiBearerAuth()
   @Roles(RolesEnum.store, RolesEnum.admin)
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.CREATED)
   @Post()
   create(@Body() createTopicDto: CreateTopicDto): Promise<Topic> {
     return this.topicsService.create(createTopicDto);
@@ -109,9 +110,8 @@ export class TopicsController {
     summary: 'Update a topic',
     description: 'Update a topic.',
   })
-  @ApiOkResponse({
-    description: 'The topic.',
-    type: Topic,
+  @ApiNoContentResponse({
+    description: 'The topic has been updated.',
   })
   @ApiUnauthorizedResponse({
     description: 'The user is not logged in.',
@@ -121,7 +121,7 @@ export class TopicsController {
   })
   @ApiBearerAuth()
   @Roles(RolesEnum.store, RolesEnum.admin)
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Patch(':id')
   async update(
     @Param('id') id: number,
@@ -139,8 +139,7 @@ export class TopicsController {
     description: 'Delete a topic.',
   })
   @ApiNoContentResponse({
-    description: 'The topic.',
-    type: Topic,
+    description: 'The topic has been deleted.',
   })
   @ApiUnauthorizedResponse({
     description: 'The user is not logged in.',

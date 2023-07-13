@@ -12,8 +12,9 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { EntityHelper } from 'src/utils/entities/entity-helper.entity';
-import { Book } from '../../../books/entities/book.entity';
 import { User } from '../../entities/user.entity';
+import { Book } from '../../../books/entities/book.entity';
+import { Location as LocationEntity } from '../../../books/locations/entities/location.entity';
 import { ExposeGroupsEnum } from 'src/utils/types/expose-groups.enum';
 
 @Entity('Store')
@@ -74,4 +75,7 @@ export class Store extends EntityHelper {
 
   @OneToMany(() => Book, (book) => book.store)
   books: Book[];
+
+  @OneToMany(() => LocationEntity, (location) => location.store)
+  locations: LocationEntity[];
 }

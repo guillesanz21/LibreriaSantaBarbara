@@ -237,14 +237,14 @@ export class StoresController {
     description:
       'Update the specified store by its ID (store_id) with the specified data.',
   })
-  @ApiOkResponse({
+  @ApiNoContentResponse({
     description: 'The record has been successfully updated.',
   })
   @ApiUnprocessableEntityResponse({
     description: 'The email is not valid.',
   })
   @Patch(':id')
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async update(
     @Param('id') id: number,
     @Body() body: UpdateStoreDto,

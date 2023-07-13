@@ -40,7 +40,7 @@ export class Book extends EntityHelper {
   })
   @Column({ type: 'int', nullable: false, default: 1 })
   @Index()
-  user_id: number;
+  store_id: number;
 
   @ApiProperty({
     example: 1,

@@ -451,7 +451,7 @@
           }
         },
         "responses": {
-          "200": {
+          "204": {
             "description": "The record has been successfully updated."
           },
           "401": {
@@ -950,7 +950,7 @@
           }
         },
         "responses": {
-          "200": {
+          "204": {
             "description": "The record has been successfully updated."
           },
           "401": {
@@ -1448,7 +1448,7 @@
           }
         },
         "responses": {
-          "200": {
+          "204": {
             "description": "The record has been successfully updated."
           },
           "401": {
@@ -2457,7 +2457,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "The topic.",
             "content": {
               "application/json": {
@@ -2540,15 +2540,8 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "The topic.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Topic"
-                }
-              }
-            }
+          "204": {
+            "description": "The topic has been updated."
           },
           "401": {
             "description": "The user is not logged in."
@@ -2582,14 +2575,7 @@
         ],
         "responses": {
           "204": {
-            "description": "The topic.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Topic"
-                }
-              }
-            }
+            "description": "The topic has been deleted."
           },
           "401": {
             "description": "The user is not logged in."
@@ -2640,6 +2626,185 @@
         },
         "tags": [
           "Books/Topics"
+        ]
+      }
+    },
+    "/api/books/locations": {
+      "post": {
+        "operationId": "LocationsController_create",
+        "summary": "Create a location",
+        "description": "Create a location associated to the store.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLocationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The location.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Location"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Books/Locations"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "LocationsController_findMany",
+        "summary": "Get all the locations",
+        "description": "Get all the locations associated to the store.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The locations.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Location"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Books/Locations"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/books/locations/{id}": {
+      "get": {
+        "operationId": "LocationsController_findOne",
+        "summary": "Get a location by id",
+        "description": "Get a location by id.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The location.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Location"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Books/Locations"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "LocationsController_update",
+        "summary": "Update a location",
+        "description": "Update a location associated to the store.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLocationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The location has been updated."
+          },
+          "404": {
+            "description": "Location not found."
+          }
+        },
+        "tags": [
+          "Books/Locations"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "LocationsController_delete",
+        "summary": "Delete a location",
+        "description": "(Hard) Delete a location associated to the store.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The location has been (hard) deleted."
+          },
+          "404": {
+            "description": "Location not found."
+          },
+          "500": {
+            "description": "Location not deleted."
+          }
+        },
+        "tags": [
+          "Books/Locations"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
         ]
       }
     }
@@ -3642,7 +3807,7 @@
             "example": 1,
             "description": "The internal id of the book"
           },
-          "user_id": {
+          "store_id": {
             "type": "number",
             "example": 1,
             "description": "The id of the store that have the book"
@@ -3769,7 +3934,7 @@
         },
         "required": [
           "id",
-          "user_id",
+          "store_id",
           "location_id",
           "status_id",
           "ref",
@@ -3815,6 +3980,54 @@
             "type": "string",
             "example": "Fiction",
             "description": "The topic of the book"
+          }
+        }
+      },
+      "CreateLocationDto": {
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "string",
+            "example": "Storage 1",
+            "description": "The location of the book"
+          }
+        },
+        "required": [
+          "location"
+        ]
+      },
+      "Location": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1,
+            "description": "The id of the location"
+          },
+          "store_id": {
+            "type": "number",
+            "example": 1,
+            "description": "The id of the store where the location is"
+          },
+          "location": {
+            "type": "string",
+            "example": "Storage",
+            "description": "The location"
+          }
+        },
+        "required": [
+          "id",
+          "store_id",
+          "location"
+        ]
+      },
+      "UpdateLocationDto": {
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "string",
+            "example": "Storage 1",
+            "description": "The location of the book"
           }
         }
       }

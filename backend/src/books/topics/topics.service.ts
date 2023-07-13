@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Topic } from './entitites/topic.entity';
+import { Book } from '../entities/book.entity';
 import { CreateTopicDto } from './dtos/create-topic.dto';
 import { UpdateTopicDto } from './dtos/update-topic.dto';
-import { MaybeType } from 'src/utils/types/maybe.type';
-import { Book } from '../entities/book.entity';
+import { NullableType } from 'src/utils/types/nullable.type';
 
 @Injectable()
 export class TopicsService {
@@ -15,7 +15,7 @@ export class TopicsService {
   ) {}
 
   // Find a topic by its id
-  async findOneById(id: number): Promise<MaybeType<Topic>> {
+  async findOneById(id: number): Promise<NullableType<Topic>> {
     return this.topicsRepository.findOne({ where: { id: +id } });
   }
 
@@ -26,7 +26,7 @@ export class TopicsService {
 
   // Find the topics of a book
   // TODO: Check if this works
-  async findTopicsOfBook(book_id: number): Promise<Topic[]> {
+  async findTopicsOfBook(book_id: number): Promise<NullableType<Topic[]>> {
     return this.topicsRepository
       .createQueryBuilder('topics')
       .leftJoin('book.topics', 'topics')
@@ -36,7 +36,7 @@ export class TopicsService {
 
   // Find the books of a topic
   // TODO: Check if this works
-  async findBooksByTopic(topic_id: number): Promise<Book[]> {
+  async findBooksByTopic(topic_id: number): Promise<NullableType<Book[]>> {
     return this.topicsRepository
       .createQueryBuilder('books')
       .leftJoin('topic.books', 'books')

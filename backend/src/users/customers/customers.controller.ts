@@ -236,14 +236,14 @@ export class CustomersController {
     description:
       'Update the specified customer by its ID (customer_id) with the specified data.',
   })
-  @ApiOkResponse({
+  @ApiNoContentResponse({
     description: 'The record has been successfully updated.',
   })
   @ApiUnprocessableEntityResponse({
     description: 'The email is not valid.',
   })
   @Patch(':id')
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async update(
     @Param('id') id: number,
     @Body() body: UpdateCustomerDto,

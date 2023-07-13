@@ -6,6 +6,7 @@ import { StoresModule } from './users/stores/stores.module';
 import { JWTModule } from './auth/jwt/jwt.module';
 import { LanguagesModule } from './books/languages/languages.module';
 import { TopicsModule } from './books/topics/topics.module';
+import { LocationsModule } from './books/locations/locations.module';
 
 export const routes = [
   {
@@ -49,6 +50,10 @@ export const routes = [
           {
             path: 'topics',
             module: TopicsModule,
+          },
+          {
+            path: 'locations',
+            module: LocationsModule,
           },
         ],
       },
