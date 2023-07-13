@@ -365,7 +365,7 @@ export class JwtController {
   }
 
   //~   ######## ME (whoami, update) ########
-  // * ######  POST /auth/email/me/logout ######
+  // * ######  POST /auth/email/me/logout (Auth) ######
   @ApiOperation({
     summary: 'Logout',
     description:
@@ -392,7 +392,7 @@ export class JwtController {
     });
   }
 
-  // * ######  GET /auth/email/me ######
+  // * ######  GET /auth/email/me (Auth) ######
   @ApiOperation({
     summary: 'Me',
     description: 'Get the user data of the user in the request object.',
@@ -415,7 +415,7 @@ export class JwtController {
     return this.service.me(req.user);
   }
 
-  // * ######  PATCH /auth/email/me/stores ######
+  // * ######  PATCH /auth/email/me/stores (Auth) ######
   @ApiOperation({
     summary: 'Update store',
     description: 'Update the store data of the user in the request object.',
@@ -444,7 +444,7 @@ export class JwtController {
     }
   }
 
-  // * ######  PATCH /auth/email/me/customers ######
+  // * ######  PATCH /auth/email/me/customers (Auth) ######
   @ApiOperation({
     summary: 'Update customer',
     description: 'Update the customer data of the user in the request object.',
@@ -468,7 +468,7 @@ export class JwtController {
     await this.service.updateCustomer(req.user, customerDto);
   }
 
-  // * ######  PATCH /auth/email/me/password ######
+  // * ######  PATCH /auth/email/me/password (Auth) ######
   @ApiOperation({
     summary: 'Update password',
     description: 'Update the password of the user in the request object.',
@@ -502,7 +502,7 @@ export class JwtController {
     }
   }
 
-  // * ######  DELETE /auth/email/me ######
+  // * ######  DELETE /auth/email/me (Auth) ######
   @ApiOperation({
     summary: 'Delete',
     description: 'Soft-delete the user in the request object.',

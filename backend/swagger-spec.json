@@ -2655,6 +2655,12 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
           }
         },
         "tags": [
@@ -2684,6 +2690,12 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
           }
         },
         "tags": [
@@ -2721,6 +2733,12 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
           }
         },
         "tags": [
@@ -2760,6 +2778,12 @@
           "204": {
             "description": "The location has been updated."
           },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
           "404": {
             "description": "Location not found."
           }
@@ -2791,6 +2815,12 @@
           "204": {
             "description": "The location has been (hard) deleted."
           },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
           "404": {
             "description": "Location not found."
           },
@@ -2800,6 +2830,143 @@
         },
         "tags": [
           "Books/Locations"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/books/status": {
+      "post": {
+        "operationId": "StatusController_create",
+        "summary": "Create a status",
+        "description": "Create a status associated to the store.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateStatusDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The status.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          }
+        },
+        "tags": [
+          "Books/Status"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "StatusController_findMany",
+        "summary": "Get all the status",
+        "description": "Get all the status available.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The status.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Status"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Books/Status"
+        ]
+      }
+    },
+    "/api/books/status/{id}": {
+      "get": {
+        "operationId": "StatusController_findOne",
+        "summary": "Get a status by id",
+        "description": "Get a status by id.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The status.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Books/Status"
+        ]
+      },
+      "patch": {
+        "operationId": "StatusController_delete",
+        "summary": "Delete a status by id",
+        "description": "Delete a status by id.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The status has been successfully deleted."
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "500": {
+            "description": "The status could not be deleted."
+          }
+        },
+        "tags": [
+          "Books/Status"
         ],
         "security": [
           {
@@ -4028,6 +4195,48 @@
             "type": "string",
             "example": "Storage 1",
             "description": "The location of the book"
+          }
+        }
+      },
+      "CreateStatusDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "Available",
+            "description": "The status of the book"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "Status": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1,
+            "description": "The id of the status"
+          },
+          "status": {
+            "type": "string",
+            "example": "Sold",
+            "description": "The status"
+          }
+        },
+        "required": [
+          "id",
+          "status"
+        ]
+      },
+      "UpdateStatusDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "Available",
+            "description": "The status of the book"
           }
         }
       }

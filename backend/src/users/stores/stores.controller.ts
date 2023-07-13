@@ -56,7 +56,7 @@ import { StoreResponseSchema } from '../../utils/schemas/users.schema';
 export class StoresController {
   constructor(private readonly storesService: StoresService) {}
 
-  // * ######  POST /users/stores ######
+  // * ######  POST /users/stores (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Create a new store',
     description: 'Create a new store.',
@@ -74,7 +74,7 @@ export class StoresController {
     return this.storesService.create(body);
   }
 
-  // * ######  GET /users/stores ######
+  // * ######  GET /users/stores (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Get all the stores by filtering them',
     description: 'Get all the filtered stores.',
@@ -129,7 +129,7 @@ export class StoresController {
     });
   }
 
-  // * ######  GET /users/stores/pagination ######
+  // * ######  GET /users/stores/pagination (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Get all the stores by filtering them (with pagination)',
     description: 'Get all the filtered stores (with pagination).',
@@ -208,7 +208,7 @@ export class StoresController {
     );
   }
 
-  // * ######  GET /users/stores/:id ######
+  // * ######  GET /users/stores/:id (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Get a store by ID',
     description: 'Get the specified store by its ID (store_id).',
@@ -231,7 +231,7 @@ export class StoresController {
     return store;
   }
 
-  // * ######  PATCH /users/stores/:id ######
+  // * ######  PATCH /users/stores/:id (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Update a store.',
     description:
@@ -255,7 +255,7 @@ export class StoresController {
     }
   }
 
-  // * ######  DELETE /users/stores/:id ######
+  // * ######  DELETE /users/stores/:id (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Delete a store',
     description: 'Delete the specified store by its ID (store_id).',
@@ -286,7 +286,7 @@ export class StoresController {
     }
   }
 
-  // * ######  PATCH /users/stores/:id/restore ######
+  // * ######  PATCH /users/stores/:id/restore (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Restore a store',
     description:

@@ -61,7 +61,7 @@ export class AdminController {
   ) {}
 
   //~ ######  Admin specific endpoints ######
-  // * ######  POST /users/admin/stores/approve ######
+  // * ######  POST /users/admin/stores/approve (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Approve a store',
     description: 'Approve a store.',
@@ -87,7 +87,7 @@ export class AdminController {
     }
   }
 
-  // * ######  POST /users/admin/stores/reject ######
+  // * ######  POST /users/admin/stores/reject (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Reject a store',
     description: 'Reject a store.',
@@ -114,7 +114,7 @@ export class AdminController {
   }
 
   //~ ######  Usual CRUD ######
-  // * ######  POST /users/admin ######
+  // * ######  POST /users/admin (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Create a new user',
     description: 'Create a new user (default: admin).',
@@ -132,7 +132,7 @@ export class AdminController {
     return this.usersService.create(body);
   }
 
-  // * ######  GET /users/admin ######
+  // * ######  GET /users/admin (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Get all the users by filtering them',
     description:
@@ -185,7 +185,7 @@ export class AdminController {
     });
   }
 
-  // * ######  GET /users/admin/pagination ######
+  // * ######  GET /users/admin/pagination (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Get all the users by filtering them (with pagination)',
     description:
@@ -266,7 +266,7 @@ export class AdminController {
     );
   }
 
-  // * ######  GET /users/admin/:id ######
+  // * ######  GET /users/admin/:id (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Get a user by ID',
     description: 'Get the specified user by its ID (user_id).',
@@ -288,7 +288,7 @@ export class AdminController {
     return store;
   }
 
-  // * ######  PATCH /users/admin/:id ######
+  // * ######  PATCH /users/admin/:id (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Update a user.',
     description:
@@ -312,7 +312,7 @@ export class AdminController {
     }
   }
 
-  // * ######  DELETE /users/admin/:id ######
+  // * ######  DELETE /users/admin/:id (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Delete a user',
     description: 'Delete the specified user by its ID (user_id).',
@@ -343,7 +343,7 @@ export class AdminController {
     }
   }
 
-  // * ######  PATCH /users/admin/:id/restore ######
+  // * ######  PATCH /users/admin/:id/restore (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Restore a user',
     description: 'Restore a soft deleted user specified  by its ID (user_id).',

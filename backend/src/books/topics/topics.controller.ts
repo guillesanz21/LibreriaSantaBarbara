@@ -82,7 +82,7 @@ export class TopicsController {
     return this.topicsService.findBooksByTopic(+id);
   }
 
-  // * ######  POST /books/topics ######
+  // * ######  POST /books/topics (Auth)[Admin, Store] ######
   @ApiOperation({
     summary: 'Create a topic',
     description: 'Create a topic.',
@@ -105,7 +105,7 @@ export class TopicsController {
     return this.topicsService.create(createTopicDto);
   }
 
-  // * ######  PATCH /books/topics/:id ######
+  // * ######  PATCH /books/topics/:id (Auth)[Admin, Store] ######
   @ApiOperation({
     summary: 'Update a topic',
     description: 'Update a topic.',
@@ -133,7 +133,7 @@ export class TopicsController {
     }
   }
 
-  // * ######  DELETE /books/topics/:id ######
+  // * ######  DELETE /books/topics/:id (Auth)[Admin, Store] ######
   @ApiOperation({
     summary: 'Delete a topic',
     description: 'Delete a topic.',

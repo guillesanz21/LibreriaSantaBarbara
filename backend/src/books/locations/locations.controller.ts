@@ -15,12 +15,14 @@ import {
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { Location as LocationEntity } from './entities/location.entity';
 import { LocationsService } from './locations.service';
@@ -33,11 +35,17 @@ import { NullableType } from 'src/utils/types/nullable.type';
 @ApiTags('Books/Locations')
 @ApiBearerAuth()
 @Roles(RolesEnum.store, RolesEnum.admin)
+@ApiForbiddenResponse({
+  description: 'Forbidden.',
+})
+@ApiUnauthorizedResponse({
+  description: 'Unauthorized.',
+})
 @Controller()
 export class LocationsController {
   constructor(private readonly locationsService: LocationsService) {}
 
-  // * ######  POST /books/locations ######
+  // * ######  POST /books/locations (Auth)[Admin, Store] ######
   @ApiOperation({
     summary: 'Create a location',
     description: 'Create a location associated to the store.',
@@ -55,7 +63,7 @@ export class LocationsController {
     return this.locationsService.create(req.user.storeId, createLocationDto);
   }
 
-  // * ######  GET /books/locations ######
+  // * ######  GET /books/locations (Auth)[Admin, Store] ######
   @ApiOperation({
     summary: 'Get all the locations',
     description: 'Get all the locations associated to the store.',
@@ -70,7 +78,7 @@ export class LocationsController {
     return this.locationsService.findMany(req.user.storeId);
   }
 
-  // * ######  GET /books/locations/:id ######
+  // * ######  GET /books/locations/:id (Auth)[Admin, Store] ######
   @ApiOperation({
     summary: 'Get a location by id',
     description: 'Get a location by id.',
@@ -88,7 +96,7 @@ export class LocationsController {
     return this.locationsService.findOne(req.user.storeId, +id);
   }
 
-  // * ######  PATCH /books/locations/:id ######
+  // * ######  PATCH /books/locations/:id (Auth)[Admin, Store] ######
   @ApiOperation({
     summary: 'Update a location',
     description: 'Update a location associated to the store.',
@@ -116,7 +124,7 @@ export class LocationsController {
     }
   }
 
-  // * ######  DELETE /books/locations/:id ######
+  // * ######  DELETE /books/locations/:id (Auth)[Admin, Store] ######
   @ApiOperation({
     summary: 'Delete a location',
     description: '(Hard) Delete a location associated to the store.',

@@ -53,7 +53,7 @@ import { CustomerResponseSchema } from '../../utils/schemas/users.schema';
 export class CustomersController {
   constructor(private readonly customersService: CustomersService) {}
 
-  // * ######  POST /users/customers ######
+  // * ######  POST /users/customers  (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Create a new customer',
     description: 'Create a new customer.',
@@ -74,7 +74,7 @@ export class CustomersController {
     return this.customersService.create(body);
   }
 
-  // * ######  GET /users/customers ######
+  // * ######  GET /users/customers  (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Get all the customers by filtering them',
     description: 'Get all the filtered customers',
@@ -128,7 +128,7 @@ export class CustomersController {
     });
   }
 
-  // * ######  GET /users/customers/pagination ######
+  // * ######  GET /users/customers/pagination  (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Get all the customers by filtering them (with pagination)',
     description: 'Get all the filtered customers (with pagination).',
@@ -207,7 +207,7 @@ export class CustomersController {
     );
   }
 
-  // * ######  GET /users/customers/:id ######
+  // * ######  GET /users/customers/:id  (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Get a customer by ID',
     description: 'Get the specified customer by its ID (customer_id).',
@@ -230,7 +230,7 @@ export class CustomersController {
     return customer;
   }
 
-  // * ######  PATCH /users/customers/:id ######
+  // * ######  PATCH /users/customers/:id  (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Update a customer.',
     description:
@@ -254,7 +254,7 @@ export class CustomersController {
     }
   }
 
-  // * ######  DELETE /users/customers/:id ######
+  // * ######  DELETE /users/customers/:id  (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Delete a customer',
     description: 'Delete the specified customer by its ID (customer_id).',
@@ -285,7 +285,7 @@ export class CustomersController {
     }
   }
 
-  // * ######  PATCH /users/customers/:id/restore ######
+  // * ######  PATCH /users/customers/:id/restore  (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Restore a customer',
     description:
