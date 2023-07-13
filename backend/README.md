@@ -58,3 +58,10 @@ $ sudo ./main migrations:generate  migrationName
 # Run migrations
 $ ./main migrations:run
 ```
+
+## Database (Seeding)
+
+1. Create seed file with `npm run seed:create -- --name=SeedName`
+1. Go to `src/database/seeds/SeedName/SeedName-seed.service.ts`
+1. In `run` method extend your logic.
+1. Run [npm run seed:run](#run-seed)

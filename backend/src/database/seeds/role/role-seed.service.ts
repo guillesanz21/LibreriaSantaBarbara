@@ -17,7 +17,10 @@ export class RoleSeedService {
     });
     if (!countAdmin) {
       await this.repository.save(
-        this.repository.create({ id: RolesEnum.admin, role: 'admin' }),
+        this.repository.create({
+          id: RolesEnum.admin,
+          role: RolesEnum[RolesEnum.admin],
+        }),
       );
     }
 
@@ -26,7 +29,10 @@ export class RoleSeedService {
     });
     if (!countStore) {
       await this.repository.save(
-        this.repository.create({ id: RolesEnum.store, role: 'store' }),
+        this.repository.create({
+          id: RolesEnum.store,
+          role: RolesEnum[RolesEnum.store],
+        }),
       );
     }
 
@@ -35,7 +41,10 @@ export class RoleSeedService {
     });
     if (!countCustomer) {
       await this.repository.save(
-        this.repository.create({ id: RolesEnum.customer, role: 'customer' }),
+        this.repository.create({
+          id: RolesEnum.customer,
+          role: RolesEnum[RolesEnum.customer],
+        }),
       );
     }
 
@@ -46,7 +55,7 @@ export class RoleSeedService {
       await this.repository.save(
         this.repository.create({
           id: RolesEnum.unapprovedStore,
-          role: 'unapprovedStore',
+          role: RolesEnum[RolesEnum.unapprovedStore],
         }),
       );
     }
@@ -58,7 +67,7 @@ export class RoleSeedService {
       await this.repository.save(
         this.repository.create({
           id: RolesEnum.unconfirmed,
-          role: 'unconfirmed',
+          role: RolesEnum[RolesEnum.unconfirmed],
         }),
       );
     }
@@ -68,7 +77,10 @@ export class RoleSeedService {
     });
     if (!countGuest) {
       await this.repository.save(
-        this.repository.create({ id: RolesEnum.guest, role: 'guest' }),
+        this.repository.create({
+          id: RolesEnum.guest,
+          role: RolesEnum[RolesEnum.guest],
+        }),
       );
     }
   }

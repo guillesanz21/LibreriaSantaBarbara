@@ -7,9 +7,15 @@ import { TypeOrmConfigService } from '../typeorm-config.service';
 import { RoleSeedModule } from './role/role-seed.module';
 import { UserTypeSeedModule } from './user-type/user-type-seed.module';
 import { UserSeedModule } from './user/user-seed.module';
+import { StatusSeedModule } from './status/status-seed.module';
+import { TopicSeedModule } from './topic/topic-seed.module';
+import { LocationSeedModule } from './location/location-seed.module';
 
 @Module({
   imports: [
+    LocationSeedModule,
+    TopicSeedModule,
+    StatusSeedModule,
     ConfigModule.forRoot({
       isGlobal: true, // make config module global
       load: [authConfig, dbConfig, appConfig], // load config files

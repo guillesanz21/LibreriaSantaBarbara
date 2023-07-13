@@ -21,7 +21,7 @@ import { Store } from '../../users/stores/entities/store.entity';
 import { Location } from '../locations/entities/location.entity';
 import { Status } from '../status/entities/status.entity';
 import { Language } from '../languages/entites/language.entity';
-import { Topic } from '../topics/entitites/topic.entity';
+import { Topic } from '../topics/entities/topic.entity';
 import { Keyword } from './keyword.entity';
 import { Image } from './image.entity';
 import { ExposeGroupsEnum } from 'src/utils/types/expose-groups.enum';

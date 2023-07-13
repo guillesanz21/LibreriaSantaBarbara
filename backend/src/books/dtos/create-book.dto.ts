@@ -38,14 +38,14 @@ export class CreateBookDto implements IBook {
   @IsExists('Location', 'id')
   location_id?: number;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: 1,
     description: 'The id of the status of the book',
   })
-  @IsDefined()
+  @IsOptional()
   @IsNumber()
   @IsExists('Status', 'id')
-  status_id: number;
+  status_id?: number;
 
   @ApiPropertyOptional({
     example: 1,

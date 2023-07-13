@@ -21,7 +21,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { TopicsService } from './topics.service';
-import { Topic } from './entitites/topic.entity';
+import { Topic } from './entities/topic.entity';
 import { Book } from '../entities/book.entity';
 import { CreateTopicDto } from './dtos/create-topic.dto';
 import { UpdateTopicDto } from './dtos/update-topic.dto';

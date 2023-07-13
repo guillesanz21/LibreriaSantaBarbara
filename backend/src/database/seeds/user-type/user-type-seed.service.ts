@@ -17,7 +17,10 @@ export class UserTypeSeedService {
     });
     if (!countAdmin) {
       await this.repository.save(
-        this.repository.create({ id: UserTypesEnum.admin, user_type: 'admin' }),
+        this.repository.create({
+          id: UserTypesEnum.admin,
+          user_type: UserTypesEnum[UserTypesEnum.admin],
+        }),
       );
     }
 
@@ -26,7 +29,10 @@ export class UserTypeSeedService {
     });
     if (!countStore) {
       await this.repository.save(
-        this.repository.create({ id: UserTypesEnum.store, user_type: 'store' }),
+        this.repository.create({
+          id: UserTypesEnum.store,
+          user_type: UserTypesEnum[UserTypesEnum.store],
+        }),
       );
     }
 
@@ -37,7 +43,7 @@ export class UserTypeSeedService {
       await this.repository.save(
         this.repository.create({
           id: UserTypesEnum.customer,
-          user_type: 'customer',
+          user_type: UserTypesEnum[UserTypesEnum.customer],
         }),
       );
     }
