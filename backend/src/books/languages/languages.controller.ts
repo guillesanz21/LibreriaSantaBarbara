@@ -24,35 +24,7 @@ import { Language } from './entites/language.entity';
 export class LanguagesController {
   constructor(private readonly languagesService: LanguagesService) {}
 
-  // * ######  GET /books/languages/:id ######
-  @ApiOperation({
-    summary: 'Get a language by id',
-    description: 'Get a language by id.',
-  })
-  @ApiOkResponse({
-    description: 'The language.',
-    type: Language,
-  })
-  @HttpCode(HttpStatus.OK)
-  @Get(':id')
-  findOne(@Param('id') id: number): Promise<Language> {
-    return this.languagesService.findOneById(+id);
-  }
-
-  // * ######  DELETE /books/languages/:id ######
-  @ApiOperation({
-    summary: 'Delete a language by id',
-    description: 'Delete a language by id.',
-  })
-  @ApiNoContentResponse({
-    description: 'The language has been deleted.',
-  })
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @Delete(':id')
-  delete(@Param('id') id: number): Promise<void> {
-    return this.languagesService.delete(+id);
-  }
-
+  // ~ Static ~
   // * ######  GET /books/languages/static ######
   @ApiOperation({
     summary: 'Get all the static languages',
@@ -129,5 +101,35 @@ export class LanguagesController {
   @Get('static/:alpha2')
   getOneStatic(@Param('alpha2') alpha2: string): string | undefined {
     return this.languagesService.getOneStatic(alpha2);
+  }
+
+  // ~ CRUD ~
+  // * ######  GET /books/languages/:id ######
+  @ApiOperation({
+    summary: 'Get a language by id',
+    description: 'Get a language by id.',
+  })
+  @ApiOkResponse({
+    description: 'The language.',
+    type: Language,
+  })
+  @HttpCode(HttpStatus.OK)
+  @Get(':id')
+  findOne(@Param('id') id: number): Promise<Language> {
+    return this.languagesService.findOneById(+id);
+  }
+
+  // * ######  DELETE /books/languages/:id ######
+  @ApiOperation({
+    summary: 'Delete a language by id',
+    description: 'Delete a language by id.',
+  })
+  @ApiNoContentResponse({
+    description: 'The language has been deleted.',
+  })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Delete(':id')
+  delete(@Param('id') id: number): Promise<void> {
+    return this.languagesService.delete(+id);
   }
 }

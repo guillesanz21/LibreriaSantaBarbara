@@ -41,7 +41,7 @@ export class CreateAdminDto extends CreateUserDto {
   user_type_id?: number;
 
   @ApiProperty({
-    example: 'example@example.com',
+    example: 'admin@admin.com',
     required: true,
     description: 'The email of the admin. Should be unique.',
     maxLength: commonConstraints.email.maxLength,
@@ -54,7 +54,7 @@ export class CreateAdminDto extends CreateUserDto {
   email: string;
 
   @ApiProperty({
-    example: 'powerfulPassword1234#',
+    example: 'test',
     required: true,
     description: 'The password of the store.',
     minLength: commonConstraints.password.minLength,

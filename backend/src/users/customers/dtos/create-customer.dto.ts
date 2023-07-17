@@ -21,7 +21,7 @@ const { customer: customerConstraints } = userConstraints;
 
 export class CreateCustomerDto extends CreateUserDto {
   @ApiProperty({
-    example: 'example@example.com',
+    example: 'customer@customer.com',
     description: 'The email of the customer. Should be unique among customers.',
     maxLength: commonConstraints.email.maxLength,
   })

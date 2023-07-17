@@ -19,7 +19,7 @@ const { store: storeConstraints } = userConstraints;
 
 export class AuthRegisterStoreDto {
   @ApiProperty({
-    example: 'example@example.com',
+    example: 'store@store.com',
     description: 'The email of the store. Should be unique among stores.',
     maxLength: commonConstraints.email.maxLength,
   })
@@ -31,7 +31,7 @@ export class AuthRegisterStoreDto {
   email: string;
 
   @ApiProperty({
-    example: 'powerfulPassword1234#',
+    example: 'test',
     description: 'The password of the store.',
     minLength: commonConstraints.password.minLength,
   })

@@ -6,7 +6,7 @@ const { common: commonConstraints } = userConstraints;
 
 export class AuthUpdatePasswordDto {
   @ApiProperty({
-    example: 'powerfulPassword1234#',
+    example: 'test',
     description: 'The new password of the user.',
     minLength: commonConstraints.password.minLength,
   })

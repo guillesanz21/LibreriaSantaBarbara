@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Topic } from './entities/topic.entity';
-import { Book } from '../entities/book.entity';
-import { CreateTopicDto } from './dtos/create-topic.dto';
+import { Book } from '../books/entities/book.entity';
+import { BulkCreateTopicDto, CreateTopicDto } from './dtos/create-topic.dto';
 import { UpdateTopicDto } from './dtos/update-topic.dto';
 import { NullableType } from 'src/utils/types/nullable.type';
 
@@ -14,6 +14,33 @@ export class TopicsService {
     private readonly topicsRepository: Repository<Topic>,
   ) {}
 
+  // * [C] Create
+  // Create a topic
+  async create(topic: CreateTopicDto): Promise<Topic> {
+    const createdTopic = await this.topicsRepository.insert(
+      this.topicsRepository.create(topic),
+    );
+    return createdTopic.raw;
+  }
+
+  // Bulk create
+  async bulkCreate(topicsToCreate: BulkCreateTopicDto[]): Promise<Topic[]> {
+    const topics: Topic[] = [];
+    for (const topic of topicsToCreate) {
+      const topicExists = await this.topicsRepository.findOne({
+        where: { topic: topic.topic },
+      });
+      if (topicExists) {
+        topics.push(topicExists);
+      } else {
+        const createdTopic = this.topicsRepository.create(topic);
+        topics.push(createdTopic);
+      }
+    }
+    return topics;
+  }
+
+  // * [R] Read
   // Find a topic by its id
   async findOneById(id: number): Promise<NullableType<Topic>> {
     return this.topicsRepository.findOne({ where: { id: +id } });
@@ -24,38 +51,28 @@ export class TopicsService {
     return this.topicsRepository.find();
   }
 
-  // Find the topics of a book
-  // TODO: Check if this works
-  async findTopicsOfBook(book_id: number): Promise<NullableType<Topic[]>> {
-    return this.topicsRepository
-      .createQueryBuilder('topics')
-      .leftJoin('book.topics', 'topics')
-      .where('book.id = :id', { id: book_id })
-      .getMany();
+  // Find many topics by name
+  async findMany(topic: string): Promise<Topic[]> {
+    return this.topicsRepository.find({ where: { topic } });
   }
 
   // Find the books of a topic
-  // TODO: Check if this works
   async findBooksByTopic(topic_id: number): Promise<NullableType<Book[]>> {
     return this.topicsRepository
-      .createQueryBuilder('books')
-      .leftJoin('topic.books', 'books')
+      .createQueryBuilder('topic')
+      .leftJoin('topic.books', 'Book')
       .where('topic.id = :id', { id: topic_id })
       .getMany() as unknown as Book[];
   }
 
-  // Create a topic
-  async create(topic: CreateTopicDto): Promise<Topic> {
-    return this.topicsRepository.save(this.topicsRepository.create(topic));
-  }
-
+  // * [U] Update methods
   // Update a topic
-  async update(topic_id: number, topic: UpdateTopicDto): Promise<Topic> {
-    return this.topicsRepository.save(
-      this.topicsRepository.create({ id: topic_id, ...topic }),
-    );
+  async update(topic_id: number, topic: UpdateTopicDto): Promise<boolean> {
+    const result = await this.topicsRepository.update(topic_id, topic);
+    return result.affected > 0;
   }
 
+  // * [D] Delete methods
   // Delete (hard) a topic
   async delete(topic_id: number): Promise<boolean> {
     const result = await this.topicsRepository.delete(topic_id);

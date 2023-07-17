@@ -21,7 +21,7 @@ const { common: commonConstraints } = userConstraints;
 
 export class CreateStoreDto extends CreateUserDto {
   @ApiProperty({
-    example: 'example@example.com',
+    example: 'store@store.com',
     description: 'The email of the store. Should be unique among stores.',
     maxLength: commonConstraints.email.maxLength,
   })
@@ -45,7 +45,7 @@ export class CreateStoreDto extends CreateUserDto {
   NIF?: string;
 
   @ApiProperty({
-    example: 'powerfulPassword1234#',
+    example: 'test',
     required: true,
     description: 'The password of the store.',
     minLength: commonConstraints.password.minLength,

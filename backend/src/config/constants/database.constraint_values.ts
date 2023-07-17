@@ -1,3 +1,5 @@
+import { int4max } from './common_values';
+
 export const userConstraints = {
   common: {
     email: {
@@ -52,7 +54,7 @@ export const bookConstraints = {
     maxLength: 100,
   },
   year: {
-    max: 2055,
+    max: 2060,
   },
   size: {
     maxLength: 50,
@@ -62,6 +64,7 @@ export const bookConstraints = {
   },
   pages: {
     min: 0,
+    max: int4max, // 4 bytes. Careful if changing field type in database.
   },
   condition: {
     maxLength: 250,
@@ -71,9 +74,11 @@ export const bookConstraints = {
   },
   price: {
     min: 0,
+    max: int4max, // 4 bytes. Careful if changing field type in database.
   },
   stock: {
     min: 0,
+    max: int4max, // 4 bytes. Careful if changing field type in database.
   },
   binding: {
     maxLength: 75,

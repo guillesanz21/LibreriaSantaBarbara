@@ -11,6 +11,7 @@ import {
   Patch,
   Post,
   Request,
+  SerializeOptions,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -30,17 +31,18 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { CreateLocationDto } from './dtos/create-location.dto';
 import { UpdateLocationDto } from './dtos/update-location.dto';
 import { RolesEnum } from 'src/users/roles/roles.enum';
+import { ExposeGroupsEnum } from 'src/utils/types/expose-groups.enum';
 import { NullableType } from 'src/utils/types/nullable.type';
 
 @ApiTags('Books/Locations')
+@ApiForbiddenResponse({ description: 'Forbidden.' })
+@ApiUnauthorizedResponse({ description: 'Unauthorized.' })
+@ApiNotFoundResponse({ description: 'Store not found.' })
+@SerializeOptions({
+  groups: [ExposeGroupsEnum.me, ExposeGroupsEnum.admin],
+})
 @ApiBearerAuth()
 @Roles(RolesEnum.store, RolesEnum.admin)
-@ApiForbiddenResponse({
-  description: 'Forbidden.',
-})
-@ApiUnauthorizedResponse({
-  description: 'Unauthorized.',
-})
 @Controller()
 export class LocationsController {
   constructor(private readonly locationsService: LocationsService) {}
@@ -48,7 +50,7 @@ export class LocationsController {
   // * ######  POST /books/locations (Auth)[Admin, Store] ######
   @ApiOperation({
     summary: 'Create a location',
-    description: 'Create a location associated to the store.',
+    description: '[Admin, Store] Create a location associated to the store.',
   })
   @ApiCreatedResponse({
     description: 'The location.',
@@ -56,17 +58,25 @@ export class LocationsController {
   })
   @HttpCode(HttpStatus.CREATED)
   @Post()
-  create(
+  async create(
     @Request() req,
     @Body() createLocationDto: CreateLocationDto,
   ): Promise<NullableType<LocationEntity>> {
-    return this.locationsService.create(req.user.storeId, createLocationDto);
+    const result = await this.locationsService.create(
+      req.user.id,
+      createLocationDto,
+    );
+    if (typeof result === 'string' && result === 'NotFound') {
+      throw new NotFoundException(result);
+    }
+    return result as LocationEntity;
   }
 
   // * ######  GET /books/locations (Auth)[Admin, Store] ######
   @ApiOperation({
     summary: 'Get all the locations',
-    description: 'Get all the locations associated to the store.',
+    description:
+      '[Admin, Store] Get all the locations associated to the store.',
   })
   @ApiOkResponse({
     description: 'The locations.',
@@ -74,14 +84,18 @@ export class LocationsController {
   })
   @HttpCode(HttpStatus.OK)
   @Get()
-  findMany(@Request() req): Promise<NullableType<LocationEntity[]>> {
-    return this.locationsService.findMany(req.user.storeId);
+  async findMany(@Request() req): Promise<NullableType<LocationEntity[]>> {
+    const result = await this.locationsService.findMany(req.user.id);
+    if (typeof result === 'string' && result === 'NotFound') {
+      throw new NotFoundException(result);
+    }
+    return result as LocationEntity[];
   }
 
   // * ######  GET /books/locations/:id (Auth)[Admin, Store] ######
   @ApiOperation({
     summary: 'Get a location by id',
-    description: 'Get a location by id.',
+    description: '[Admin, Store] Get a location by id.',
   })
   @ApiOkResponse({
     description: 'The location.',
@@ -89,24 +103,24 @@ export class LocationsController {
   })
   @HttpCode(HttpStatus.OK)
   @Get(':id')
-  findOne(
+  async findOne(
     @Request() req,
     @Param('id') id: string,
   ): Promise<NullableType<LocationEntity>> {
-    return this.locationsService.findOne(req.user.storeId, +id);
+    const result = await this.locationsService.findOne(req.user.id, +id);
+    if (typeof result === 'string' && result === 'NotFound') {
+      throw new NotFoundException(result);
+    }
+    return result as LocationEntity;
   }
 
   // * ######  PATCH /books/locations/:id (Auth)[Admin, Store] ######
   @ApiOperation({
     summary: 'Update a location',
-    description: 'Update a location associated to the store.',
+    description: '[Admin, Store] Update a location associated to the store.',
   })
-  @ApiNoContentResponse({
-    description: 'The location has been updated.',
-  })
-  @ApiNotFoundResponse({
-    description: 'Location not found.',
-  })
+  @ApiNoContentResponse({ description: 'The location has been updated.' })
+  @ApiInternalServerErrorResponse({ description: 'Location not updated.' })
   @HttpCode(HttpStatus.NO_CONTENT)
   @Patch(':id')
   async update(
@@ -115,38 +129,34 @@ export class LocationsController {
     @Body() updateLocationDto: UpdateLocationDto,
   ): Promise<void> {
     const result = await this.locationsService.update(
-      req.user.storeId,
+      req.user.id,
       +id,
       updateLocationDto,
     );
-    if (!result) {
-      throw new NotFoundException(`Location not found`);
+    if (result === 'NotFound') {
+      throw new NotFoundException(`Store not found`);
+    }
+    if (result === 'NotUpdated') {
+      throw new InternalServerErrorException(`Location not updated`);
     }
   }
 
   // * ######  DELETE /books/locations/:id (Auth)[Admin, Store] ######
   @ApiOperation({
     summary: 'Delete a location',
-    description: '(Hard) Delete a location associated to the store.',
+    description:
+      '[Admin, Store] (Hard) Delete a location associated to the store.',
   })
   @ApiNoContentResponse({
     description: 'The location has been (hard) deleted.',
   })
-  @ApiNotFoundResponse({
-    description: 'Location not found.',
-  })
-  @ApiInternalServerErrorResponse({
-    description: 'Location not deleted.',
-  })
+  @ApiInternalServerErrorResponse({ description: 'Location not deleted.' })
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async delete(@Request() req, @Param('id') id: string): Promise<void> {
-    const result = await this.locationsService.hardDelete(
-      req.user.storeId,
-      +id,
-    );
+    const result = await this.locationsService.hardDelete(req.user.id, +id);
     if (result === 'NotFound') {
-      throw new NotFoundException(`Location not found`);
+      throw new NotFoundException(result);
     }
     if (result === 'NotDeleted') {
       throw new InternalServerErrorException(`Location not deleted`);

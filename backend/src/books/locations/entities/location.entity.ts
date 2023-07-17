@@ -11,7 +11,7 @@ import {
 } from 'typeorm';
 import { Expose } from 'class-transformer';
 import { EntityHelper } from 'src/utils/entities/entity-helper.entity';
-import { Book } from '../../entities/book.entity';
+import { Book } from '../../books/entities/book.entity';
 import { Store } from '../../../users/stores/entities/store.entity';
 import { ExposeGroupsEnum } from 'src/utils/types/expose-groups.enum';
 

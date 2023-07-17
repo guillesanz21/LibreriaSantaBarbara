@@ -37,7 +37,7 @@ export class StatusController {
   // * ######  POST /books/status (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Create a status',
-    description: 'Create a status associated to the store.',
+    description: '[Admin] Create a status associated to the store.',
   })
   @ApiCreatedResponse({
     description: 'The status.',
@@ -92,7 +92,7 @@ export class StatusController {
   // * ######  PATCH /books/status/:id (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Update a status by id',
-    description: 'Update a status by id.',
+    description: '[Admin] Update a status by id.',
   })
   @ApiNoContentResponse({
     description: 'The status has been successfully updated.',
@@ -125,7 +125,7 @@ export class StatusController {
   // * ######  DELETE /books/status/:id (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Delete a status by id',
-    description: 'Delete a status by id.',
+    description: '[Admin] Delete a status by id.',
   })
   @ApiNoContentResponse({
     description: 'The status has been successfully deleted.',

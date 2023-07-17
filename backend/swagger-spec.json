@@ -5,7 +5,7 @@
       "post": {
         "operationId": "AdminController_aproveStore",
         "summary": "Approve a store",
-        "description": "Approve a store.",
+        "description": "[Admin] Approve a store.",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -48,7 +48,7 @@
       "post": {
         "operationId": "AdminController_rejectStore",
         "summary": "Reject a store",
-        "description": "Reject a store.",
+        "description": "[Admin] Reject a store.",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -91,7 +91,7 @@
       "post": {
         "operationId": "AdminController_create",
         "summary": "Create a new user",
-        "description": "Create a new user (default: admin).",
+        "description": "[Admin] Create a new user (default: admin).",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -136,7 +136,7 @@
       "get": {
         "operationId": "AdminController_findMany",
         "summary": "Get all the users by filtering them",
-        "description": "Get all the filtered users (doesn't return user type specific fields).",
+        "description": "[Admin] Get all the filtered users (doesn't return user type specific fields).",
         "parameters": [
           {
             "name": "user-type",
@@ -246,7 +246,7 @@
       "get": {
         "operationId": "AdminController_findManyWithPagination",
         "summary": "Get all the users by filtering them (with pagination)",
-        "description": "Get all the filtered users (with pagination) (doesn't return user type specific fields).",
+        "description": "[Admin] Get all the filtered users (with pagination) (doesn't return user type specific fields).",
         "parameters": [
           {
             "name": "page",
@@ -385,7 +385,7 @@
       "get": {
         "operationId": "AdminController_findOne",
         "summary": "Get a user by ID",
-        "description": "Get the specified user by its ID (user_id).",
+        "description": "[Admin] Get the specified user by its ID (user_id).",
         "parameters": [
           {
             "name": "id",
@@ -429,7 +429,7 @@
       "patch": {
         "operationId": "AdminController_update",
         "summary": "Update a user.",
-        "description": "Update the specified user by its ID (user_id) with the specified data.",
+        "description": "[Admin] Update the specified user by its ID (user_id) with the specified data.",
         "parameters": [
           {
             "name": "id",
@@ -476,7 +476,7 @@
       "delete": {
         "operationId": "AdminController_remove",
         "summary": "Delete a user",
-        "description": "Delete the specified user by its ID (user_id).",
+        "description": "[Admin] Delete the specified user by its ID (user_id).",
         "parameters": [
           {
             "name": "id",
@@ -528,7 +528,7 @@
       "patch": {
         "operationId": "AdminController_restore",
         "summary": "Restore a user",
-        "description": "Restore a soft deleted user specified  by its ID (user_id).",
+        "description": "[Admin] Restore a soft deleted user specified  by its ID (user_id).",
         "parameters": [
           {
             "name": "id",
@@ -567,7 +567,7 @@
       "post": {
         "operationId": "CustomersController_create",
         "summary": "Create a new customer",
-        "description": "Create a new customer.",
+        "description": "[Admin] Create a new customer.",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -619,7 +619,7 @@
       "get": {
         "operationId": "CustomersController_findMany",
         "summary": "Get all the customers by filtering them",
-        "description": "Get all the filtered customers",
+        "description": "[Admin] Get all the filtered customers",
         "parameters": [
           {
             "name": "email",
@@ -735,7 +735,7 @@
       "get": {
         "operationId": "CustomersController_findManyWithPagination",
         "summary": "Get all the customers by filtering them (with pagination)",
-        "description": "Get all the filtered customers (with pagination).",
+        "description": "[Admin] Get all the filtered customers (with pagination).",
         "parameters": [
           {
             "name": "page",
@@ -880,7 +880,7 @@
       "get": {
         "operationId": "CustomersController_findOne",
         "summary": "Get a customer by ID",
-        "description": "Get the specified customer by its ID (customer_id).",
+        "description": "[Admin] Get the specified customer by its ID (customer_id).",
         "parameters": [
           {
             "name": "id",
@@ -928,7 +928,7 @@
       "patch": {
         "operationId": "CustomersController_update",
         "summary": "Update a customer.",
-        "description": "Update the specified customer by its ID (customer_id) with the specified data.",
+        "description": "[Admin] Update the specified customer by its ID (customer_id) with the specified data.",
         "parameters": [
           {
             "name": "id",
@@ -975,7 +975,7 @@
       "delete": {
         "operationId": "CustomersController_remove",
         "summary": "Delete a customer",
-        "description": "Delete the specified customer by its ID (customer_id).",
+        "description": "[Admin] Delete the specified customer by its ID (customer_id).",
         "parameters": [
           {
             "name": "id",
@@ -1024,7 +1024,7 @@
       "patch": {
         "operationId": "CustomersController_restore",
         "summary": "Restore a customer",
-        "description": "Restore a soft deleted customer specified  by its ID (customer_id).",
+        "description": "[Admin] Restore a soft deleted customer specified  by its ID (customer_id).",
         "parameters": [
           {
             "name": "id",
@@ -1060,7 +1060,7 @@
       "post": {
         "operationId": "StoresController_create",
         "summary": "Create a new store",
-        "description": "Create a new store.",
+        "description": "[Admin] Create a new store.",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -1112,7 +1112,7 @@
       "get": {
         "operationId": "StoresController_findMany",
         "summary": "Get all the stores by filtering them",
-        "description": "Get all the filtered stores.",
+        "description": "[Admin] Get all the filtered stores.",
         "parameters": [
           {
             "name": "email",
@@ -1229,7 +1229,7 @@
       "get": {
         "operationId": "StoresController_findManyWithPagination",
         "summary": "Get all the stores by filtering them (with pagination)",
-        "description": "Get all the filtered stores (with pagination).",
+        "description": "[Admin] Get all the filtered stores (with pagination).",
         "parameters": [
           {
             "name": "page",
@@ -1375,7 +1375,7 @@
       "get": {
         "operationId": "StoresController_findOne",
         "summary": "Get a store by ID",
-        "description": "Get the specified store by its ID (store_id).",
+        "description": "[Admin] Get the specified store by its ID (store_id).",
         "parameters": [
           {
             "name": "id",
@@ -1426,7 +1426,7 @@
       "patch": {
         "operationId": "StoresController_update",
         "summary": "Update a store.",
-        "description": "Update the specified store by its ID (store_id) with the specified data.",
+        "description": "[Admin] Update the specified store by its ID (store_id) with the specified data.",
         "parameters": [
           {
             "name": "id",
@@ -1473,7 +1473,7 @@
       "delete": {
         "operationId": "StoresController_remove",
         "summary": "Delete a store",
-        "description": "Delete the specified store by its ID (store_id).",
+        "description": "[Admin] Delete the specified store by its ID (store_id).",
         "parameters": [
           {
             "name": "id",
@@ -1525,7 +1525,7 @@
       "patch": {
         "operationId": "StoresController_restore",
         "summary": "Restore a store",
-        "description": "Restore a soft deleted store specified  by its ID (store_id).",
+        "description": "[Admin] Restore a soft deleted store specified  by its ID (store_id).",
         "parameters": [
           {
             "name": "id",
@@ -2017,7 +2017,7 @@
       "post": {
         "operationId": "JwtController_logoutStore",
         "summary": "Logout",
-        "description": "Logout the user by removing the token from the request object.",
+        "description": "[*] Logout the user by removing the token from the request object.",
         "parameters": [],
         "responses": {
           "204": {
@@ -2044,7 +2044,7 @@
       "get": {
         "operationId": "JwtController_me",
         "summary": "Me",
-        "description": "Get the user data of the user in the request object.",
+        "description": "[*] Get the user data of the user in the request object.",
         "parameters": [],
         "responses": {
           "200": {
@@ -2080,7 +2080,7 @@
       "delete": {
         "operationId": "JwtController_delete",
         "summary": "Delete",
-        "description": "Soft-delete the user in the request object.",
+        "description": "[*] Soft-delete the user in the request object.",
         "parameters": [],
         "responses": {
           "204": {
@@ -2104,7 +2104,7 @@
       "patch": {
         "operationId": "JwtController_updateStore",
         "summary": "Update store",
-        "description": "Update the store data of the user in the request object.",
+        "description": "[*] Update the store data of the user in the request object.",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -2141,7 +2141,7 @@
       "patch": {
         "operationId": "JwtController_updateCustomer",
         "summary": "Update customer",
-        "description": "Update the customer data of the user in the request object.",
+        "description": "[*] Update the customer data of the user in the request object.",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -2178,7 +2178,7 @@
       "patch": {
         "operationId": "JwtController_updatePassword",
         "summary": "Update password",
-        "description": "Update the password of the user in the request object.",
+        "description": "[*] Update the password of the user in the request object.",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -2211,61 +2211,6 @@
           {
             "bearer": []
           }
-        ]
-      }
-    },
-    "/api/books/languages/{id}": {
-      "get": {
-        "operationId": "LanguagesController_findOne",
-        "summary": "Get a language by id",
-        "description": "Get a language by id.",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "number"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The language.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Language"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Books/Languages"
-        ]
-      },
-      "delete": {
-        "operationId": "LanguagesController_delete",
-        "summary": "Delete a language by id",
-        "description": "Delete a language by id.",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "number"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "The language has been deleted."
-          }
-        },
-        "tags": [
-          "Books/Languages"
         ]
       }
     },
@@ -2416,6 +2361,61 @@
         ]
       }
     },
+    "/api/books/languages/{id}": {
+      "get": {
+        "operationId": "LanguagesController_findOne",
+        "summary": "Get a language by id",
+        "description": "Get a language by id.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The language.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Language"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Books/Languages"
+        ]
+      },
+      "delete": {
+        "operationId": "LanguagesController_delete",
+        "summary": "Delete a language by id",
+        "description": "Delete a language by id.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The language has been deleted."
+          }
+        },
+        "tags": [
+          "Books/Languages"
+        ]
+      }
+    },
     "/api/books/topics": {
       "get": {
         "operationId": "TopicsController_findAll",
@@ -2444,7 +2444,7 @@
       "post": {
         "operationId": "TopicsController_create",
         "summary": "Create a topic",
-        "description": "Create a topic.",
+        "description": "[Admin, Store] Create a topic.",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -2518,7 +2518,7 @@
       "patch": {
         "operationId": "TopicsController_update",
         "summary": "Update a topic",
-        "description": "Update a topic.",
+        "description": "[Admin, Store] Update a topic.",
         "parameters": [
           {
             "name": "id",
@@ -2562,7 +2562,7 @@
       "delete": {
         "operationId": "TopicsController_delete",
         "summary": "Delete a topic",
-        "description": "Delete a topic.",
+        "description": "[Admin, Store] Delete a topic.",
         "parameters": [
           {
             "name": "id",
@@ -2633,7 +2633,7 @@
       "post": {
         "operationId": "LocationsController_create",
         "summary": "Create a location",
-        "description": "Create a location associated to the store.",
+        "description": "[Admin, Store] Create a location associated to the store.",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -2661,6 +2661,9 @@
           },
           "403": {
             "description": "Forbidden."
+          },
+          "404": {
+            "description": "Store not found."
           }
         },
         "tags": [
@@ -2675,7 +2678,7 @@
       "get": {
         "operationId": "LocationsController_findMany",
         "summary": "Get all the locations",
-        "description": "Get all the locations associated to the store.",
+        "description": "[Admin, Store] Get all the locations associated to the store.",
         "parameters": [],
         "responses": {
           "200": {
@@ -2696,6 +2699,9 @@
           },
           "403": {
             "description": "Forbidden."
+          },
+          "404": {
+            "description": "Store not found."
           }
         },
         "tags": [
@@ -2712,7 +2718,7 @@
       "get": {
         "operationId": "LocationsController_findOne",
         "summary": "Get a location by id",
-        "description": "Get a location by id.",
+        "description": "[Admin, Store] Get a location by id.",
         "parameters": [
           {
             "name": "id",
@@ -2739,6 +2745,9 @@
           },
           "403": {
             "description": "Forbidden."
+          },
+          "404": {
+            "description": "Store not found."
           }
         },
         "tags": [
@@ -2753,7 +2762,7 @@
       "patch": {
         "operationId": "LocationsController_update",
         "summary": "Update a location",
-        "description": "Update a location associated to the store.",
+        "description": "[Admin, Store] Update a location associated to the store.",
         "parameters": [
           {
             "name": "id",
@@ -2785,7 +2794,10 @@
             "description": "Forbidden."
           },
           "404": {
-            "description": "Location not found."
+            "description": "Store not found."
+          },
+          "500": {
+            "description": "Location not updated."
           }
         },
         "tags": [
@@ -2800,7 +2812,7 @@
       "delete": {
         "operationId": "LocationsController_delete",
         "summary": "Delete a location",
-        "description": "(Hard) Delete a location associated to the store.",
+        "description": "[Admin, Store] (Hard) Delete a location associated to the store.",
         "parameters": [
           {
             "name": "id",
@@ -2822,7 +2834,7 @@
             "description": "Forbidden."
           },
           "404": {
-            "description": "Location not found."
+            "description": "Store not found."
           },
           "500": {
             "description": "Location not deleted."
@@ -2842,7 +2854,7 @@
       "post": {
         "operationId": "StatusController_create",
         "summary": "Create a status",
-        "description": "Create a status associated to the store.",
+        "description": "[Admin] Create a status associated to the store.",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -2940,7 +2952,7 @@
       "patch": {
         "operationId": "StatusController_delete",
         "summary": "Delete a status by id",
-        "description": "Delete a status by id.",
+        "description": "[Admin] Delete a status by id.",
         "parameters": [
           {
             "name": "id",
@@ -2967,6 +2979,2374 @@
         },
         "tags": [
           "Books/Status"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/books/public/new-ref": {
+      "get": {
+        "operationId": "BooksPublicController_getNewRef",
+        "summary": "Get a new reference.",
+        "description": "Get a new reference (the last one + 1).",
+        "parameters": [
+          {
+            "name": "store_id",
+            "required": false,
+            "in": "query",
+            "description": "ID of the store. Default 1",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The new reference has been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Store not found."
+          }
+        },
+        "tags": [
+          "Books/Public"
+        ]
+      }
+    },
+    "/api/books/public/count": {
+      "get": {
+        "operationId": "BooksPublicController_count",
+        "summary": "Count books",
+        "description": "[Store] Count books from the store",
+        "parameters": [
+          {
+            "name": "store_id",
+            "required": false,
+            "in": "query",
+            "description": "ID of the store. Default 1",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The books have been successfully counted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Store not found."
+          }
+        },
+        "tags": [
+          "Books/Public"
+        ]
+      }
+    },
+    "/api/books/public": {
+      "get": {
+        "operationId": "BooksPublicController_findMany",
+        "summary": "Get all books",
+        "description": "Get all books from the store",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Number of items per page",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "store_id",
+            "required": false,
+            "in": "query",
+            "description": "ID of the store. Default 1",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "keywords",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          {
+            "name": "topics",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          {
+            "name": "language",
+            "required": false,
+            "in": "query",
+            "description": "ISO 639-1 code",
+            "schema": {}
+          },
+          {
+            "name": "location",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                1,
+                2,
+                3
+              ],
+              "type": "number"
+            }
+          },
+          {
+            "name": "max-pages",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "min-pages",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "max-price",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "min-price",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "collection",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "publication_place",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "year",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "publisher",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "author",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "title",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ISBN",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The books have been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "allOf": [
+                              {
+                                "$ref": "#/components/schemas/Book"
+                              },
+                              {
+                                "properties": {
+                                  "languages": {
+                                    "type": "array",
+                                    "items": {
+                                      "$ref": "#/components/schemas/Language"
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "properties": {
+                                  "keywords": {
+                                    "type": "array",
+                                    "items": {
+                                      "$ref": "#/components/schemas/Keyword"
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "properties": {
+                                  "topics": {
+                                    "type": "array",
+                                    "items": {
+                                      "$ref": "#/components/schemas/Topic"
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "properties": {
+                                  "images": {
+                                    "type": "array",
+                                    "items": {
+                                      "$ref": "#/components/schemas/Image"
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "properties": {
+                                  "location": {
+                                    "$ref": "#/components/schemas/Location"
+                                  }
+                                }
+                              },
+                              {
+                                "properties": {
+                                  "status": {
+                                    "$ref": "#/components/schemas/Status"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        "hasNextPage": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Store not found."
+          }
+        },
+        "tags": [
+          "Books/Public"
+        ]
+      }
+    },
+    "/api/books/public/{ref}": {
+      "get": {
+        "operationId": "BooksPublicController_findOne",
+        "summary": "Get a book",
+        "description": "Get a book from the store by its ID",
+        "parameters": [
+          {
+            "name": "store_id",
+            "required": false,
+            "in": "query",
+            "description": "ID of the store. Default 1",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "ref",
+            "required": true,
+            "in": "path",
+            "description": "Book reference",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The book has been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Book"
+                    },
+                    {
+                      "properties": {
+                        "languages": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Language"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "keywords": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Keyword"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "topics": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Topic"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "images": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Image"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "location": {
+                          "$ref": "#/components/schemas/Location"
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "$ref": "#/components/schemas/Status"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Store not found."
+          }
+        },
+        "tags": [
+          "Books/Public"
+        ]
+      }
+    },
+    "/api/books/admin": {
+      "post": {
+        "operationId": "BooksAdminController_create",
+        "summary": "Create a book",
+        "description": "[Admin] Add a book to the store",
+        "parameters": [
+          {
+            "name": "store_id",
+            "required": false,
+            "in": "query",
+            "description": "ID of the store. Default 1",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBookDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The book has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Book"
+                    },
+                    {
+                      "properties": {
+                        "languages": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Language"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "keywords": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Keyword"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "topics": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Topic"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "images": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Image"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "location": {
+                          "$ref": "#/components/schemas/Location"
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "$ref": "#/components/schemas/Status"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "Store not found."
+          }
+        },
+        "tags": [
+          "Books/Admin"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/books/admin/{ref}": {
+      "patch": {
+        "operationId": "BooksAdminController_updateOne",
+        "summary": "Update a book",
+        "description": "[Admin] Update a book from the store by its reference",
+        "parameters": [
+          {
+            "name": "store_id",
+            "required": false,
+            "in": "query",
+            "description": "ID of the store. Default 1",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "ref",
+            "required": true,
+            "in": "path",
+            "description": "Book reference",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBookDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The book has been successfully updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Book"
+                    },
+                    {
+                      "properties": {
+                        "languages": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Language"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "keywords": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Keyword"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "topics": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Topic"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "images": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Image"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "location": {
+                          "$ref": "#/components/schemas/Location"
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "$ref": "#/components/schemas/Status"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "Store not found."
+          },
+          "500": {
+            "description": "The book has not been updated."
+          }
+        },
+        "tags": [
+          "Books/Admin"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "BooksAdminController_deleteOne",
+        "summary": "Delete a book",
+        "description": "[Admin] (SOFT) Delete a book from the store by its reference",
+        "parameters": [
+          {
+            "name": "store_id",
+            "required": false,
+            "in": "query",
+            "description": "ID of the store. Default 1",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "ref",
+            "required": true,
+            "in": "path",
+            "description": "Book reference",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The book has been successfully deleted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Book"
+                    },
+                    {
+                      "properties": {
+                        "languages": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Language"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "keywords": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Keyword"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "topics": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Topic"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "images": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Image"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "location": {
+                          "$ref": "#/components/schemas/Location"
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "$ref": "#/components/schemas/Status"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "Store not found."
+          },
+          "500": {
+            "description": "The book has not been deleted."
+          }
+        },
+        "tags": [
+          "Books/Admin"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/books/admin/{ref}/hard": {
+      "delete": {
+        "operationId": "BooksAdminController_hardDeleteOne",
+        "summary": "Hard delete a book",
+        "description": "[Admin] (HARD) Delete a book from the store by its reference",
+        "parameters": [
+          {
+            "name": "store_id",
+            "required": false,
+            "in": "query",
+            "description": "ID of the store. Default 1",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "ref",
+            "required": true,
+            "in": "path",
+            "description": "Book reference",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The book has been successfully deleted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Book"
+                    },
+                    {
+                      "properties": {
+                        "languages": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Language"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "keywords": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Keyword"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "topics": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Topic"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "images": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Image"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "location": {
+                          "$ref": "#/components/schemas/Location"
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "$ref": "#/components/schemas/Status"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "Store not found."
+          },
+          "500": {
+            "description": "The book has not been deleted."
+          }
+        },
+        "tags": [
+          "Books/Admin"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/books/admin/{ref}/restore": {
+      "patch": {
+        "operationId": "BooksAdminController_restoreOne",
+        "summary": "Restore a book",
+        "description": "[Admin] Restore a book from the store by its reference",
+        "parameters": [
+          {
+            "name": "store_id",
+            "required": false,
+            "in": "query",
+            "description": "ID of the store. Default 1",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "ref",
+            "required": true,
+            "in": "path",
+            "description": "Book reference",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The book has been successfully restored.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Book"
+                    },
+                    {
+                      "properties": {
+                        "languages": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Language"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "keywords": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Keyword"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "topics": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Topic"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "images": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Image"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "location": {
+                          "$ref": "#/components/schemas/Location"
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "$ref": "#/components/schemas/Status"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "Store not found."
+          },
+          "500": {
+            "description": "The book has not been restored."
+          }
+        },
+        "tags": [
+          "Books/Admin"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/books/admin/{ref}/sell": {
+      "patch": {
+        "operationId": "BooksAdminController_sellOne",
+        "summary": "Sell a book",
+        "description": "[Admin] Sell a book from the store by its reference",
+        "parameters": [
+          {
+            "name": "store_id",
+            "required": false,
+            "in": "query",
+            "description": "ID of the store. Default 1",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "ref",
+            "required": true,
+            "in": "path",
+            "description": "Book reference",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The book has been successfully sold.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Book"
+                    },
+                    {
+                      "properties": {
+                        "languages": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Language"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "keywords": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Keyword"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "topics": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Topic"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "images": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Image"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "location": {
+                          "$ref": "#/components/schemas/Location"
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "$ref": "#/components/schemas/Status"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "Store not found."
+          },
+          "500": {
+            "description": "The book has not been sold."
+          }
+        },
+        "tags": [
+          "Books/Admin"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/books/admin/{ref}/add-stock": {
+      "patch": {
+        "operationId": "BooksAdminController_addStockOne",
+        "summary": "Add stock to a book",
+        "description": "[Admin] Add stock to a book from the store by its reference",
+        "parameters": [
+          {
+            "name": "store_id",
+            "required": false,
+            "in": "query",
+            "description": "ID of the store. Default 1",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "ref",
+            "required": true,
+            "in": "path",
+            "description": "Book reference",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "stock",
+            "required": false,
+            "in": "query",
+            "description": "Stock to add",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The stock has been successfully added.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Book"
+                    },
+                    {
+                      "properties": {
+                        "languages": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Language"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "keywords": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Keyword"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "topics": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Topic"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "images": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Image"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "location": {
+                          "$ref": "#/components/schemas/Location"
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "$ref": "#/components/schemas/Status"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "Store not found."
+          },
+          "500": {
+            "description": "The stock has not been added."
+          }
+        },
+        "tags": [
+          "Books/Admin"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/books": {
+      "post": {
+        "operationId": "BooksController_create",
+        "summary": "Create a book",
+        "description": "[Store] Add a book to the store",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBookDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The book has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Book"
+                    },
+                    {
+                      "properties": {
+                        "languages": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Language"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "keywords": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Keyword"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "topics": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Topic"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "images": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Image"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "location": {
+                          "$ref": "#/components/schemas/Location"
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "$ref": "#/components/schemas/Status"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "Store not found."
+          }
+        },
+        "tags": [
+          "Books"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "BooksController_findMany",
+        "summary": "Get all books",
+        "description": "[Store] Get all books from the store",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Number of items per page",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "keywords",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          {
+            "name": "topics",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          {
+            "name": "language",
+            "required": false,
+            "in": "query",
+            "description": "ISO 639-1 code",
+            "schema": {}
+          },
+          {
+            "name": "location",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                1,
+                2,
+                3
+              ],
+              "type": "number"
+            }
+          },
+          {
+            "name": "max-pages",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "min-pages",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "max-price",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "min-price",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "collection",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "publication_place",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "year",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "publisher",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "author",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "title",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ISBN",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The books have been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "allOf": [
+                              {
+                                "$ref": "#/components/schemas/Book"
+                              },
+                              {
+                                "properties": {
+                                  "languages": {
+                                    "type": "array",
+                                    "items": {
+                                      "$ref": "#/components/schemas/Language"
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "properties": {
+                                  "keywords": {
+                                    "type": "array",
+                                    "items": {
+                                      "$ref": "#/components/schemas/Keyword"
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "properties": {
+                                  "topics": {
+                                    "type": "array",
+                                    "items": {
+                                      "$ref": "#/components/schemas/Topic"
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "properties": {
+                                  "images": {
+                                    "type": "array",
+                                    "items": {
+                                      "$ref": "#/components/schemas/Image"
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "properties": {
+                                  "location": {
+                                    "$ref": "#/components/schemas/Location"
+                                  }
+                                }
+                              },
+                              {
+                                "properties": {
+                                  "status": {
+                                    "$ref": "#/components/schemas/Status"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        "hasNextPage": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "Store not found."
+          }
+        },
+        "tags": [
+          "Books"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/books/new-ref": {
+      "get": {
+        "operationId": "BooksController_getNewRef",
+        "summary": "Get a new reference.",
+        "description": "[Store] Get a new reference (the last one + 1).",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The new reference has been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "Store not found."
+          }
+        },
+        "tags": [
+          "Books"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/books/count": {
+      "get": {
+        "operationId": "BooksController_count",
+        "summary": "Count books",
+        "description": "[Store] Count books from the store",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The books have been successfully counted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "Store not found."
+          }
+        },
+        "tags": [
+          "Books"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/books/{ref}": {
+      "get": {
+        "operationId": "BooksController_findOne",
+        "summary": "Get a book",
+        "description": "[Store] Get a book from the store by its ID",
+        "parameters": [
+          {
+            "name": "ref",
+            "required": true,
+            "in": "path",
+            "description": "Book reference",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The book has been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Book"
+                    },
+                    {
+                      "properties": {
+                        "languages": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Language"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "keywords": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Keyword"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "topics": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Topic"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "images": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Image"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "location": {
+                          "$ref": "#/components/schemas/Location"
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "$ref": "#/components/schemas/Status"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "Store not found."
+          }
+        },
+        "tags": [
+          "Books"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "BooksController_updateOne",
+        "summary": "Update a book",
+        "description": "[Store] Update a book from the store by its reference",
+        "parameters": [
+          {
+            "name": "ref",
+            "required": true,
+            "in": "path",
+            "description": "Book reference",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBookDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The book has been successfully updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Book"
+                    },
+                    {
+                      "properties": {
+                        "languages": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Language"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "keywords": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Keyword"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "topics": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Topic"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "images": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Image"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "location": {
+                          "$ref": "#/components/schemas/Location"
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "$ref": "#/components/schemas/Status"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "Store not found."
+          },
+          "500": {
+            "description": "The book has not been updated."
+          }
+        },
+        "tags": [
+          "Books"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "BooksController_deleteOne",
+        "summary": "Delete a book",
+        "description": "[Store] (SOFT) Delete a book from the store by its reference",
+        "parameters": [
+          {
+            "name": "ref",
+            "required": true,
+            "in": "path",
+            "description": "Book reference",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The book has been successfully deleted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Book"
+                    },
+                    {
+                      "properties": {
+                        "languages": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Language"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "keywords": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Keyword"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "topics": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Topic"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "images": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Image"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "location": {
+                          "$ref": "#/components/schemas/Location"
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "$ref": "#/components/schemas/Status"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "Store not found."
+          },
+          "500": {
+            "description": "The book has not been deleted."
+          }
+        },
+        "tags": [
+          "Books"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/books/{ref}/restore": {
+      "patch": {
+        "operationId": "BooksController_restoreOne",
+        "summary": "Restore a book",
+        "description": "[Store] Restore a book from the store by its reference",
+        "parameters": [
+          {
+            "name": "ref",
+            "required": true,
+            "in": "path",
+            "description": "Book reference",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The book has been successfully restored.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Book"
+                    },
+                    {
+                      "properties": {
+                        "languages": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Language"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "keywords": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Keyword"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "topics": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Topic"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "images": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Image"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "location": {
+                          "$ref": "#/components/schemas/Location"
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "$ref": "#/components/schemas/Status"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "Store not found."
+          },
+          "500": {
+            "description": "The book has not been restored."
+          }
+        },
+        "tags": [
+          "Books"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/books/{ref}/sell": {
+      "patch": {
+        "operationId": "BooksController_sellOne",
+        "summary": "Sell a book",
+        "description": "[Store] Sell a book from the store by its reference",
+        "parameters": [
+          {
+            "name": "ref",
+            "required": true,
+            "in": "path",
+            "description": "Book reference",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The book has been successfully sold.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Book"
+                    },
+                    {
+                      "properties": {
+                        "languages": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Language"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "keywords": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Keyword"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "topics": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Topic"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "images": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Image"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "location": {
+                          "$ref": "#/components/schemas/Location"
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "$ref": "#/components/schemas/Status"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "Store not found."
+          },
+          "500": {
+            "description": "The book has not been sold."
+          }
+        },
+        "tags": [
+          "Books"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/books/{ref}/add-stock": {
+      "patch": {
+        "operationId": "BooksController_addStockOne",
+        "summary": "Add stock to a book",
+        "description": "[Store] Add stock to a book from the store by its reference",
+        "parameters": [
+          {
+            "name": "ref",
+            "required": true,
+            "in": "path",
+            "description": "Book reference",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "stock",
+            "required": false,
+            "in": "query",
+            "description": "Stock to add",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The stock has been successfully added.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Book"
+                    },
+                    {
+                      "properties": {
+                        "languages": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Language"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "keywords": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Keyword"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "topics": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Topic"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "images": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Image"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "location": {
+                          "$ref": "#/components/schemas/Location"
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "status": {
+                          "$ref": "#/components/schemas/Status"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "403": {
+            "description": "Forbidden."
+          },
+          "404": {
+            "description": "Store not found."
+          },
+          "500": {
+            "description": "The stock has not been added."
+          }
+        },
+        "tags": [
+          "Books"
         ],
         "security": [
           {
@@ -3025,7 +5405,7 @@
           },
           "password": {
             "type": "string",
-            "example": "powerfulPassword1234#",
+            "example": "test",
             "description": "The password of the store.",
             "minLength": 8
           },
@@ -3066,7 +5446,7 @@
           },
           "email": {
             "type": "string",
-            "example": "example@example.com",
+            "example": "admin@admin.com",
             "description": "The email of the admin. Should be unique.",
             "maxLength": 300
           },
@@ -3185,7 +5565,7 @@
           },
           "password": {
             "type": "string",
-            "example": "powerfulPassword1234#",
+            "example": "test",
             "description": "The password of the store.",
             "minLength": 8
           },
@@ -3226,7 +5606,7 @@
           },
           "email": {
             "type": "string",
-            "example": "example@example.com",
+            "example": "admin@admin.com",
             "description": "The email of the admin. Should be unique.",
             "maxLength": 300
           },
@@ -3307,7 +5687,7 @@
           },
           "password": {
             "type": "string",
-            "example": "powerfulPassword1234#",
+            "example": "test",
             "description": "The password of the user",
             "minLength": 8
           },
@@ -3337,7 +5717,7 @@
           },
           "email": {
             "type": "string",
-            "example": "example@example.com",
+            "example": "customer@customer.com",
             "description": "The email of the customer. Should be unique among customers.",
             "maxLength": 300
           },
@@ -3398,7 +5778,7 @@
           },
           "password": {
             "type": "string",
-            "example": "powerfulPassword1234#",
+            "example": "test",
             "description": "The password of the user",
             "minLength": 8
           },
@@ -3428,7 +5808,7 @@
           },
           "email": {
             "type": "string",
-            "example": "example@example.com",
+            "example": "customer@customer.com",
             "description": "The email of the customer. Should be unique among customers.",
             "maxLength": 300
           },
@@ -3530,7 +5910,7 @@
           },
           "password": {
             "type": "string",
-            "example": "powerfulPassword1234#",
+            "example": "test",
             "description": "The password of the store.",
             "minLength": 8
           },
@@ -3560,7 +5940,7 @@
           },
           "email": {
             "type": "string",
-            "example": "example@example.com",
+            "example": "store@store.com",
             "description": "The email of the store. Should be unique among stores.",
             "maxLength": 300
           },
@@ -3608,7 +5988,7 @@
           },
           "password": {
             "type": "string",
-            "example": "powerfulPassword1234#",
+            "example": "test",
             "description": "The password of the store.",
             "minLength": 8
           },
@@ -3638,7 +6018,7 @@
           },
           "email": {
             "type": "string",
-            "example": "example@example.com",
+            "example": "store@store.com",
             "description": "The email of the store. Should be unique among stores.",
             "maxLength": 300
           },
@@ -3667,12 +6047,12 @@
         "properties": {
           "email": {
             "type": "string",
-            "example": "example@example.com",
+            "example": "store@store.com",
             "description": "The email of the user that forgot the password. Should exist."
           },
           "password": {
             "type": "string",
-            "example": "powerfulPassword1234#",
+            "example": "test",
             "description": "The password of the user."
           }
         },
@@ -3686,13 +6066,13 @@
         "properties": {
           "email": {
             "type": "string",
-            "example": "example@example.com",
+            "example": "store@store.com",
             "description": "The email of the store. Should be unique among stores.",
             "maxLength": 300
           },
           "password": {
             "type": "string",
-            "example": "powerfulPassword1234#",
+            "example": "test",
             "description": "The password of the store.",
             "minLength": 8
           },
@@ -3734,13 +6114,13 @@
         "properties": {
           "email": {
             "type": "string",
-            "example": "example@example.com",
+            "example": "customer@customer.com",
             "description": "The email of the customer. Should be unique among customers.",
             "maxLength": 300
           },
           "password": {
             "type": "string",
-            "example": "powerfulPassword1234#",
+            "example": "test",
             "description": "The password of the customer.",
             "minLength": 8
           },
@@ -3798,7 +6178,7 @@
         "properties": {
           "email": {
             "type": "string",
-            "example": "example@example.com",
+            "example": "store@store.com",
             "description": "The email of the user that forgot the password. Should exist."
           }
         },
@@ -3811,7 +6191,7 @@
         "properties": {
           "password": {
             "type": "string",
-            "example": "powerfulPassword1234#",
+            "example": "test",
             "description": "The new password of the user.",
             "minLength": 8
           },
@@ -3831,7 +6211,7 @@
         "properties": {
           "email": {
             "type": "string",
-            "example": "example@example.com",
+            "example": "store@store.com",
             "description": "The email of the store. Should be unique among stores.",
             "maxLength": 300
           },
@@ -3866,7 +6246,7 @@
         "properties": {
           "email": {
             "type": "string",
-            "example": "example@example.com",
+            "example": "customer@customer.com",
             "description": "The email of the customer. Should be unique among customers.",
             "maxLength": 300
           },
@@ -3907,7 +6287,7 @@
         "properties": {
           "password": {
             "type": "string",
-            "example": "powerfulPassword1234#",
+            "example": "test",
             "description": "The new password of the user.",
             "minLength": 8
           },
@@ -3996,8 +6376,8 @@
           },
           "ISBN": {
             "type": "string",
-            "example": "9789720046957",
-            "description": "The ISBN (13/9) of the book"
+            "example": "9781250788450",
+            "description": "The ISBN (13/10) of the book"
           },
           "title": {
             "type": "string",
@@ -4239,6 +6619,371 @@
             "description": "The status of the book"
           }
         }
+      },
+      "CreateBookDto": {
+        "type": "object",
+        "properties": {
+          "location_id": {
+            "type": "number",
+            "example": 1,
+            "description": "The id of the location where book is stored"
+          },
+          "status_id": {
+            "type": "number",
+            "example": 1,
+            "description": "The id of the status of the book"
+          },
+          "ref": {
+            "type": "number",
+            "example": 1,
+            "description": "The external id/reference of the book. Should be unique."
+          },
+          "ISBN": {
+            "type": "string",
+            "example": "978-1250788450",
+            "description": "The ISBN (13/10) of the book"
+          },
+          "title": {
+            "type": "string",
+            "example": "The Lord of the Rings",
+            "description": "The title of the book"
+          },
+          "author": {
+            "type": "string",
+            "example": "J. R. R. Tolkien",
+            "description": "The author of the book"
+          },
+          "publication_place": {
+            "type": "string",
+            "example": "Portugal",
+            "description": "The publication place (country, region, etc.) of the book"
+          },
+          "publisher": {
+            "type": "string",
+            "example": "Círculo de Leitores",
+            "description": "The publisher of the book"
+          },
+          "collection": {
+            "type": "string",
+            "example": "Colecção: Obras de J. R. R. Tolkien",
+            "description": "The collection of the book"
+          },
+          "year": {
+            "type": "number",
+            "example": 2012,
+            "description": "The publication year of the book"
+          },
+          "size": {
+            "type": "string",
+            "example": "20x13",
+            "description": "The size of the book (height x width)"
+          },
+          "weight": {
+            "type": "number",
+            "example": 500,
+            "description": "The weight of the book (in grams)"
+          },
+          "pages": {
+            "type": "number",
+            "example": 500,
+            "description": "The number of pages of the book"
+          },
+          "condition": {
+            "type": "string",
+            "example": "With dust jacket",
+            "description": "The condition of the book"
+          },
+          "description": {
+            "type": "string",
+            "example": "The Lord of the Rings is an epic high-fantasy novel",
+            "description": "The description of the book"
+          },
+          "price": {
+            "type": "number",
+            "example": 30,
+            "description": "The price of the book (euros)"
+          },
+          "stock": {
+            "type": "number",
+            "example": 2,
+            "description": "The stock of the book",
+            "default": 1
+          },
+          "binding": {
+            "type": "string",
+            "example": "Hardcover",
+            "description": "The binding of the book",
+            "default": null
+          },
+          "private_note": {
+            "type": "string",
+            "example": "Erase the pencil marks",
+            "description": "A private note that only the store can see",
+            "default": null
+          },
+          "sold_at": {
+            "format": "date-time",
+            "type": "string",
+            "example": null,
+            "description": "The date when the book was sold",
+            "default": null
+          },
+          "keywords": {
+            "example": [
+              "used",
+              "adventure",
+              "epic"
+            ],
+            "description": "The keywords of the book",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "languages": {
+            "example": [
+              "ES",
+              "EN"
+            ],
+            "description": "The languages of the book",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "images": {
+            "example": [
+              "https://example.com/image1.jpg"
+            ],
+            "description": "The images of the book",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "topics": {
+            "example": [
+              "fantasy",
+              "adventure",
+              "epic"
+            ],
+            "description": "The topics of the book",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "ref",
+          "ISBN",
+          "title"
+        ]
+      },
+      "UpdateBookDto": {
+        "type": "object",
+        "properties": {
+          "location_id": {
+            "type": "number",
+            "example": 1,
+            "description": "The id of the location where book is stored"
+          },
+          "status_id": {
+            "type": "number",
+            "example": 1,
+            "description": "The id of the status of the book"
+          },
+          "ref": {
+            "type": "number",
+            "example": 1,
+            "description": "The external id/reference of the book. Should be unique."
+          },
+          "ISBN": {
+            "type": "string",
+            "example": "978-1250788450",
+            "description": "The ISBN (13/10) of the book"
+          },
+          "title": {
+            "type": "string",
+            "example": "The Lord of the Rings",
+            "description": "The title of the book"
+          },
+          "author": {
+            "type": "string",
+            "example": "J. R. R. Tolkien",
+            "description": "The author of the book"
+          },
+          "publication_place": {
+            "type": "string",
+            "example": "Portugal",
+            "description": "The publication place (country, region, etc.) of the book"
+          },
+          "publisher": {
+            "type": "string",
+            "example": "Círculo de Leitores",
+            "description": "The publisher of the book"
+          },
+          "collection": {
+            "type": "string",
+            "example": "Colecção: Obras de J. R. R. Tolkien",
+            "description": "The collection of the book"
+          },
+          "year": {
+            "type": "number",
+            "example": 2012,
+            "description": "The publication year of the book"
+          },
+          "size": {
+            "type": "string",
+            "example": "20x13",
+            "description": "The size of the book (height x width)"
+          },
+          "weight": {
+            "type": "number",
+            "example": 500,
+            "description": "The weight of the book (in grams)"
+          },
+          "pages": {
+            "type": "number",
+            "example": 500,
+            "description": "The number of pages of the book"
+          },
+          "condition": {
+            "type": "string",
+            "example": "With dust jacket",
+            "description": "The condition of the book"
+          },
+          "description": {
+            "type": "string",
+            "example": "The Lord of the Rings is an epic high-fantasy novel",
+            "description": "The description of the book"
+          },
+          "price": {
+            "type": "number",
+            "example": 30,
+            "description": "The price of the book (euros)"
+          },
+          "stock": {
+            "type": "number",
+            "example": 2,
+            "description": "The stock of the book",
+            "default": 1
+          },
+          "binding": {
+            "type": "string",
+            "example": "Hardcover",
+            "description": "The binding of the book",
+            "default": null
+          },
+          "private_note": {
+            "type": "string",
+            "example": "Erase the pencil marks",
+            "description": "A private note that only the store can see",
+            "default": null
+          },
+          "sold_at": {
+            "format": "date-time",
+            "type": "string",
+            "example": null,
+            "description": "The date when the book was sold",
+            "default": null
+          },
+          "keywords": {
+            "example": [
+              "used",
+              "adventure",
+              "epic"
+            ],
+            "description": "The keywords of the book",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "languages": {
+            "example": [
+              "ES",
+              "EN"
+            ],
+            "description": "The languages of the book",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "images": {
+            "example": [
+              "https://example.com/image1.jpg"
+            ],
+            "description": "The images of the book",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "topics": {
+            "example": [
+              "fantasy",
+              "adventure",
+              "epic"
+            ],
+            "description": "The topics of the book",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Keyword": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1,
+            "description": "The id of the keyword"
+          },
+          "book_id": {
+            "type": "number",
+            "example": 1,
+            "description": "The id of the book that the keyword references to"
+          },
+          "keyword": {
+            "type": "string",
+            "example": "keyword",
+            "description": "The keyword"
+          }
+        },
+        "required": [
+          "id",
+          "book_id",
+          "keyword"
+        ]
+      },
+      "Image": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1,
+            "description": "The id of the image"
+          },
+          "book_id": {
+            "type": "number",
+            "example": 1,
+            "description": "The id of the book that the image belongs to"
+          },
+          "url": {
+            "type": "string",
+            "example": "https://example.com/image.png",
+            "description": "The url of the image"
+          }
+        },
+        "required": [
+          "id",
+          "book_id",
+          "url"
+        ]
       }
     }
   }

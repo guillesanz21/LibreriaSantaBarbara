@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
 import { EntityHelper } from 'src/utils/entities/entity-helper.entity';
-import { Book } from '../../entities/book.entity';
+import { Book } from '../../books/entities/book.entity';
 
 @Entity('Topic')
 export class Topic extends EntityHelper {
@@ -16,8 +16,9 @@ export class Topic extends EntityHelper {
   // * Relations
   @ManyToMany(() => Book, (book) => book.topics, {
     eager: false,
-    cascade: true,
+    orphanedRowAction: 'delete',
     onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
   })
   books: Book[];
 }

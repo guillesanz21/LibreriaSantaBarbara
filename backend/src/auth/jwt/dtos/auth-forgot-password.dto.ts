@@ -6,7 +6,7 @@ import { IsExists } from 'src/utils/validators/isExists.validator';
 
 export class AuthForgotPasswordDto {
   @ApiProperty({
-    example: 'example@example.com',
+    example: 'store@store.com',
     description:
       'The email of the user that forgot the password. Should exist.',
   })

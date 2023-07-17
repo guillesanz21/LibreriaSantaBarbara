@@ -15,3 +15,14 @@ export class CreateTopicDto {
   @IsUnique('Topic')
   topic: string;
 }
+
+export class BulkCreateTopicDto {
+  @ApiProperty({
+    example: 'Fiction',
+    description: 'The topic of the book',
+  })
+  @IsNotEmpty()
+  @Transform(({ value }) => value?.toLowerCase())
+  @MaxLength(constraints.topic.maxLength)
+  topic: string;
+}

@@ -17,19 +17,19 @@ export class LocationSeedService {
       await this.repository.save(
         this.repository.create({
           store_id: 1,
-          location: 'Warehouse',
+          location: 'warehouse',
         }),
       );
       await this.repository.save(
         this.repository.create({
           store_id: 1,
-          location: 'Bookstore',
+          location: 'bookstore',
         }),
       );
       await this.repository.save(
         this.repository.create({
           store_id: 1,
-          location: 'House',
+          location: 'house',
         }),
       );
     }

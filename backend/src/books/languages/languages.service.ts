@@ -7,7 +7,10 @@ import {
   getNames,
 } from '@cospired/i18n-iso-languages';
 import { Language } from './entites/language.entity';
-import { CreateLanguageDto } from './dtos/create-language.dto';
+import {
+  BulkCreateLanguageDto,
+  CreateLanguageDto,
+} from './dtos/create-language.dto';
 
 @Injectable()
 export class LanguagesService {
@@ -21,6 +24,21 @@ export class LanguagesService {
     this.lang = 'es';
   }
 
+  // ~ CRUD ~
+  // * [C] Create
+  // Create a language
+  async create(langDto: CreateLanguageDto): Promise<Language> {
+    const lang = this.languagesRepository.create(langDto);
+    const createdLanguage = await this.languagesRepository.insert(lang);
+    return createdLanguage.raw;
+  }
+
+  // Bulk create languages from array of names and return the created languages
+  bulkCreate(langs: BulkCreateLanguageDto[]): Language[] {
+    return langs.map((lang) => this.languagesRepository.create(lang));
+  }
+
+  // * [R] Read
   // Find a language by its id
   async findOneById(id: number): Promise<Language | undefined> {
     return this.languagesRepository.findOne({ where: { id: +id } });
@@ -31,17 +49,13 @@ export class LanguagesService {
     return this.languagesRepository.find({ where: { book_id: +bookId } });
   }
 
-  // Create a language
-  async create(langDto: CreateLanguageDto): Promise<Language> {
-    const lang = this.languagesRepository.create(langDto);
-    return this.languagesRepository.save(lang);
-  }
-
+  // * [D] Delete
   // Delete (hard) a language
   async delete(id: number): Promise<void> {
     await this.languagesRepository.delete(id);
   }
 
+  // ~ Static read ~
   // Get all languages
   getAllStatic(): LocalizedLanguageNames {
     return getNames(this.lang);

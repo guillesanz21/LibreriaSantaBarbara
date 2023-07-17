@@ -13,17 +13,16 @@ import {
   JoinTable,
   Index,
   UpdateDateColumn,
-  Generated,
 } from 'typeorm';
-import { Expose, Transform } from 'class-transformer';
+import { Exclude, Expose, Transform } from 'class-transformer';
 import { EntityHelper } from 'src/utils/entities/entity-helper.entity';
-import { Store } from '../../users/stores/entities/store.entity';
-import { Location } from '../locations/entities/location.entity';
-import { Status } from '../status/entities/status.entity';
-import { Language } from '../languages/entites/language.entity';
-import { Topic } from '../topics/entities/topic.entity';
-import { Keyword } from './keyword.entity';
-import { Image } from './image.entity';
+import { Store } from '../../../users/stores/entities/store.entity';
+import { Location } from '../../locations/entities/location.entity';
+import { Status } from '../../status/entities/status.entity';
+import { Language } from '../../languages/entites/language.entity';
+import { Topic } from '../../topics/entities/topic.entity';
+import { Keyword } from '../../keywords/entities/keyword.entity';
+import { Image } from '../../images/entities/image.entity';
 import { ExposeGroupsEnum } from 'src/utils/types/expose-groups.enum';
 
 @Entity('Book')
@@ -46,7 +45,7 @@ export class Book extends EntityHelper {
     example: 1,
     description: 'The id of the location where book is stored',
   })
-  @Expose({ groups: [ExposeGroupsEnum.me, ExposeGroupsEnum.admin] })
+  @Exclude({ toPlainOnly: true })
   @Column({ type: 'int', nullable: true })
   @Index()
   location_id: number;
@@ -55,7 +54,7 @@ export class Book extends EntityHelper {
     example: 1,
     description: 'The id of the status of the book',
   })
-  @Expose({ groups: [ExposeGroupsEnum.me, ExposeGroupsEnum.admin] })
+  @Exclude({ toPlainOnly: true })
   @Column({ type: 'int', nullable: false, default: 1 })
   @Index()
   status_id: number;
@@ -65,12 +64,11 @@ export class Book extends EntityHelper {
     description: 'The external id/reference of the book',
   })
   @Column({ nullable: false })
-  @Generated('increment')
   ref: number;
 
   @ApiProperty({
-    example: '9789720046957',
-    description: 'The ISBN (13/9) of the book',
+    example: '9781250788450',
+    description: 'The ISBN (13/10) of the book',
   })
   @Column({ type: 'text', nullable: false })
   ISBN: string;
@@ -156,7 +154,7 @@ export class Book extends EntityHelper {
     example: 30,
     description: 'The price of the book (euros)',
   })
-  @Column({ type: 'numeric', nullable: false })
+  @Column({ nullable: false })
   price: number;
 
   @ApiProperty({
@@ -223,7 +221,8 @@ export class Book extends EntityHelper {
   @JoinColumn({ name: 'store_id' })
   store: Store;
 
-  @Transform(({ value }) => value?.location)
+  @Transform(({ value }) => ({ id: value?.id, location: value?.location }))
+  @Expose({ groups: [ExposeGroupsEnum.me, ExposeGroupsEnum.admin] })
   @ManyToOne(() => Location, (location) => location.books, {
     eager: true,
     cascade: true,
@@ -233,7 +232,7 @@ export class Book extends EntityHelper {
   @JoinColumn({ name: 'location_id' })
   location: Location;
 
-  @Transform(({ value }) => value?.status)
+  // @Transform(({ value }) => value?.status)
   @ManyToOne(() => Status, (status) => status.books, {
     eager: true,
     cascade: true,
@@ -263,8 +262,9 @@ export class Book extends EntityHelper {
 
   @ManyToMany(() => Topic, (topic) => topic.books, {
     eager: true,
+    cascade: true,
     onUpdate: 'CASCADE',
-    onDelete: 'RESTRICT',
+    onDelete: 'CASCADE',
   })
   @JoinTable({
     name: 'Topic_of_Book',

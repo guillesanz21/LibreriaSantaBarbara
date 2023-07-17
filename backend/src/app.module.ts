@@ -8,7 +8,7 @@ import { appConfig, authConfig, CORS, dbConfig, mailConfig } from './config';
 import { TypeOrmConfigService } from './database/typeorm-config.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-import { BooksModule } from './books/books.module';
+import { BooksGlobalModule } from './books/books-global.module';
 import { routes } from './routes';
 import { MailModule } from './mail/mail.module';
 import { MailConfigService } from './mail/mail-config.service';
@@ -31,7 +31,7 @@ import { MailConfigService } from './mail/mail-config.service';
     }),
     UsersModule,
     AuthModule,
-    BooksModule,
+    BooksGlobalModule,
     MailModule,
     RouterModule.register(routes),
   ],

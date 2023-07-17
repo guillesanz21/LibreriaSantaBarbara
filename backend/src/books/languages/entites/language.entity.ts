@@ -8,7 +8,7 @@ import {
   Index,
 } from 'typeorm';
 import { EntityHelper } from 'src/utils/entities/entity-helper.entity';
-import { Book } from '../../entities/book.entity';
+import { Book } from '../../books/entities/book.entity';
 
 @Entity('Language')
 export class Language extends EntityHelper {
@@ -34,6 +34,7 @@ export class Language extends EntityHelper {
   // * Relations
   @ManyToOne(() => Book, (book) => book.languages, {
     eager: false,
+    orphanedRowAction: 'delete',
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
   })

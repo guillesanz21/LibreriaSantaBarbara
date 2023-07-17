@@ -35,6 +35,7 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { DestructureUser } from '../interceptors/destructure-user.interceptor';
 import { NullableType } from 'src/utils/types/nullable.type';
 import { RolesEnum } from '../roles/roles.enum';
+import { ExposeGroupsEnum } from 'src/utils/types/expose-groups.enum';
 import { InfinityPaginationResultType } from 'src/utils/types/infinity-pagination-result.type';
 import { infinityPagination } from 'src/utils/infinity-pagination';
 import { StoreResponseSchema } from '../../utils/schemas/users.schema';
@@ -59,14 +60,14 @@ export class StoresController {
   // * ######  POST /users/stores (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Create a new store',
-    description: 'Create a new store.',
+    description: '[Admin] Create a new store.',
   })
   @ApiCreatedResponse({
     description: 'The record has been successfully created.',
     schema: StoreResponseSchema,
   })
   @SerializeOptions({
-    groups: ['admin'],
+    groups: [ExposeGroupsEnum.admin],
   })
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -77,7 +78,7 @@ export class StoresController {
   // * ######  GET /users/stores (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Get all the stores by filtering them',
-    description: 'Get all the filtered stores.',
+    description: '[Admin] Get all the filtered stores.',
   })
   @ApiQuery({ name: 'email', required: false })
   @ApiQuery({ name: 'NIF', required: false })
@@ -101,7 +102,7 @@ export class StoresController {
     },
   })
   @SerializeOptions({
-    groups: ['admin'],
+    groups: [ExposeGroupsEnum.admin],
   })
   @DestructureUser()
   @Get()
@@ -132,7 +133,7 @@ export class StoresController {
   // * ######  GET /users/stores/pagination (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Get all the stores by filtering them (with pagination)',
-    description: 'Get all the filtered stores (with pagination).',
+    description: '[Admin] Get all the filtered stores (with pagination).',
   })
   @ApiQuery({ name: 'page', description: 'Page number', required: true })
   @ApiQuery({ name: 'limit', description: 'Results/page', required: true })
@@ -167,7 +168,7 @@ export class StoresController {
     },
   })
   @SerializeOptions({
-    groups: ['admin'],
+    groups: [ExposeGroupsEnum.admin],
   })
   @DestructureUser()
   @Get('/pagination')
@@ -211,14 +212,14 @@ export class StoresController {
   // * ######  GET /users/stores/:id (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Get a store by ID',
-    description: 'Get the specified store by its ID (store_id).',
+    description: '[Admin] Get the specified store by its ID (store_id).',
   })
   @ApiOkResponse({
     description: 'The record has been successfully retrieved.',
     schema: StoreResponseSchema,
   })
   @SerializeOptions({
-    groups: ['admin'],
+    groups: [ExposeGroupsEnum.admin],
   })
   @DestructureUser()
   @Get(':id')
@@ -235,7 +236,7 @@ export class StoresController {
   @ApiOperation({
     summary: 'Update a store.',
     description:
-      'Update the specified store by its ID (store_id) with the specified data.',
+      '[Admin] Update the specified store by its ID (store_id) with the specified data.',
   })
   @ApiNoContentResponse({
     description: 'The record has been successfully updated.',
@@ -258,7 +259,7 @@ export class StoresController {
   // * ######  DELETE /users/stores/:id (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Delete a store',
-    description: 'Delete the specified store by its ID (store_id).',
+    description: '[Admin] Delete the specified store by its ID (store_id).',
   })
   @ApiQuery({
     name: 'mode',
@@ -290,7 +291,7 @@ export class StoresController {
   @ApiOperation({
     summary: 'Restore a store',
     description:
-      'Restore a soft deleted store specified  by its ID (store_id).',
+      '[Admin] Restore a soft deleted store specified  by its ID (store_id).',
   })
   @ApiNoContentResponse({
     description: 'The record has been successfully restored.',

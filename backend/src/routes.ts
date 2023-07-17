@@ -1,6 +1,6 @@
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-import { BooksModule } from './books/books.module';
+import { BooksModule } from './books/books/books.module';
 import { CustomersModule } from './users/customers/customers.module';
 import { StoresModule } from './users/stores/stores.module';
 import { JWTModule } from './auth/jwt/jwt.module';
@@ -8,6 +8,7 @@ import { LanguagesModule } from './books/languages/languages.module';
 import { TopicsModule } from './books/topics/topics.module';
 import { LocationsModule } from './books/locations/locations.module';
 import { StatusModule } from './books/status/status.module';
+import { BooksGlobalModule } from './books/books-global.module';
 
 export const routes = [
   {
@@ -42,7 +43,7 @@ export const routes = [
       },
       {
         path: 'books',
-        module: BooksModule,
+        module: BooksGlobalModule,
         children: [
           {
             path: 'languages',
@@ -59,6 +60,10 @@ export const routes = [
           {
             path: 'status',
             module: StatusModule,
+          },
+          {
+            path: '/',
+            module: BooksModule,
           },
         ],
       },

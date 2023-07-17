@@ -16,7 +16,7 @@ const { customer: customerConstraints } = userConstraints;
 
 export class AuthUpdateCustomerDto {
   @ApiPropertyOptional({
-    example: 'example@example.com',
+    example: 'customer@customer.com',
     description: 'The email of the customer. Should be unique among customers.',
     maxLength: commonConstraints.email.maxLength,
   })

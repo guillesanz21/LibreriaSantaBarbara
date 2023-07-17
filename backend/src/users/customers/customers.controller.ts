@@ -34,6 +34,7 @@ import { UpdateCustomerDto } from './dtos/update-customer.dto';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { DestructureUser } from '../interceptors/destructure-user.interceptor';
 import { RolesEnum } from '../roles/roles.enum';
+import { ExposeGroupsEnum } from 'src/utils/types/expose-groups.enum';
 import { NullableType } from 'src/utils/types/nullable.type';
 import { InfinityPaginationResultType } from 'src/utils/types/infinity-pagination-result.type';
 import { infinityPagination } from 'src/utils/infinity-pagination';
@@ -56,7 +57,7 @@ export class CustomersController {
   // * ######  POST /users/customers  (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Create a new customer',
-    description: 'Create a new customer.',
+    description: '[Admin] Create a new customer.',
   })
   @ApiCreatedResponse({
     description: 'The record has been successfully created.',
@@ -66,7 +67,7 @@ export class CustomersController {
     description: 'The email is not valid.',
   })
   @SerializeOptions({
-    groups: ['admin'],
+    groups: [ExposeGroupsEnum.admin],
   })
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -77,7 +78,7 @@ export class CustomersController {
   // * ######  GET /users/customers  (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Get all the customers by filtering them',
-    description: 'Get all the filtered customers',
+    description: '[Admin] Get all the filtered customers',
   })
   @ApiQuery({ name: 'email', required: false })
   @ApiQuery({ name: 'NIF', required: false })
@@ -101,7 +102,7 @@ export class CustomersController {
     },
   })
   @SerializeOptions({
-    groups: ['admin'],
+    groups: [ExposeGroupsEnum.admin],
   })
   @DestructureUser()
   @Get()
@@ -131,7 +132,7 @@ export class CustomersController {
   // * ######  GET /users/customers/pagination  (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Get all the customers by filtering them (with pagination)',
-    description: 'Get all the filtered customers (with pagination).',
+    description: '[Admin] Get all the filtered customers (with pagination).',
   })
   @ApiQuery({ name: 'page', description: 'Page number', required: true })
   @ApiQuery({ name: 'limit', description: 'Results/page', required: true })
@@ -166,7 +167,7 @@ export class CustomersController {
     },
   })
   @SerializeOptions({
-    groups: ['admin'],
+    groups: [ExposeGroupsEnum.admin],
   })
   @DestructureUser()
   @Get('/pagination')
@@ -210,14 +211,14 @@ export class CustomersController {
   // * ######  GET /users/customers/:id  (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Get a customer by ID',
-    description: 'Get the specified customer by its ID (customer_id).',
+    description: '[Admin] Get the specified customer by its ID (customer_id).',
   })
   @ApiOkResponse({
     description: 'The record has been successfully retrieved.',
     schema: CustomerResponseSchema,
   })
   @SerializeOptions({
-    groups: ['admin'],
+    groups: [ExposeGroupsEnum.admin],
   })
   @DestructureUser()
   @Get(':id')
@@ -234,7 +235,7 @@ export class CustomersController {
   @ApiOperation({
     summary: 'Update a customer.',
     description:
-      'Update the specified customer by its ID (customer_id) with the specified data.',
+      '[Admin] Update the specified customer by its ID (customer_id) with the specified data.',
   })
   @ApiNoContentResponse({
     description: 'The record has been successfully updated.',
@@ -257,7 +258,8 @@ export class CustomersController {
   // * ######  DELETE /users/customers/:id  (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Delete a customer',
-    description: 'Delete the specified customer by its ID (customer_id).',
+    description:
+      '[Admin] Delete the specified customer by its ID (customer_id).',
   })
   @ApiQuery({
     name: 'mode',
@@ -289,7 +291,7 @@ export class CustomersController {
   @ApiOperation({
     summary: 'Restore a customer',
     description:
-      'Restore a soft deleted customer specified  by its ID (customer_id).',
+      '[Admin] Restore a soft deleted customer specified  by its ID (customer_id).',
   })
   @ApiNoContentResponse({
     description: 'The record has been successfully restored.',

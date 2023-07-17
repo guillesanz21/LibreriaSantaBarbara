@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class CreateTables1689242044551 implements MigrationInterface {
-  name = 'CreateTables1689242044551';
+export class CreateTables1689597407064 implements MigrationInterface {
+  name = 'CreateTables1689597407064';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
@@ -176,7 +176,7 @@ export class CreateTables1689242044551 implements MigrationInterface {
                 "store_id" integer NOT NULL DEFAULT '1',
                 "location_id" integer,
                 "status_id" integer NOT NULL DEFAULT '1',
-                "ref" SERIAL NOT NULL,
+                "ref" integer NOT NULL,
                 "ISBN" text NOT NULL,
                 "title" text NOT NULL,
                 "author" text,
@@ -189,7 +189,7 @@ export class CreateTables1689242044551 implements MigrationInterface {
                 "pages" integer,
                 "condition" text,
                 "description" text,
-                "price" numeric NOT NULL,
+                "price" integer NOT NULL,
                 "stock" integer DEFAULT '1',
                 "binding" text,
                 "private_note" text,
@@ -273,11 +273,11 @@ export class CreateTables1689242044551 implements MigrationInterface {
         `);
     await queryRunner.query(`
             ALTER TABLE "Topic_of_Book"
-            ADD CONSTRAINT "FK_78c0f439caaae08089d04052648" FOREIGN KEY ("book_id") REFERENCES "Book"("id") ON DELETE RESTRICT ON UPDATE CASCADE
+            ADD CONSTRAINT "FK_78c0f439caaae08089d04052648" FOREIGN KEY ("book_id") REFERENCES "Book"("id") ON DELETE CASCADE ON UPDATE CASCADE
         `);
     await queryRunner.query(`
             ALTER TABLE "Topic_of_Book"
-            ADD CONSTRAINT "FK_ff3831b17779b3aa1e2f51ca505" FOREIGN KEY ("topic_id") REFERENCES "Topic"("id") ON DELETE NO ACTION ON UPDATE CASCADE
+            ADD CONSTRAINT "FK_ff3831b17779b3aa1e2f51ca505" FOREIGN KEY ("topic_id") REFERENCES "Topic"("id") ON DELETE CASCADE ON UPDATE CASCADE
         `);
   }
 

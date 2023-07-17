@@ -24,7 +24,7 @@ export class CreateUserDto {
   role_id: number;
 
   @ApiPropertyOptional({
-    example: 'powerfulPassword1234#',
+    example: 'test',
     description: 'The password of the user',
     minLength: commonConstraints.password.minLength,
   })

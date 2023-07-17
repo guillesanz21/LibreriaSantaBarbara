@@ -8,7 +8,7 @@ import {
   Index,
 } from 'typeorm';
 import { EntityHelper } from 'src/utils/entities/entity-helper.entity';
-import { Book } from './book.entity';
+import { Book } from '../../books/entities/book.entity';
 
 @Entity('Image')
 export class Image extends EntityHelper {
@@ -34,6 +34,7 @@ export class Image extends EntityHelper {
   // * Relations
   @ManyToOne(() => Book, (book) => book.images, {
     eager: false,
+    orphanedRowAction: 'delete',
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
   })

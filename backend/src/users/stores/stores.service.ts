@@ -94,7 +94,6 @@ export class StoresService {
         deleted_at: IsNull(),
       },
     };
-    console.log(fields);
     return this.repository.find({
       where: fields,
       relations: ['user'],

@@ -16,22 +16,22 @@ export class TopicSeedService {
     if (count === 0) {
       await this.repository.save(
         this.repository.create({
-          topic: 'Fiction',
+          topic: 'fiction',
         }),
       );
       await this.repository.save(
         this.repository.create({
-          topic: 'History',
+          topic: 'history',
         }),
       );
       await this.repository.save(
         this.repository.create({
-          topic: 'Fantasy',
+          topic: 'fantasy',
         }),
       );
       await this.repository.save(
         this.repository.create({
-          topic: 'Mystery',
+          topic: 'mystery',
         }),
       );
     }

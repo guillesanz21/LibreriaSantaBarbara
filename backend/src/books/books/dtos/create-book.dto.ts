@@ -17,18 +17,8 @@ import { IsExists } from 'src/utils/validators/isExists.validator';
 import { IsCompositeUnique } from 'src/utils/validators/isCompositeUnique.validator';
 import { IsISO6391 } from 'src/utils/validators/isISO6391.validator';
 import { bookConstraints as constraints } from 'src/config/constants/database.constraint_values';
-import { IBook } from '../interfaces/book.interface';
 
-export class CreateBookDto implements IBook {
-  @ApiPropertyOptional({
-    example: 1,
-    description: 'The id of the store that have the book',
-  })
-  @IsOptional()
-  @IsNumber()
-  @IsExists('Store', 'id')
-  store_id?: number;
-
+export class CreateBookDto {
   @ApiPropertyOptional({
     example: 1,
     description: 'The id of the location where book is stored',
@@ -47,18 +37,18 @@ export class CreateBookDto implements IBook {
   @IsExists('Status', 'id')
   status_id?: number;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     example: 1,
-    description: 'The external id/reference of the book',
+    description: 'The external id/reference of the book. Should be unique.',
   })
-  @IsOptional()
+  @IsNotEmpty()
   @Min(constraints.ref.min)
   @IsCompositeUnique('Book', 'store_id')
-  ref?: number;
+  ref: number;
 
   @ApiProperty({
-    example: '9789720046957',
-    description: 'The ISBN (13/9) of the book',
+    example: '978-1250788450',
+    description: 'The ISBN (13/10) of the book',
   })
   @Transform(({ value }) => value.replace(/-/g, ''))
   @IsNotEmpty()
@@ -110,7 +100,7 @@ export class CreateBookDto implements IBook {
     description: 'The publication year of the book',
   })
   @IsOptional()
-  @Max(2055)
+  @Max(constraints.year.max)
   year?: number;
 
   @ApiPropertyOptional({
@@ -135,6 +125,7 @@ export class CreateBookDto implements IBook {
   })
   @IsOptional()
   @Min(constraints.pages.min)
+  @Max(constraints.pages.max)
   pages?: number;
 
   @ApiPropertyOptional({
@@ -159,19 +150,23 @@ export class CreateBookDto implements IBook {
   })
   @IsDefined()
   @Min(constraints.price.min)
+  @Max(constraints.price.max)
   price: number;
 
   @ApiPropertyOptional({
     example: 2,
     description: 'The stock of the book',
+    default: 1,
   })
   @IsOptional()
   @Min(constraints.stock.min)
+  @Max(constraints.stock.max)
   stock?: number;
 
   @ApiPropertyOptional({
     example: 'Hardcover',
     description: 'The binding of the book',
+    default: null,
   })
   @IsOptional()
   @MaxLength(constraints.binding.maxLength)
@@ -180,14 +175,16 @@ export class CreateBookDto implements IBook {
   @ApiPropertyOptional({
     example: 'Erase the pencil marks',
     description: 'A private note that only the store can see',
+    default: null,
   })
   @IsOptional()
   @MaxLength(constraints.private_note.maxLength)
   private_note?: string;
 
   @ApiPropertyOptional({
-    example: '2021-01-01',
+    example: null,
     description: 'The date when the book was sold',
+    default: null,
   })
   @IsOptional()
   @IsDate()
@@ -198,6 +195,9 @@ export class CreateBookDto implements IBook {
     description: 'The keywords of the book',
   })
   @IsOptional()
+  @Transform(({ value }) =>
+    value.map((keyword: string) => keyword?.toLowerCase()),
+  )
   @MaxLength(constraints.keyword.maxLength, {
     each: true,
   })
@@ -222,6 +222,7 @@ export class CreateBookDto implements IBook {
     description: 'The images of the book',
   })
   @IsOptional()
+  // TODO: Validate file instead of URL
   @IsUrl({}, { each: true })
   images?: string[];
 

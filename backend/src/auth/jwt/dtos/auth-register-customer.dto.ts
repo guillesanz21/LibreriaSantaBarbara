@@ -18,7 +18,7 @@ const { customer: customerConstraints } = userConstraints;
 
 export class AuthRegisterCustomerDto {
   @ApiProperty({
-    example: 'example@example.com',
+    example: 'customer@customer.com',
     description: 'The email of the customer. Should be unique among customers.',
     maxLength: commonConstraints.email.maxLength,
   })
@@ -30,7 +30,7 @@ export class AuthRegisterCustomerDto {
   email: string;
 
   @ApiProperty({
-    example: 'powerfulPassword1234#',
+    example: 'test',
     description: 'The password of the customer.',
     minLength: commonConstraints.password.minLength,
   })

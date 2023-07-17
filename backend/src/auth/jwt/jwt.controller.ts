@@ -27,6 +27,7 @@ import {
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 import { Public } from '../decorators/public.decorator';
+import { DestructureUser } from 'src/users/interceptors/destructure-user.interceptor';
 import { JWTService } from './jwt.service';
 import { AuthLoginEmailDto } from './dtos/auth-login-email.dto';
 import { AuthRegisterStoreDto } from './dtos/auth-register-store.dto';
@@ -39,9 +40,9 @@ import { AuthUpdateStoreDto } from './dtos/auth-update-store.dto';
 import { AuthUpdateCustomerDto } from './dtos/auth-update-customer.dto';
 import { GeneralUser } from 'src/users/users.types';
 import { UserTypesEnum } from 'src/users/user-types/user_types.enum';
+import { ExposeGroupsEnum } from 'src/utils/types/expose-groups.enum';
 import { LoginResponseType } from '../auth.types';
 import { NullableType } from 'src/utils/types/nullable.type';
-import { DestructureUser } from 'src/users/interceptors/destructure-user.interceptor';
 import { LoginJWTResponseSchema } from 'src/utils/schemas/auth.schema';
 import { StoreResponseSchema } from 'src/utils/schemas/users.schema';
 
@@ -91,7 +92,7 @@ export class JwtController {
   @ApiNotFoundResponse({ description: 'The store was not found.' })
   @ApiUnprocessableEntityResponse({ description: 'Incorrect password.' })
   @SerializeOptions({
-    groups: ['me'],
+    groups: [ExposeGroupsEnum.me],
   })
   @Post('stores/login')
   @Public()
@@ -114,7 +115,7 @@ export class JwtController {
   @ApiNotFoundResponse({ description: 'The customer was not found.' })
   @ApiUnprocessableEntityResponse({ description: 'Incorrect password.' })
   @SerializeOptions({
-    groups: ['me'],
+    groups: [ExposeGroupsEnum.me],
   })
   @Post('customers/login')
   @Public()
@@ -137,7 +138,7 @@ export class JwtController {
   @ApiNotFoundResponse({ description: 'The user was not found.' })
   @ApiUnprocessableEntityResponse({ description: 'Incorrect password.' })
   @SerializeOptions({
-    groups: ['me'],
+    groups: [ExposeGroupsEnum.me],
   })
   @Post('admin/login')
   @Public()
@@ -369,7 +370,7 @@ export class JwtController {
   @ApiOperation({
     summary: 'Logout',
     description:
-      'Logout the user by removing the token from the request object.',
+      '[*] Logout the user by removing the token from the request object.',
   })
   @ApiNoContentResponse({
     description: 'The user has been successfully logged out.',
@@ -380,7 +381,7 @@ export class JwtController {
   @ApiInternalServerErrorResponse({ description: 'Error logging out.' })
   @ApiBearerAuth()
   @SerializeOptions({
-    groups: ['me'],
+    groups: [ExposeGroupsEnum.me],
   })
   @Post('me/logout')
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -395,7 +396,7 @@ export class JwtController {
   // * ######  GET /auth/email/me (Auth) ######
   @ApiOperation({
     summary: 'Me',
-    description: 'Get the user data of the user in the request object.',
+    description: '[*] Get the user data of the user in the request object.',
   })
   @ApiOkResponse({
     description: 'The user data has been successfully retrieved.',
@@ -406,7 +407,7 @@ export class JwtController {
   })
   @ApiBearerAuth()
   @SerializeOptions({
-    groups: ['me'],
+    groups: [ExposeGroupsEnum.me],
   })
   @DestructureUser()
   @Get('me')
@@ -418,7 +419,7 @@ export class JwtController {
   // * ######  PATCH /auth/email/me/stores (Auth) ######
   @ApiOperation({
     summary: 'Update store',
-    description: 'Update the store data of the user in the request object.',
+    description: '[*] Update the store data of the user in the request object.',
   })
   @ApiNoContentResponse({
     description: 'The store data has been successfully updated.',
@@ -447,7 +448,8 @@ export class JwtController {
   // * ######  PATCH /auth/email/me/customers (Auth) ######
   @ApiOperation({
     summary: 'Update customer',
-    description: 'Update the customer data of the user in the request object.',
+    description:
+      '[*] Update the customer data of the user in the request object.',
   })
   @ApiNoContentResponse({
     description: 'The customer data has been successfully updated.',
@@ -471,7 +473,7 @@ export class JwtController {
   // * ######  PATCH /auth/email/me/password (Auth) ######
   @ApiOperation({
     summary: 'Update password',
-    description: 'Update the password of the user in the request object.',
+    description: '[*] Update the password of the user in the request object.',
   })
   @ApiNoContentResponse({
     description: 'The password has been successfully updated.',
@@ -505,7 +507,7 @@ export class JwtController {
   // * ######  DELETE /auth/email/me (Auth) ######
   @ApiOperation({
     summary: 'Delete',
-    description: 'Soft-delete the user in the request object.',
+    description: '[*] Soft-delete the user in the request object.',
   })
   @ApiNoContentResponse({
     description: 'The user has been successfully deleted.',

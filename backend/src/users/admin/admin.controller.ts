@@ -36,6 +36,7 @@ import { UpdateAdminDto } from './dtos/update-admin.dto';
 import { AproveRejectStroreDto } from './dtos/aprove-reject-store.dto';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { RolesEnum } from '../roles/roles.enum';
+import { ExposeGroupsEnum } from 'src/utils/types/expose-groups.enum';
 import { UserTypesEnum } from '../user-types/user_types.enum';
 import { NullableType } from 'src/utils/types/nullable.type';
 import { InfinityPaginationResultType } from 'src/utils/types/infinity-pagination-result.type';
@@ -64,7 +65,7 @@ export class AdminController {
   // * ######  POST /users/admin/stores/approve (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Approve a store',
-    description: 'Approve a store.',
+    description: '[Admin] Approve a store.',
   })
   @ApiNoContentResponse({
     description: 'The store has been successfully approved.',
@@ -90,7 +91,7 @@ export class AdminController {
   // * ######  POST /users/admin/stores/reject (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Reject a store',
-    description: 'Reject a store.',
+    description: '[Admin] Reject a store.',
   })
   @ApiNoContentResponse({
     description: 'The store has been successfully rejected.',
@@ -117,14 +118,14 @@ export class AdminController {
   // * ######  POST /users/admin (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Create a new user',
-    description: 'Create a new user (default: admin).',
+    description: '[Admin] Create a new user (default: admin).',
   })
   @ApiCreatedResponse({
     description: 'The record has been successfully created.',
     type: User,
   })
   @SerializeOptions({
-    groups: ['admin'],
+    groups: [ExposeGroupsEnum.admin],
   })
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -136,7 +137,7 @@ export class AdminController {
   @ApiOperation({
     summary: 'Get all the users by filtering them',
     description:
-      "Get all the filtered users (doesn't return user type specific fields).",
+      "[Admin] Get all the filtered users (doesn't return user type specific fields).",
   })
   @ApiQuery({
     name: 'user-type',
@@ -161,7 +162,7 @@ export class AdminController {
     type: [User],
   })
   @SerializeOptions({
-    groups: ['admin'],
+    groups: [ExposeGroupsEnum.admin],
   })
   @Get()
   @HttpCode(HttpStatus.OK)
@@ -189,7 +190,7 @@ export class AdminController {
   @ApiOperation({
     summary: 'Get all the users by filtering them (with pagination)',
     description:
-      "Get all the filtered users (with pagination) (doesn't return user type specific fields).",
+      "[Admin] Get all the filtered users (with pagination) (doesn't return user type specific fields).",
   })
   @ApiQuery({ name: 'page', description: 'Page number', required: true })
   @ApiQuery({ name: 'limit', description: 'Results/page', required: true })
@@ -228,7 +229,7 @@ export class AdminController {
     },
   })
   @SerializeOptions({
-    groups: ['admin'],
+    groups: [ExposeGroupsEnum.admin],
   })
   @Get('/pagination')
   @HttpCode(HttpStatus.OK)
@@ -269,14 +270,14 @@ export class AdminController {
   // * ######  GET /users/admin/:id (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Get a user by ID',
-    description: 'Get the specified user by its ID (user_id).',
+    description: '[Admin] Get the specified user by its ID (user_id).',
   })
   @ApiOkResponse({
     description: 'The record has been successfully retrieved.',
     type: User,
   })
   @SerializeOptions({
-    groups: ['admin'],
+    groups: [ExposeGroupsEnum.admin],
   })
   @Get(':id')
   @HttpCode(HttpStatus.OK)
@@ -292,7 +293,7 @@ export class AdminController {
   @ApiOperation({
     summary: 'Update a user.',
     description:
-      'Update the specified user by its ID (user_id) with the specified data.',
+      '[Admin] Update the specified user by its ID (user_id) with the specified data.',
   })
   @ApiNoContentResponse({
     description: 'The record has been successfully updated.',
@@ -315,7 +316,7 @@ export class AdminController {
   // * ######  DELETE /users/admin/:id (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Delete a user',
-    description: 'Delete the specified user by its ID (user_id).',
+    description: '[Admin] Delete the specified user by its ID (user_id).',
   })
   @ApiQuery({
     name: 'mode',
@@ -346,7 +347,8 @@ export class AdminController {
   // * ######  PATCH /users/admin/:id/restore (Auth)[Admin] ######
   @ApiOperation({
     summary: 'Restore a user',
-    description: 'Restore a soft deleted user specified  by its ID (user_id).',
+    description:
+      '[Admin] Restore a soft deleted user specified  by its ID (user_id).',
   })
   @ApiNoContentResponse({
     description: 'The record has been successfully restored.',

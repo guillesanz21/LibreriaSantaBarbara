@@ -22,7 +22,7 @@ import {
 } from '@nestjs/swagger';
 import { TopicsService } from './topics.service';
 import { Topic } from './entities/topic.entity';
-import { Book } from '../entities/book.entity';
+import { Book } from '../books/entities/book.entity';
 import { CreateTopicDto } from './dtos/create-topic.dto';
 import { UpdateTopicDto } from './dtos/update-topic.dto';
 import { Public } from 'src/auth/decorators/public.decorator';
@@ -85,7 +85,7 @@ export class TopicsController {
   // * ######  POST /books/topics (Auth)[Admin, Store] ######
   @ApiOperation({
     summary: 'Create a topic',
-    description: 'Create a topic.',
+    description: '[Admin, Store] Create a topic.',
   })
   @ApiCreatedResponse({
     description: 'The topic.',
@@ -108,7 +108,7 @@ export class TopicsController {
   // * ######  PATCH /books/topics/:id (Auth)[Admin, Store] ######
   @ApiOperation({
     summary: 'Update a topic',
-    description: 'Update a topic.',
+    description: '[Admin, Store] Update a topic.',
   })
   @ApiNoContentResponse({
     description: 'The topic has been updated.',
@@ -136,7 +136,7 @@ export class TopicsController {
   // * ######  DELETE /books/topics/:id (Auth)[Admin, Store] ######
   @ApiOperation({
     summary: 'Delete a topic',
-    description: 'Delete a topic.',
+    description: '[Admin, Store] Delete a topic.',
   })
   @ApiNoContentResponse({
     description: 'The topic has been deleted.',

@@ -6,7 +6,7 @@ import { lowerCaseTransformer } from 'src/utils/transformers/lower-case.transfor
 
 export class AuthLoginEmailDto {
   @ApiProperty({
-    example: 'example@example.com',
+    example: 'store@store.com',
     description:
       'The email of the user that forgot the password. Should exist.',
   })
@@ -16,7 +16,7 @@ export class AuthLoginEmailDto {
   email: string;
 
   @ApiProperty({
-    example: 'powerfulPassword1234#',
+    example: 'test',
     description: 'The password of the user.',
   })
   @IsNotEmpty()

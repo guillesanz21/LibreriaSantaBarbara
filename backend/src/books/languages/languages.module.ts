@@ -9,5 +9,6 @@ import { LanguagesController } from './languages.controller';
   imports: [TypeOrmModule.forFeature([Language])],
   providers: [IsISO6391Constraint, LanguagesService],
   controllers: [LanguagesController],
+  exports: [LanguagesService],
 })
 export class LanguagesModule {}

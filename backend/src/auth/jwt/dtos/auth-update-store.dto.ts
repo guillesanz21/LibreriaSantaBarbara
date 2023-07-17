@@ -18,7 +18,7 @@ const { store: storeConstraints } = userConstraints;
 
 export class AuthUpdateStoreDto {
   @ApiPropertyOptional({
-    example: 'example@example.com',
+    example: 'store@store.com',
     description: 'The email of the store. Should be unique among stores.',
     maxLength: commonConstraints.email.maxLength,
   })
