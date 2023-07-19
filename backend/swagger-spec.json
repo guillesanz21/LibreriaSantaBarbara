@@ -1,6 +1,77 @@
 {
   "openapi": "3.0.0",
   "paths": {
+    "/api/books/import": {
+      "get": {
+        "operationId": "ImportExportBooksController_importBooks",
+        "parameters": [
+          {
+            "name": "format_from",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "csv",
+                "tsv",
+                "json",
+                "xml"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "format_to",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "csv",
+                "tsv",
+                "json",
+                "xml"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Import/Export"
+        ]
+      }
+    },
+    "/api/books/export": {
+      "get": {
+        "operationId": "ImportExportBooksController_exportBooks",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Import/Export"
+        ]
+      }
+    },
+    "/api/books/import/conflicts": {
+      "get": {
+        "operationId": "ImportExportBooksController_importBooksWithConflicts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Import/Export"
+        ]
+      }
+    },
     "/api/users/admin/stores/approve": {
       "post": {
         "operationId": "AdminController_aproveStore",

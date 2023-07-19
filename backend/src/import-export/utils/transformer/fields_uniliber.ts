@@ -1,0 +1,27 @@
+export type FieldsUniliber = {
+  Referencia: number;
+  Título: string;
+  Autor: string;
+  Ilustrador: string;
+  Edición: string;
+  Editorial: string;
+  'Lugar de publicación': string;
+  'Año de publicación': number;
+  ISBN: string;
+  Formato: string;
+  Encuadernación: string;
+  Peso: string;
+  Edición_1: string;
+  Tirada: string;
+  Firmado: string;
+  Descripción: string;
+  'Estado del libro': string;
+  'Estado de la cubierta': string;
+  Precio: number;
+  'Tipo de artículo': string;
+  Cantidad: number;
+  Catálogo: string;
+  'Palabras clave': string;
+  'Categoría de AbeBooks': string;
+  'URL imagen': string;
+};

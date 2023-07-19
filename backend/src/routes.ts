@@ -9,6 +9,7 @@ import { TopicsModule } from './books/topics/topics.module';
 import { LocationsModule } from './books/locations/locations.module';
 import { StatusModule } from './books/status/status.module';
 import { BooksGlobalModule } from './books/books-global.module';
+import { ImportExportModule } from './import-export/import-export.module';
 
 export const routes = [
   {
@@ -66,6 +67,11 @@ export const routes = [
             module: BooksModule,
           },
         ],
+      },
+      {
+        // This routes are defined inside the controller
+        path: '',
+        module: ImportExportModule,
       },
     ],
   },

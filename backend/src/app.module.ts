@@ -12,6 +12,7 @@ import { BooksGlobalModule } from './books/books-global.module';
 import { routes } from './routes';
 import { MailModule } from './mail/mail.module';
 import { MailConfigService } from './mail/mail-config.service';
+import { ImportExportModule } from './import-export/import-export.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { MailConfigService } from './mail/mail-config.service';
     MailerModule.forRootAsync({
       useClass: MailConfigService,
     }),
+    ImportExportModule,
     UsersModule,
     AuthModule,
     BooksGlobalModule,
