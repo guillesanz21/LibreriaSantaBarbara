@@ -42,39 +42,44 @@ export class BooksService {
     return store_id;
   }
 
-  // ~ CRUD
-  // * [C] Create
-  // Create a book
-  async create(
-    owner_id: number, // ID of the user/store
-    id_of = 'user',
+  // Create a book without inserting it
+  private async createBook(
+    store_id: number,
     bookDto: CreateBookDto,
   ): Promise<Book | string> {
     const { languages, images, topics, keywords } = bookDto;
 
-    // 1. Get store_id
-    const store_id = await this.getStoreId(owner_id, id_of);
-    if (store_id === 'NotFound') return 'NotFound';
+    // 1. Create topics (if don't exist)
+    const topicsFormatted = topics ? topics.map((topic) => ({ topic })) : null;
+    // This functions (bulkCreate) could be improved in performance for bulk inserts
+    const createdTopics = topicsFormatted
+      ? await this.topicsService.bulkCreate(topicsFormatted)
+      : null;
 
-    // 2. Create topics (if don't exist)
-    const topicsFormatted = topics.map((topic) => ({ topic }));
-    const createdTopics = await this.topicsService.bulkCreate(topicsFormatted);
+    // 2. Create languages
+    const languagesFormatted = languages
+      ? languages.map((language) => ({ language }))
+      : null;
+    const createdLanguages = languagesFormatted
+      ? this.languagesService.bulkCreate(languagesFormatted)
+      : null;
 
-    // 3. Create languages
-    const languagesFormatted = languages.map((language) => ({ language }));
-    const createdLanguages =
-      this.languagesService.bulkCreate(languagesFormatted);
+    // 3. Create images
+    // TODO: Upload images to S3. But check first if the image isn't a URL
+    const imagesFormatted = images ? images.map((image) => ({ image })) : null;
+    const createdImages = imagesFormatted
+      ? this.imagesService.bulkCreate(imagesFormatted)
+      : null;
 
-    // 4. Create images
-    // TODO: Upload images to S3
-    const imagesFormatted = images.map((image) => ({ image }));
-    const createdImages = this.imagesService.bulkCreate(imagesFormatted);
+    // 4. Create keywords
+    const keywordsFormatted = keywords
+      ? keywords.map((keyword) => ({ keyword }))
+      : null;
+    const createdKeywords = keywordsFormatted
+      ? this.keywordsService.bulkCreate(keywordsFormatted)
+      : null;
 
-    // 5. Create keywords
-    const keywordsFormatted = keywords.map((keyword) => ({ keyword }));
-    const createdKeywords = this.keywordsService.bulkCreate(keywordsFormatted);
-
-    // 6. Create book
+    // 5. Create book
     delete bookDto.languages;
     delete bookDto.images;
     delete bookDto.topics;
@@ -83,18 +88,83 @@ export class BooksService {
     const book = {
       store_id,
       ...bookDto,
-      languages: createdLanguages,
-      images: createdImages,
-      topics: createdTopics,
-      keywords: createdKeywords,
+      // Optional fields
+      ...(createdLanguages && { languages: createdLanguages }),
+      ...(createdImages && { images: createdImages }),
+      ...(createdTopics && { topics: createdTopics }),
+      ...(createdKeywords && { keywords: createdKeywords }),
     };
+    return book as Book;
+  }
 
-    // 7. Save the book and its relations
+  // ~ CRUD
+  // * [C] Create
+  // Create a book
+  async create(
+    owner_id: number, // ID of the user/store
+    id_of = 'user',
+    bookDto: CreateBookDto,
+  ): Promise<Book | string> {
+    // Get store_id from token
+    const store_id = await this.getStoreId(owner_id, id_of);
+    if (store_id === 'NotFound') return 'NotFound';
+    const book = await this.createBook(+store_id, bookDto);
+    if (typeof book === 'string') return book;
+    // Save the book and its relations
     const createdBook = await this.booksRepository.save(book as Book);
     return createdBook;
   }
 
+  // Bulk create books
+  async bulkCreate(
+    owner_id: number, // ID of the user/store
+    id_of = 'user',
+    booksDto: CreateBookDto[],
+    delete_previous = false,
+  ): Promise<Book[] | string> {
+    // Get store_id from token
+    const store_id = await this.getStoreId(owner_id, id_of);
+    if (store_id === 'NotFound') return 'NotFound';
+
+    // Create books
+    const books = booksDto.map((bookDto) =>
+      this.createBook(+store_id, bookDto),
+    );
+    const createdBooks = await Promise.all(books);
+    if (createdBooks.includes('NotFound')) return 'NotFound';
+
+    // Save the books and their relations
+    let savedBooks: Book[];
+    if (delete_previous) {
+      // Transaction
+      savedBooks = await this.booksRepository.manager.transaction(
+        async (manager) => {
+          // Delete previous books
+          const booksInDB = await this.findAll();
+          if (booksInDB) {
+            await manager.remove(booksInDB);
+          }
+          // Save new books
+          return await manager.save(Book, createdBooks as Book[], {
+            chunk: 1000,
+          });
+        },
+      );
+    } else {
+      savedBooks = await this.booksRepository.save(createdBooks as Book[], {
+        chunk: 1000,
+      });
+    }
+    return savedBooks;
+  }
+
   // * [R] Read
+  // Find all
+  async findAll(): Promise<Book[]> {
+    const books = await this.booksRepository.find();
+    return books;
+  }
+
   // Find many filtered books without pagination
   // TODO: ArrayIncludes for topics and keywords instead of IN operator
   async findManyPaginated(

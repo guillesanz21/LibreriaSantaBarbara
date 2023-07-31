@@ -37,3 +37,4 @@ lerna-debug.log*
 # BACKEND
 backend/.data
 backend/.env
+backend/src/tmp

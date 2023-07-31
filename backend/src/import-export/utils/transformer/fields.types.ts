@@ -1,4 +1,4 @@
-export type FieldsUniliber = {
+export type UniliberType = {
   Referencia: number;
   Título: string;
   Autor: string;

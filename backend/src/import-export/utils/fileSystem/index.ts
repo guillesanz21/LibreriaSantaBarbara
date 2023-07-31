@@ -1,5 +1,5 @@
-import { chmod, readFile, writeFile } from 'fs/promises';
-import { existsSync } from 'fs';
+import { chmod, writeFile } from 'fs/promises';
+import * as fs from 'fs';
 import { ExtensionFormat } from './ExtensionFormat';
 
 type DataType = 'books' | 'users';
@@ -8,10 +8,10 @@ const permissions = 0o766;
 
 export const importFile = async (fileName: string) => {
   const filePath = `${dirPath}/${fileName}`;
-  if (!existsSync(filePath)) {
+  if (!fs.existsSync(filePath)) {
     throw new Error(`File ${filePath} does not exist`);
   }
-  const data = await readFile(filePath, { encoding: 'binary' });
+  const data = fs.readFileSync(filePath, { encoding: 'latin1' });
   return data;
 };
 

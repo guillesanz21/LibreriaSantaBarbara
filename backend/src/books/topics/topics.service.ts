@@ -14,6 +14,28 @@ export class TopicsService {
     private readonly topicsRepository: Repository<Topic>,
   ) {}
 
+  // Create a single topic in a bulk create operation
+  private async createSingleTopic(
+    topicToCreate: BulkCreateTopicDto,
+    topicsObject: any,
+  ): Promise<Topic> {
+    const topicExists = await this.topicsRepository.findOne({
+      where: { topic: topicToCreate.topic },
+    });
+    // Check if the topic is already in the topics object, if so, continue
+    if (topicsObject[topicToCreate.topic]) {
+      return topicsObject[topicToCreate.topic];
+    }
+    if (topicExists) {
+      return topicExists;
+    } else {
+      const createdTopic = await this.topicsRepository.insert(
+        this.topicsRepository.create(topicToCreate),
+      );
+      return createdTopic.raw;
+    }
+  }
+
   // * [C] Create
   // Create a topic
   async create(topic: CreateTopicDto): Promise<Topic> {
@@ -24,18 +46,15 @@ export class TopicsService {
   }
 
   // Bulk create
+  // TODO: Improve this method. Probably won't work in edge cases
   async bulkCreate(topicsToCreate: BulkCreateTopicDto[]): Promise<Topic[]> {
     const topics: Topic[] = [];
-    for (const topic of topicsToCreate) {
-      const topicExists = await this.topicsRepository.findOne({
-        where: { topic: topic.topic },
-      });
-      if (topicExists) {
-        topics.push(topicExists);
-      } else {
-        const createdTopic = this.topicsRepository.create(topic);
-        topics.push(createdTopic);
-      }
+    const topicsObject = {};
+    // async await for loop
+    for await (const topic of topicsToCreate) {
+      const createdTopic = await this.createSingleTopic(topic, topicsObject);
+      topicsObject[topic.topic] = topic;
+      topics.push(createdTopic); // Push only if it is not already in the topics object
     }
     return topics;
   }

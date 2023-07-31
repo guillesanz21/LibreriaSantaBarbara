@@ -31,7 +31,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       extra: {
         // based on https://node-postgres.com/apis/pool
         // max connection pool size
-        max: this.configService.get('db.maxConnections', { infer: true }),
+        // max: this.configService.get('db.maxConnections', { infer: true }),
         // ssl: this.configService.get('db.sslEnabled', { infer: true })
         //   ? {
         //       rejectUnauthorized: this.configService.get(

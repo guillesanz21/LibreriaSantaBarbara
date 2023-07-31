@@ -70,7 +70,7 @@ export class Book extends EntityHelper {
     example: '9781250788450',
     description: 'The ISBN (13/10) of the book',
   })
-  @Column({ type: 'text', nullable: false })
+  @Column({ type: 'text', nullable: true })
   ISBN: string;
 
   @ApiProperty({

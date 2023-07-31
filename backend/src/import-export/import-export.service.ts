@@ -1,23 +1,56 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Book } from 'src/books/books/entities/book.entity';
+import { BooksService } from 'src/books/books/books.service';
 import { parser } from './utils/parser';
+import { booksTransformer } from './utils/transformer';
 import { FileFormatEnum } from './utils/parser/FileFormat';
 import { importFile, exportFile } from './utils/fileSystem';
 import { ExtensionFormatEnum } from './utils/fileSystem/ExtensionFormat';
+import { UniliberType } from './utils/transformer/fields.types';
+import { ImportExportEnum } from './utils/transformer/ImportExportFormat';
 
 @Injectable()
 export class ImportExportService {
-  async importBooks(format_from: FileFormatEnum, format_to: FileFormatEnum) {
+  constructor(
+    @InjectRepository(Book)
+    private readonly booksRepository: typeof Book,
+    private readonly booksService: BooksService,
+  ) {}
+
+  // Full Import (Delete all books in database and import)
+  async importBooks(
+    user_id: number,
+    format: FileFormatEnum,
+    keywords_to_topics?: boolean,
+    clean_description?: boolean,
+  ): Promise<string> {
+    const format_to = FileFormatEnum.json;
     // 1. Read the file
-    const data = await importFile('original.min.txt');
+    const data: string = await importFile('original.txt');
 
     // 2. Parse the file
-    const parsed_file = parser(data, format_from, format_to);
+    const parsed_file = parser(data, format, format_to);
+    const books: UniliberType[] = parsed_file.data;
 
-    // 2.1. Check if there are errors
     // 3. Transform the file (Adapt the data to the database schema)
-    // 4. If there are books in database, delete them. count() > 0 => delete()
-    // 5. Save the books in database
-    return parsed_file;
+    const transformed_books = booksTransformer(
+      books,
+      ImportExportEnum.uniliber,
+      ImportExportEnum.db,
+      keywords_to_topics,
+      clean_description,
+    );
+
+    // 4. Transaction: Delete previous books and save the books in database, or fail.
+    const created_books = await this.booksService.bulkCreate(
+      user_id,
+      'user',
+      transformed_books,
+      true,
+    );
+
+    return created_books ? 'Imported books' : 'Error importing';
   }
 
   async importBooksWithConflicts() {
@@ -30,10 +63,19 @@ export class ImportExportService {
   }
 
   async exportBooks() {
+    /*
+    TODO: Añadir un nuevo campo a partir de: status, sold_at.
+    "vendido": true/false
+    TODO: Un único campo con las imágenes separadas por || ooo 4 campos: Imagen1, Imagen2,...
+    "imagenes": "https://example.com/image1.jpg||https://example.com/image1.jpg||https://example.com/image1.jpg||https://example.com/image1.jpg",
+    "palabras clave": "Palabra clave 1,Palabra clave 2,Palabra clave 3" // Se separan por comas y la primera letra de cada palabra se pone en mayúscula
+    "materias": "Materia 1, Materia 2, Materia 3" // Se separan por comas y la primera letra de cada palabra se pone en mayúscula,
+    "idiomas": "Idioma 1, Idioma 2" // español, inglés, francés
+    */
     // 1. Read the books from database
-    // DELETE:
-    const data = await importFile('original.min.json');
+    const data = await this.booksService.findAll();
     // 2. Transform the books to the file schema
+
     // 3. Parse the file
     const parsed_file = parser(data, FileFormatEnum.json, FileFormatEnum.tsv);
     // 4. Save the file
