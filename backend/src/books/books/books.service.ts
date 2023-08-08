@@ -13,6 +13,7 @@ import { StatusEnum } from '../status/status.types';
 import { NullableType } from 'src/utils/types/nullable.type';
 import { int4max } from 'src/config/constants/common_values';
 import { IPaginationOptions } from 'src/utils/types/paginations-options.interface';
+import { OwnerEnum } from 'src/users/users.types';
 
 @Injectable()
 export class BooksService {
@@ -31,7 +32,7 @@ export class BooksService {
     id_of: string,
   ): Promise<string | number> {
     let store_id: number;
-    if (id_of === 'store') {
+    if (id_of === OwnerEnum.store) {
       store_id = owner_id;
     } else {
       const user_id = owner_id;
@@ -102,7 +103,7 @@ export class BooksService {
   // Create a book
   async create(
     owner_id: number, // ID of the user/store
-    id_of = 'user',
+    id_of = OwnerEnum.user,
     bookDto: CreateBookDto,
   ): Promise<Book | string> {
     // Get store_id from token
@@ -118,7 +119,7 @@ export class BooksService {
   // Bulk create books
   async bulkCreate(
     owner_id: number, // ID of the user/store
-    id_of = 'user',
+    id_of = OwnerEnum.user,
     booksDto: CreateBookDto[],
     delete_previous = false,
   ): Promise<Book[] | string> {
@@ -140,7 +141,7 @@ export class BooksService {
       savedBooks = await this.booksRepository.manager.transaction(
         async (manager) => {
           // Delete previous books
-          const booksInDB = await this.findAll();
+          const booksInDB = await this.findAll(+store_id, OwnerEnum.store);
           if (booksInDB) {
             await manager.remove(booksInDB);
           }
@@ -159,9 +160,17 @@ export class BooksService {
   }
 
   // * [R] Read
-  // Find all
-  async findAll(): Promise<Book[]> {
-    const books = await this.booksRepository.find();
+  // Find all by Store
+  async findAll(
+    owner_id: number, // ID of the user/store
+    id_of = OwnerEnum.user,
+  ): Promise<string | Book[]> {
+    const store_id = await this.getStoreId(owner_id, id_of);
+    if (typeof store_id === 'string') return store_id;
+
+    const books = await this.booksRepository.find({
+      where: { store_id: +store_id },
+    });
     return books;
   }
 
@@ -170,7 +179,7 @@ export class BooksService {
   async findManyPaginated(
     paginationOptions: IPaginationOptions,
     owner_id: number, // ID of the user/store
-    id_of = 'user',
+    id_of = OwnerEnum.user,
     ISBN = null,
     title = null,
     author = null,
@@ -235,7 +244,7 @@ export class BooksService {
   async findOne(
     id?: number, // ID of the book
     owner_id?: number, // ID of the user/store
-    id_of = 'user',
+    id_of = OwnerEnum.user,
     ref?: number, // Reference of the book
   ): Promise<string | Book> {
     // Check that either id or reference and owner_id are provided
@@ -257,7 +266,10 @@ export class BooksService {
   }
 
   // Get the last reference + 1 (store_id from token)
-  async getNewRef(owner_id: number, id_of = 'store'): Promise<string | number> {
+  async getNewRef(
+    owner_id: number,
+    id_of = OwnerEnum.store,
+  ): Promise<string | number> {
     const store_id = await this.getStoreId(owner_id, id_of);
     if (typeof store_id === 'string') return store_id;
     const lastBook = await this.booksRepository.findOne({
@@ -272,7 +284,7 @@ export class BooksService {
   // Count books
   async count(
     owner_id: number, // ID of the user/store
-    id_of = 'user',
+    id_of = OwnerEnum.user,
   ): Promise<string | number> {
     const store_id = await this.getStoreId(owner_id, id_of);
     if (typeof store_id === 'string') return store_id;
@@ -286,7 +298,7 @@ export class BooksService {
   // Update a book
   async updateOne(
     owner_id?: number, // ID of the user/store
-    id_of = 'user',
+    id_of = OwnerEnum.user,
     ref?: number,
     bookDto?: UpdateBookDto,
   ): Promise<string> {
@@ -361,7 +373,7 @@ export class BooksService {
   // Hard delete a book
   async hardDeleteOne(
     owner_id?: number, // ID of the user/store
-    id_of = 'user',
+    id_of = OwnerEnum.user,
     ref?: number,
   ): Promise<string> {
     // 1. Get store_id from token
@@ -383,7 +395,7 @@ export class BooksService {
   // Soft delete a book
   async softDeleteOne(
     owner_id?: number, // ID of the user/store
-    id_of = 'user',
+    id_of = OwnerEnum.user,
     ref?: number,
   ): Promise<string> {
     // 1. Get store_id from token
@@ -405,7 +417,7 @@ export class BooksService {
   // Restore a book
   async restoreOne(
     owner_id?: number, // ID of the user/store
-    id_of = 'user',
+    id_of = OwnerEnum.user,
     ref?: number,
   ): Promise<string> {
     // 1. Get store_id from token
@@ -429,7 +441,7 @@ export class BooksService {
   // Sell a book
   async sellOne(
     owner_id?: number, // ID of the user/store
-    id_of = 'user',
+    id_of = OwnerEnum.user,
     ref?: number,
   ): Promise<string> {
     // 1. Get store_id from token
@@ -464,7 +476,7 @@ export class BooksService {
   // Add stock to a book
   async addStock(
     owner_id?: number, // ID of the user/store
-    id_of = 'user',
+    id_of = OwnerEnum.user,
     ref?: number,
     stock = 1,
   ): Promise<string> {

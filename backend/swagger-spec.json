@@ -50,6 +50,12 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Books not imported"
           }
         },
         "tags": [
@@ -65,10 +71,57 @@
     "/api/books/export": {
       "post": {
         "operationId": "ImportExportBooksController_exportBooks",
-        "parameters": [],
+        "summary": "Export all books to a file.",
+        "description": "Export all books to a file, in the specefied format and file extension.",
+        "parameters": [
+          {
+            "name": "format",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "csv",
+                "tsv",
+                "json",
+                "xml"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "file-extension",
+            "required": true,
+            "in": "query",
+            "description": "File extension of the exported file",
+            "schema": {
+              "enum": [
+                "txt",
+                "csv",
+                "tsv",
+                "json"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "file-name",
+            "required": true,
+            "in": "query",
+            "description": "Name of the exported file",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
-          "201": {
-            "description": ""
+          "204": {
+            "description": "Books exported"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Books not imported"
           }
         },
         "tags": [

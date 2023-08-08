@@ -55,3 +55,7 @@ export const DBToESFields = {
   // Don't export:
   // id, store_id, private_note, created_at, updated_at, sold_at, deleted_at, status, location
 };
+
+export const ESToDBFields = Object.fromEntries(
+  Object.entries(DBToESFields).map(([key, value]) => [value, key]),
+);

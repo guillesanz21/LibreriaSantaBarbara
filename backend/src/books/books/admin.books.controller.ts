@@ -36,6 +36,7 @@ import { RolesEnum } from 'src/users/roles/roles.enum';
 import { NullableType } from 'src/utils/types/nullable.type';
 import { ExposeGroupsEnum } from 'src/utils/types/expose-groups.enum';
 import { BookResponseSchema } from 'src/utils/schemas/book.schema';
+import { OwnerEnum } from 'src/users/users.types';
 
 @ApiTags('Books/Admin')
 @ApiUnauthorizedResponse({ description: 'Unauthorized.' })
@@ -71,7 +72,7 @@ export class BooksAdminController {
   ): Promise<Book> {
     const result = await this.booksService.create(
       store_id,
-      'store',
+      OwnerEnum.store,
       createBookDto,
     );
     if (typeof result === 'string' && result === 'NotFound') {
@@ -113,7 +114,7 @@ export class BooksAdminController {
   ): Promise<void> {
     const result = await this.booksService.updateOne(
       store_id,
-      'store',
+      OwnerEnum.store,
       ref,
       updateBookDto,
     );
@@ -157,7 +158,7 @@ export class BooksAdminController {
   ): Promise<void> {
     const result = await this.booksService.softDeleteOne(
       store_id,
-      'store',
+      OwnerEnum.store,
       ref,
     );
     if (typeof result === 'string' && result === 'NotFound') {
@@ -200,7 +201,7 @@ export class BooksAdminController {
   ): Promise<void> {
     const result = await this.booksService.hardDeleteOne(
       store_id,
-      'store',
+      OwnerEnum.store,
       ref,
     );
     if (typeof result === 'string' && result === 'NotFound') {
@@ -241,7 +242,11 @@ export class BooksAdminController {
     @Query('store_id', new DefaultValuePipe(1), ParseIntPipe) store_id: number,
     @Param('ref') ref?: number,
   ): Promise<void> {
-    const result = await this.booksService.restoreOne(store_id, 'store', ref);
+    const result = await this.booksService.restoreOne(
+      store_id,
+      OwnerEnum.store,
+      ref,
+    );
     if (typeof result === 'string' && result === 'NotFound') {
       throw new NotFoundException(result);
     }
@@ -281,7 +286,11 @@ export class BooksAdminController {
     @Query('store_id', new DefaultValuePipe(1), ParseIntPipe) store_id: number,
     @Param('ref') ref?: number,
   ): Promise<void> {
-    const result = await this.booksService.sellOne(store_id, 'store', ref);
+    const result = await this.booksService.sellOne(
+      store_id,
+      OwnerEnum.store,
+      ref,
+    );
     if (typeof result === 'string' && result === 'NotFound') {
       throw new NotFoundException(result);
     }
@@ -329,7 +338,7 @@ export class BooksAdminController {
   ): Promise<void> {
     const result = await this.booksService.addStock(
       store_id,
-      'store',
+      OwnerEnum.store,
       ref,
       stock,
     );

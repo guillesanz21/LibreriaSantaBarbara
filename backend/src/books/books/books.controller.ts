@@ -34,8 +34,11 @@ import {
 import { BooksService } from './books.service';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Book } from './entities/book.entity';
+import { Keyword } from '../keywords/entities/keyword.entity';
+import { Image } from '../images/entities/image.entity';
 import { CreateBookDto } from './dtos/create-book.dto';
 import { UpdateBookDto } from './dtos/update-book.dto';
+import { OwnerEnum } from 'src/users/users.types';
 import { RolesEnum } from 'src/users/roles/roles.enum';
 import { StatusEnum, StatusType } from '../status/status.types';
 import { NullableType } from 'src/utils/types/nullable.type';
@@ -43,8 +46,6 @@ import { ExposeGroupsEnum } from 'src/utils/types/expose-groups.enum';
 import { InfinityPaginationResultType } from 'src/utils/types/infinity-pagination-result.type';
 import { infinityPagination } from 'src/utils/infinity-pagination';
 import { BookResponseSchema } from 'src/utils/schemas/book.schema';
-import { Keyword } from '../keywords/entities/keyword.entity';
-import { Image } from '../images/entities/image.entity';
 
 @ApiTags('Books')
 @ApiExtraModels(Book, Keyword, Image)
@@ -75,7 +76,7 @@ export class BooksController {
   ): Promise<Book> {
     const result = await this.booksService.create(
       req.user.id,
-      'user',
+      OwnerEnum.user,
       createBookDto,
     );
     if (typeof result === 'string' && result === 'NotFound') {
@@ -96,7 +97,10 @@ export class BooksController {
   @HttpCode(HttpStatus.OK)
   @Get('new-ref')
   async getNewRef(@Request() req): Promise<number> {
-    const result = await this.booksService.getNewRef(req.user.id, 'user');
+    const result = await this.booksService.getNewRef(
+      req.user.id,
+      OwnerEnum.user,
+    );
     if (typeof result === 'string' && result === 'NotFound') {
       throw new NotFoundException(result);
     }
@@ -115,7 +119,7 @@ export class BooksController {
   @HttpCode(HttpStatus.OK)
   @Get('count')
   async count(@Request() req): Promise<number> {
-    const result = await this.booksService.count(req.user.id, 'user');
+    const result = await this.booksService.count(req.user.id, OwnerEnum.user);
     if (typeof result === 'string' && result === 'NotFound') {
       throw new NotFoundException(result);
     }
@@ -204,7 +208,7 @@ export class BooksController {
     const result = await this.booksService.findManyPaginated(
       { page, limit },
       req.user.id,
-      'user',
+      OwnerEnum.user,
       ISBN,
       title,
       author,
@@ -249,7 +253,7 @@ export class BooksController {
     const result = await this.booksService.findOne(
       null,
       req.user.id,
-      'user',
+      OwnerEnum.user,
       ref,
     );
     if (typeof result === 'string' && result === 'NotFound') {
@@ -285,7 +289,7 @@ export class BooksController {
   ): Promise<void> {
     const result = await this.booksService.updateOne(
       req.user.id,
-      'user',
+      OwnerEnum.user,
       ref,
       updateBookDto,
     );
@@ -320,7 +324,7 @@ export class BooksController {
   async deleteOne(@Request() req, @Param('ref') ref?: number): Promise<void> {
     const result = await this.booksService.softDeleteOne(
       req.user.id,
-      'user',
+      OwnerEnum.user,
       ref,
     );
     if (typeof result === 'string' && result === 'NotFound') {
@@ -352,7 +356,11 @@ export class BooksController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Patch(':ref/restore')
   async restoreOne(@Request() req, @Param('ref') ref?: number): Promise<void> {
-    const result = await this.booksService.restoreOne(req.user.id, 'user', ref);
+    const result = await this.booksService.restoreOne(
+      req.user.id,
+      OwnerEnum.user,
+      ref,
+    );
     if (typeof result === 'string' && result === 'NotFound') {
       throw new NotFoundException(result);
     }
@@ -383,7 +391,11 @@ export class BooksController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Patch(':ref/sell')
   async sellOne(@Request() req, @Param('ref') ref?: number): Promise<void> {
-    const result = await this.booksService.sellOne(req.user.id, 'user', ref);
+    const result = await this.booksService.sellOne(
+      req.user.id,
+      OwnerEnum.user,
+      ref,
+    );
     if (typeof result === 'string' && result === 'NotFound') {
       throw new NotFoundException(result);
     }
@@ -425,7 +437,7 @@ export class BooksController {
   ): Promise<void> {
     const result = await this.booksService.addStock(
       req.user.id,
-      'user',
+      OwnerEnum.user,
       ref,
       stock,
     );

@@ -1,7 +1,6 @@
 import {
   Controller,
   DefaultValuePipe,
-  Get,
   HttpCode,
   HttpStatus,
   InternalServerErrorException,
@@ -15,6 +14,9 @@ import { ImportExportService } from './import-export.service';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
+  ApiInternalServerErrorResponse,
+  ApiNoContentResponse,
+  ApiNotFoundResponse,
   ApiOperation,
   ApiQuery,
   ApiTags,
@@ -22,6 +24,7 @@ import {
 import { FileFormatEnum } from './utils/parser/FileFormat';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { RolesEnum } from 'src/users/roles/roles.enum';
+import { ExtensionFormatEnum } from './utils/fileSystem/ExtensionFormat';
 
 @ApiTags('Import/Export')
 @ApiBearerAuth()
@@ -57,6 +60,12 @@ export class ImportExportBooksController {
     description: 'Books imported',
     type: String,
   })
+  @ApiNotFoundResponse({
+    description: 'Not found',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Books not imported',
+  })
   @HttpCode(HttpStatus.CREATED)
   @Post('books/import/all')
   async importBooks(
@@ -85,10 +94,63 @@ export class ImportExportBooksController {
     return imported_books;
   }
 
-  // * ######  POST  ######
+  // * ######  POST /books/export ######
+  @ApiOperation({
+    summary: 'Export all books to a file.',
+    description:
+      'Export all books to a file, in the specefied format and file extension.',
+  })
+  @ApiQuery({
+    name: 'format',
+    required: true,
+    enum: FileFormatEnum,
+  })
+  @ApiQuery({
+    name: 'file-extension',
+    required: true,
+    description: 'File extension of the exported file',
+    enum: ExtensionFormatEnum,
+  })
+  @ApiQuery({
+    name: 'file-name',
+    required: true,
+    description: 'Name of the exported file',
+  })
+  @ApiNoContentResponse({
+    description: 'Books exported',
+  })
+  @ApiNotFoundResponse({
+    description: 'Not found',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Books not imported',
+  })
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Post('books/export')
-  async exportBooks() {
-    return this.importExportService.exportBooks();
+  async exportBooks(
+    @Request() req,
+    @Query('format') format: FileFormatEnum,
+    @Query('file-extension') file_extension: ExtensionFormatEnum,
+    @Query('file-name') file_name: string,
+  ): Promise<void> {
+    const result = await this.importExportService.exportBooks(
+      req.user.id,
+      format,
+      file_extension,
+      file_name,
+    );
+    if (result === 'NotFound') {
+      throw new NotFoundException('NotFound');
+    }
+    if (result === 'Not implemented yet') {
+      throw new InternalServerErrorException('Method not implemented yet');
+    }
+    if (result === 'Error exporting') {
+      throw new InternalServerErrorException('Books not exported');
+    }
+    if (result.includes('JSON extension')) {
+      throw new InternalServerErrorException(result);
+    }
   }
 
   // * ######  POST  ######

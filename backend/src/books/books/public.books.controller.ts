@@ -25,6 +25,7 @@ import { NullableType } from 'src/utils/types/nullable.type';
 import { InfinityPaginationResultType } from 'src/utils/types/infinity-pagination-result.type';
 import { infinityPagination } from 'src/utils/infinity-pagination';
 import { BookResponseSchema } from 'src/utils/schemas/book.schema';
+import { OwnerEnum } from 'src/users/users.types';
 
 @ApiTags('Books/Public')
 @ApiNotFoundResponse({ description: 'Store not found.' })
@@ -53,7 +54,7 @@ export class BooksPublicController {
   async getNewRef(
     @Query('store_id', new DefaultValuePipe(1), ParseIntPipe) store_id: number,
   ): Promise<number> {
-    const result = await this.booksService.getNewRef(store_id, 'store');
+    const result = await this.booksService.getNewRef(store_id, OwnerEnum.store);
     if (typeof result === 'string' && result === 'NotFound') {
       throw new NotFoundException(result);
     }
@@ -80,7 +81,7 @@ export class BooksPublicController {
   async count(
     @Query('store_id', new DefaultValuePipe(1), ParseIntPipe) store_id: number,
   ): Promise<number> {
-    const result = await this.booksService.count(store_id, 'user');
+    const result = await this.booksService.count(store_id, OwnerEnum.store);
     if (typeof result === 'string' && result === 'NotFound') {
       throw new NotFoundException(result);
     }
@@ -175,7 +176,7 @@ export class BooksPublicController {
     const result = await this.booksService.findManyPaginated(
       { page, limit },
       store_id,
-      'store',
+      OwnerEnum.store,
       ISBN,
       title,
       author,
@@ -229,7 +230,7 @@ export class BooksPublicController {
     const result = await this.booksService.findOne(
       null,
       store_id,
-      'store',
+      OwnerEnum.store,
       ref,
     );
     if (typeof result === 'string' && result === 'NotFound') {
