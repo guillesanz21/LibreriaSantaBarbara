@@ -12,8 +12,8 @@ In this application, the bookseller could create books, import and export the da
 
 ## Version
 
-Version number: **0.1**
-([Version changelog](./docs/Changelogs/Version.0.1.md))
+<!-- Version number: **0.1**
+([Version changelog](./docs/Changelogs/Version.0.1.md)) -->
 
 ## Run
 
