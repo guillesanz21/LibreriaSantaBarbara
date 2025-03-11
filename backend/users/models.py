@@ -16,6 +16,7 @@ class User(AbstractUser):
         max_length=255,
         unique=True,
         blank=False,
+        null=False,
         verbose_name="email address"
     )
     is_email_verified = models.BooleanField(
@@ -35,6 +36,11 @@ class User(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['password', 'username']
     EMAIL_FIELD = "email"
+
+    def save(self, *args, **kwargs):
+        if not self.email:
+            raise ValueError("The Email field must be set")
+        super().save(*args, **kwargs)
 
 
 class Customer(models.Model):

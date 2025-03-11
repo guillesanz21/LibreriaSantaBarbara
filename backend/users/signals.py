@@ -12,5 +12,6 @@ def upgrade_customer_signal(sender, instance, created, **kwargs):
     Besides, it upgrades the Customer object when the User object is updated.
     """
     if created:
-        Customer.objects.create(user=instance)
+        # Create a customer, if it does not exist
+        Customer.objects.get_or_create(user=instance)
     instance.customer.save()
