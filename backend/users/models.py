@@ -1,9 +1,15 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class User(AbstractUser):
-    """Base User model"""
+    """
+    Base User model
+    An abstract base class implementing a fully featured User model with admin-compliant permissions.
+    Email, username and password are required. Other fields are optional.
+    """
+
     email = models.EmailField(
         error_messages={'unique': 'A user with that email already exists.'},
         help_text='Required. 255 characters or fewer. Letters, digits and @/./+/-/_ only.',
@@ -24,15 +30,27 @@ class User(AbstractUser):
         default=None,
         verbose_name='email verification hash'
     )
-    # soft delete
-    deleted_at = models.DateTimeField(
-        blank=True,
-        null=True,
-        default=None,
-        verbose_name='deleted at'
-    )
 
     # USERNAME_FIELD - the field that we want to use as the unique identifier for the user
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['password', 'username']
     EMAIL_FIELD = "email"
+
+
+class Customer(models.Model):
+    """
+    Customer User Model
+    Extends the base User model with additional fields related to customers.
+    """
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    nif = models.CharField(max_length=9, blank=True, null=True, unique=True, verbose_name=_("NIF"))
+    address = models.CharField(max_length=255, blank=True, null=True, verbose_name=_("address"))
+    phone = models.CharField(max_length=31, blank=True, null=True, verbose_name=_("phone number"))
+
+    def __str__(self):
+        return self.user.email
+
+    class Meta:
+        verbose_name = _("customer")
+        verbose_name_plural = _("customers")
