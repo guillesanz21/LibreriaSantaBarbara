@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'drf_spectacular',
     'users.apps.UsersConfig',
 ]
 
@@ -123,5 +125,28 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
+# Custom user model
 AUTH_USER_MODEL = 'users.User'
+
+# REST framework settings
+REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication',
+    ]
+}
+
+# Spectacular settings
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Libreria Santa Barbara API',
+    'DESCRIPTION': 'API for the Libreria Santa Barbara project',
+    'VERSION': '1.0.0',
+    'CONTACT': {
+        'name': 'Libreria Santa Barbara',
+        'email': None,
+        'url': None,
+    },
+    # 'SERVE_INCLUDE_SCHEMA': False,
+}
