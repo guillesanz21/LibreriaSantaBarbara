@@ -8,7 +8,7 @@ from rest_framework import generics, permissions
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
 
-from users.serializers import AuthTokenSerializer, UserSerializer
+from users.serializers import AuthTokenSerializer, UserRegisterSerializer
 
 
 # TODO: Hide password value in the browsable API
@@ -22,15 +22,9 @@ class CreateTokenView(ObtainAuthToken):
     # Use the default renderer classes for the ObtainAuthToken view
     # to render the response in the browsable API.
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
-    # # Return 'Bearer {token}' instead of just the token in the response.
-    # def post(self, request, *args, **kwargs):
-    #     response = super().post(request, *args, **kwargs)
-    #     token = Token.objects.get(key=response.data['token'])
-    #     response.data['token'] = f'Bearer {token.key}'
-    #     return response
 
 
 class CreateUserView(generics.CreateAPIView):
     """Create a new user in the system."""
-    serializer_class = UserSerializer
+    serializer_class = UserRegisterSerializer
     permission_classes = (permissions.AllowAny,)
