@@ -3,6 +3,9 @@ from django.contrib.auth.admin import UserAdmin
 from .models import Customer, User
 
 
+admin.site.register(Customer)
+
+
 class CustomerAdmin(admin.StackedInline):
     model = Customer
 
