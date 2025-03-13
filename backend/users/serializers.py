@@ -1,6 +1,7 @@
 
 
 from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth.password_validation import validate_password
 from drf_spectacular.utils import OpenApiExample, extend_schema_serializer
 from rest_framework import serializers
 
@@ -19,8 +20,8 @@ class UserSerializer(serializers.ModelSerializer):
     """Serializer for the user object."""
     class Meta:
         model = get_user_model()
-        fields = '__all__'
-        extra_kwargs = {'password': {'write_only': True, 'min_length': 5}}
+        fields = ['email', 'username', 'password', 'first_name', 'last_name']
+        extra_kwargs = {'password': {'write_only': True, 'min_length': 5, 'validators': [validate_password]}}
 
     # validated_data is the validated data that is passed to the serializer
     def create(self, validated_data):
@@ -41,13 +42,21 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
+class UserRegisterSerializer(UserSerializer):
+    """Serializer for the user register view."""
+
+    class Meta(UserSerializer.Meta):
+        fields = ['email', 'username', 'password']
+
+
 class CustomerSerializer(serializers.ModelSerializer):
     """Serializer for the customer object."""
     user = UserSerializer()
 
     class Meta():
         model = Customer
-        fields = '__all__'
+        # fields = '__all__'
+        fields = ['user', 'nif', 'phone', 'address']
 
     def create(self, validated_data):
         """Create a new customer with the user correctly and return it."""
@@ -67,15 +76,6 @@ class CustomerSerializer(serializers.ModelSerializer):
             pass
 
         return customer
-
-
-# * Registration serializers
-
-class UserRegisterSerializer(UserSerializer):
-    """Serializer for the user register view."""
-
-    class Meta(UserSerializer.Meta):
-        fields = ['email', 'username', 'password']
 
 
 # * Token serializers

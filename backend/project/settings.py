@@ -150,4 +150,8 @@ SPECTACULAR_SETTINGS = {
         'url': None,
     },
     # 'SERVE_INCLUDE_SCHEMA': False,
+    'SWAGGER_UI_SETTINGS': {
+        'deepLinking': True,
+        'persistAuthorization': True,
+    }
 }
