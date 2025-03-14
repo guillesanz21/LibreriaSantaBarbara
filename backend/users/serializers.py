@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.password_validation import validate_password
 from drf_spectacular.utils import OpenApiExample, extend_schema_serializer
 from rest_framework import serializers
+# from rest_framework.authtoken.models import Token
 
 from users.models import Customer
 
@@ -20,6 +21,7 @@ schema_examples_user = {'email': 'user@example.com', 'username': 'user', 'passwo
 )
 class UserSerializer(serializers.ModelSerializer):
     """Serializer for the user object."""
+
     class Meta:
         model = get_user_model()
         fields = ['email', 'username', 'password', 'first_name', 'last_name']
@@ -29,7 +31,7 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         """Create a new user with encrypted password and return it."""
         user = get_user_model().objects.create_user(**validated_data)
-        # TODO: Create Token
+        # Token.objects.create(user=user)
         return user
 
     def update(self, instance, validated_data):
