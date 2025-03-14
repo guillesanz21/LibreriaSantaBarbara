@@ -7,12 +7,14 @@ from rest_framework import serializers
 
 from users.models import Customer
 
+schema_examples_user = {'email': 'user@example.com', 'username': 'user', 'password': 'test1234'}
+
 
 @extend_schema_serializer(
     examples=[
         OpenApiExample(
-            'Ejemplo de usuario',
-            value={'email': 'user@example.com', 'username': 'user', 'password': 'test1234'}
+            'User Example',
+            value=schema_examples_user
         )
     ]
 )
@@ -49,13 +51,25 @@ class UserRegisterSerializer(UserSerializer):
         fields = ['email', 'username', 'password']
 
 
+@extend_schema_serializer(
+    examples=[
+        OpenApiExample(
+            'Customer example',
+            value={
+                'user': schema_examples_user,
+                'nif': '12345678A',
+                'phone': '123456789',
+                'address': 'C/ Falsa 123',
+            }
+        )
+    ]
+)
 class CustomerSerializer(serializers.ModelSerializer):
     """Serializer for the customer object."""
     user = UserSerializer()
 
     class Meta():
         model = Customer
-        # fields = '__all__'
         fields = ['user', 'nif', 'phone', 'address']
 
     def create(self, validated_data):
@@ -71,9 +85,9 @@ class CustomerSerializer(serializers.ModelSerializer):
         customer = super().update(instance, validated_data)
 
         if user_data:
-            # user = customer.user
-            # TODO: Update the user fields
-            pass
+            user = UserSerializer.update(UserSerializer(), instance.user, user_data)
+            customer.user = user
+            customer.save()
 
         return customer
 
