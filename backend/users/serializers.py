@@ -7,10 +7,15 @@ from rest_framework import serializers
 
 from users.models import Customer
 
-schema_examples_user = {'email': 'user@example.com', 'username': 'user', 'password': 'test1234'}
+schema_examples_user = {
+    'email': 'user@example.com',
+    'username': 'user',
+    'password': 'test1234',
+    'first_name': 'John',
+    'last_name': 'Doe'
+}
 
 # TODO: Hide password value in the browsable API
-# TODO: Add swagger info first_name, last_name
 
 
 @extend_schema_serializer(
