@@ -152,7 +152,7 @@ class Book(models.Model):
     # * Relationships
     status = models.ForeignKey(
         "books.Status",  # Status model is defined below
-        on_delete=models.SET_NULL,
+        on_delete=models.RESTRICT,
         related_name="books",
         help_text=_("The book status"),
         blank=False,
@@ -162,15 +162,17 @@ class Book(models.Model):
 
     location = models.ForeignKey(
         "books.Location",  # Location model is defined below
-        on_delete=models.SET_NULL,
+        on_delete=models.RESTRICT,
         related_name="books",
         help_text=_("The book location (e.g. Store, Warehouse, etc)"),
         blank=True,
         null=True,
         verbose_name=_("location")
     )
-    # topic
-    # language (many to many) (1 book can be in multiple languages, 1 language can have multiple books)
+    # images (1..n)
+    # keywords (1..n)
+    # topics (m..n)
+    # languages (m..n)
 
     class Meta:
         indexes = [
@@ -310,3 +312,66 @@ class Keyword(models.Model):
         unique=True,
         verbose_name=_("name")
     )
+
+
+class Topic(models.Model):
+    """
+    Topic Model.
+    A book can have multiple topics, and a topic can have multiple books.
+    """
+    books = models.ManyToManyField(
+        Book,  # Book model is defined above
+        related_name="topics",
+        help_text=_("The books related to the topic"),
+        verbose_name=_("books")
+    )
+    name = models.CharField(
+        help_text=_("The topic name (e.g. Science Fiction, Fantasy, etc)"),
+        max_length=255,
+        blank=False,
+        null=False,
+        unique=True,
+        verbose_name=_("name")
+    )
+
+    class Meta:
+        verbose_name = _("topic")
+        verbose_name_plural = _("topics")
+
+    def __str__(self):
+        """
+        String representation of the topic
+        """
+        return self.name
+
+
+class Language(models.Model):
+    """
+    Language Model.
+    A book can have multiple languages, and a language can have multiple books.
+    """
+    books = models.ManyToManyField(
+        Book,  # Book model is defined above
+        related_name="languages",
+        help_text=_("The books related to the language"),
+        verbose_name=_("books")
+    )
+    code = models.CharField(
+        help_text=_("The language code (ISO 639-1 Alpha-2) (e.g. en, es, fr, etc)"),
+        max_length=2,
+        blank=False,
+        null=False,
+        unique=True,
+        verbose_name=_("code")
+    )
+    # TODO: Add a language name field. The problem is that the name is different in each language
+
+    class Meta:
+        verbose_name = _("language")
+        verbose_name_plural = _("languages")
+
+    def __str__(self):
+        """
+        String representation of the language
+        """
+        return self.code
