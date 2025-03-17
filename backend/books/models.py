@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 
@@ -148,8 +149,26 @@ class Book(models.Model):
         verbose_name=_("sold at")
     )
 
-    # status
-    # location
+    # * Relationships
+    status = models.ForeignKey(
+        "books.Status",  # Status model is defined below
+        on_delete=models.SET_NULL,
+        related_name="books",
+        help_text=_("The book status"),
+        blank=False,
+        null=False,
+        verbose_name=_("status")
+    )
+
+    location = models.ForeignKey(
+        "books.Location",  # Location model is defined below
+        on_delete=models.SET_NULL,
+        related_name="books",
+        help_text=_("The book location"),
+        blank=True,
+        null=True,
+        verbose_name=_("location")
+    )
     # topic
     # language
     # image
@@ -172,3 +191,66 @@ class Book(models.Model):
         String representation of the book
         """
         return f"[{self.ref}] {self.title} - {self.author if self.author else _('Author unknown')}"
+
+    def get_absolute_url(self):
+        return reverse("books:book_detail", args=[self.slug])
+
+
+class Status(models.Model):
+    """
+    Status (of a Book) Model
+    """
+    name = models.CharField(
+        help_text=_("The status name"),
+        max_length=255,
+        blank=False,
+        null=False,
+        unique=True,
+        verbose_name=_("name")
+    )
+    description = models.TextField(
+        help_text=_("The status description"),
+        blank=True,
+        null=True,
+        verbose_name=_("description")
+    )
+
+    class Meta:
+        verbose_name = _("status")
+        verbose_name_plural = _("statuses")
+
+    def __str__(self):
+        """
+        String representation of the status
+        """
+        return self.name
+
+
+class Location(models.Model):
+    """
+    Location Model
+    """
+    name = models.CharField(
+        help_text=_("The location name (e.g. Store, Warehouse (shelf 13), etc)"),
+        max_length=255,
+        blank=False,
+        null=False,
+        unique=True,
+        verbose_name=_("name")
+    )
+    description = models.TextField(
+        help_text=_("The location description (e.g. Warehouse shelf 13 at the back of the store)"),
+        blank=True,
+        null=True,
+        verbose_name=_("description")
+    )
+
+    class Meta:
+        verbose_name = _("location")
+        verbose_name_plural = _("locations")
+
+    def __str__(self):
+        """
+        String representation of the location
+        """
+        return self.name
