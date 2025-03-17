@@ -286,3 +286,27 @@ class Image(models.Model):
         String representation of the image
         """
         return self.url
+
+
+class Keyword(models.Model):
+    """
+    Keyword Model.
+    A book can have multiple keywords.
+    """
+    book = models.ForeignKey(
+        Book,  # Book model is defined above
+        on_delete=models.CASCADE,
+        related_name="keywords",
+        help_text=_("The book the keyword belongs to"),
+        blank=False,
+        null=False,
+        verbose_name=_("book")
+    )
+    name = models.SlugField(
+        help_text=_("The keyword name"),
+        max_length=75,
+        blank=False,
+        null=False,
+        unique=True,
+        verbose_name=_("name")
+    )
