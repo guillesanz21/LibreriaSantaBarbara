@@ -164,14 +164,13 @@ class Book(models.Model):
         "books.Location",  # Location model is defined below
         on_delete=models.SET_NULL,
         related_name="books",
-        help_text=_("The book location"),
+        help_text=_("The book location (e.g. Store, Warehouse, etc)"),
         blank=True,
         null=True,
         verbose_name=_("location")
     )
     # topic
-    # language
-    # image
+    # language (many to many) (1 book can be in multiple languages, 1 language can have multiple books)
 
     class Meta:
         indexes = [
@@ -254,3 +253,36 @@ class Location(models.Model):
         String representation of the location
         """
         return self.name
+
+
+class Image(models.Model):
+    """
+    Image URL Model.
+    A book can have multiple images.
+    """
+    book = models.ForeignKey(
+        Book,  # Book model is defined above
+        on_delete=models.CASCADE,
+        related_name="images",
+        help_text=_("The book the image belongs to"),
+        blank=False,
+        null=False,
+        verbose_name=_("book")
+    )
+    url = models.URLField(
+        help_text=_("The image URL"),
+        max_length=2000,
+        blank=False,
+        null=False,
+        verbose_name=_("URL")
+    )
+
+    class Meta:
+        verbose_name = _("image")
+        verbose_name_plural = _("images")
+
+    def __str__(self):
+        """
+        String representation of the image
+        """
+        return self.url
