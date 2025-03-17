@@ -4,11 +4,13 @@ from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.password_validation import validate_password
 from drf_spectacular.utils import OpenApiExample, extend_schema_serializer
 from rest_framework import serializers
-# from rest_framework.authtoken.models import Token
 
 from users.models import Customer
 
 schema_examples_user = {'email': 'user@example.com', 'username': 'user', 'password': 'test1234'}
+
+# TODO: Hide password value in the browsable API
+# TODO: Add swagger info first_name, last_name
 
 
 @extend_schema_serializer(

@@ -15,9 +15,6 @@ from users.models import Customer
 from users.serializers import AuthTokenSerializer, CustomerSerializer, UserRegisterSerializer
 
 
-# TODO: Hide password value in the browsable API
-
-
 # The default ObtainAuthToken view provided by Django REST framework takes the username and password, and
 # we want to use the email address instead of the username.
 class CreateTokenView(ObtainAuthToken):
@@ -41,7 +38,7 @@ class CreateUserView(generics.CreateAPIView):
     serializer_class = UserRegisterSerializer
     permission_classes = (permissions.AllowAny,)
 
-    def create(self, request, *args, **kwargs):
+    def create(self, request, *args, **kwargs) -> Response:
         response = super().create(request, *args, **kwargs)
         # TODO: Improve this, we are getting the user that was just created
         user = self.get_serializer().Meta.model.objects.get(email=response.data['email'])
