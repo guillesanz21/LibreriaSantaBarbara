@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
 
@@ -33,8 +34,8 @@ class Book(models.Model):
     slug = models.SlugField(
         help_text=_("The book slug (ref-title)"),
         max_length=255,
-        blank=True,
-        null=True,
+        blank=False,
+        null=False,
         unique=True,
         verbose_name=_("slug")
     )
@@ -114,8 +115,8 @@ class Book(models.Model):
     )
     stock = models.IntegerField(
         help_text=_("The book stock"),
-        blank=True,
-        null=True,
+        blank=False,
+        null=False,
         default=1,
         verbose_name=_("stock")
     )
@@ -196,10 +197,19 @@ class Book(models.Model):
     def get_absolute_url(self):
         return reverse("books:book_detail", args=[self.slug])
 
+    def save(self, *args, **kwargs):
+        """
+        Custom save method to update the slug field
+        """
+        if not self.slug:
+            self.slug = slugify(f"{self.ref}-{self.title}")
+        super().save(*args, **kwargs)
+
 
 class Status(models.Model):
     """
-    Status (of a Book) Model
+    Status (of a Book) Model.
+    [Book M - 1 Status]. A status can have multiple books.
     """
     name = models.CharField(
         help_text=_("The status name"),
@@ -229,7 +239,8 @@ class Status(models.Model):
 
 class Location(models.Model):
     """
-    Location Model
+    Location Model.
+    [Book M - 1 Location]. A location can have multiple books.
     """
     name = models.CharField(
         help_text=_("The location name (e.g. Store, Warehouse (shelf 13), etc)"),
@@ -260,7 +271,7 @@ class Location(models.Model):
 class Image(models.Model):
     """
     Image URL Model.
-    A book can have multiple images.
+    [Book 1 - N Image]. A book can have multiple images.
     """
     book = models.ForeignKey(
         Book,  # Book model is defined above
@@ -293,7 +304,7 @@ class Image(models.Model):
 class Keyword(models.Model):
     """
     Keyword Model.
-    A book can have multiple keywords.
+    [Book 1 - N Keyword]. A book can have multiple keywords.
     """
     book = models.ForeignKey(
         Book,  # Book model is defined above
@@ -317,7 +328,7 @@ class Keyword(models.Model):
 class Topic(models.Model):
     """
     Topic Model.
-    A book can have multiple topics, and a topic can have multiple books.
+    [Book M - N Topic]. A book can have multiple topics, and a topic can have multiple books.
     """
     books = models.ManyToManyField(
         Book,  # Book model is defined above
@@ -348,7 +359,7 @@ class Topic(models.Model):
 class Language(models.Model):
     """
     Language Model.
-    A book can have multiple languages, and a language can have multiple books.
+    [Book M - N Language]. A book can have multiple languages, and a language can have multiple books.
     """
     books = models.ManyToManyField(
         Book,  # Book model is defined above
