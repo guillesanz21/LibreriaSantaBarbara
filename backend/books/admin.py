@@ -1,9 +1,17 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
-from books.models import Book
+from books.models import Book, Image, Keyword, Language, Location, Status, Topic
 
 # Register your models here.
+
+
+class ImageInline(admin.TabularInline):
+    model = Image
+
+
+class KeywordInline(admin.TabularInline):
+    model = Keyword
 
 
 @admin.register(Book)
@@ -15,29 +23,50 @@ class BookAdmin(admin.ModelAdmin):
     search_fields = ('ref', 'title', 'author', 'isbn')
     ordering = ['ref']
     date_hierarchy = 'created_at'
+    show_facets = admin.ShowFacets.ALWAYS
     # * Detail and add view
-    # Secciones:
-    # Public fields (title, author, isbn, price, publication_place, publisher, year,
-    #               collection, pages, description, size, condition, binding,
-    #               images, languages, topics, keywords)
-    # Private Fields (ref, location, private_notes, status, stock, weight, slug, sold_at)
-    # Control (created_at, updated_at)
     fieldsets = (
         (_('Public Fields'), {
-            'fields': ('title', 'author', 'isbn', 'price', 'publication_place', 'publisher', 'year',
-                       'collection', 'pages', 'description', 'size', 'condition', 'binding',)
+            'fields': ('title', 'author', 'isbn', 'price', 'condition', 'publication_place', 'publisher',
+                       'year', 'collection', 'pages', 'description', 'size', 'binding',)
             #    'images', 'languages', 'topics', 'keywords')
         }),
         (_('Private Fields'), {
-            'fields': ('ref', 'location', 'private_notes', 'status', 'stock', 'weight', 'slug', 'sold_at')
+            'fields': ('ref', 'location', 'private_notes', 'status', 'sold_at', 'stock', 'weight', 'slug')
         }),
         (_('Control'), {
             'fields': ('created_at', 'updated_at')
         }),
     )
+    # TODO: languages and topics
+    # filter_horizontal = ('languages', 'topics') # TODO: Creo que tengo que cambiar el lugar del many2many
     readonly_fields = ('created_at', 'updated_at')
     prepopulated_fields = {'slug': ('ref', 'title',)}
+    inlines = [ImageInline, KeywordInline]
 
-    # prepopulated_fields = {'slug' } # ref-title
-# created_at, updated_at are readonly
-# Dentro de book, inline: image, keyword, status, location
+
+@admin.register(Location)
+class LocationAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description')
+    search_fields = ('name', 'description')
+
+
+@admin.register(Status)
+class StatusAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description')
+    search_fields = ('name', 'description')
+
+
+@admin.register(Topic)
+class TopicAdmin(admin.ModelAdmin):
+    # ? Many to many: what about the books?
+    list_display = ('name',)
+    search_fields = ('name',)
+
+
+@admin.register(Language)
+class LanguageAdmin(admin.ModelAdmin):
+    # ? Many to many: what about the books?
+    list_display = ('code',)
+    search_fields = ('code',)
+    ordering = ['code']

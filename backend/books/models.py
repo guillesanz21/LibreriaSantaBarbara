@@ -301,6 +301,9 @@ class Image(models.Model):
         return self.url
 
 
+# NICETOHAVE: This is very costly, there is a huge number of keywords. Two options:
+# - Use a CharField inside the Book model and separate the keywords with commas
+# - Use Redis or another cache system to store the keywords
 class Keyword(models.Model):
     """
     Keyword Model.
