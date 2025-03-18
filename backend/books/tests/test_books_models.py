@@ -4,9 +4,11 @@ Test cases for the models.
 
 
 from decimal import Decimal
-from django.test import TestCase
+
+from django.db import IntegrityError
 
 from books import models
+from django.test import TestCase
 
 
 class ModelTests(TestCase):
@@ -122,3 +124,37 @@ class ModelTests(TestCase):
         self.assertEqual(book.topics.first().name, topic_name)
         self.assertEqual(book.languages.count(), 1)
         self.assertEqual(book.languages.first().code, language_code)
+
+    def test_create_book_negative_price(self):
+        """
+        Test creating a new book with a negative price.
+        """
+        status = models.Status.objects.create(name="sold")
+        location = models.Location.objects.create(name="Wharehouse, shelf 1A")
+
+        with self.assertRaises(IntegrityError):
+            models.Book.objects.create(
+                ref="1234",
+                title="Test Book",
+                author="",
+                price=Decimal('-10.0'),
+                status=status,
+                location=location,
+            )
+
+    def test_create_book_negative_ref(self):
+        """
+        Test creating a new book with a negative ref.
+        """
+        status = models.Status.objects.create(name="sold")
+        location = models.Location.objects.create(name="Wharehouse, shelf 1A")
+
+        with self.assertRaises(IntegrityError):
+            models.Book.objects.create(
+                ref="-1234",
+                title="Test Book",
+                author="",
+                price=Decimal('10.0'),
+                status=status,
+                location=location,
+            )

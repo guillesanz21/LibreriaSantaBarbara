@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import IntegrityError, models
 from django.urls import reverse
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
@@ -8,8 +8,7 @@ class Book(models.Model):
     """
     Book Model
     """
-    # TODO: If ref not specified, autoincrement from the last one
-    ref = models.IntegerField(
+    ref = models.PositiveIntegerField(
         help_text=_("The unique book reference number"),
         error_messages={'unique': 'A book with that reference already exists.'},
         blank=False,
@@ -67,7 +66,7 @@ class Book(models.Model):
         null=True,
         verbose_name=_("collection")
     )
-    year = models.IntegerField(
+    year = models.PositiveIntegerField(
         help_text=_("The book publication year"),
         blank=True,
         null=True,
@@ -80,13 +79,13 @@ class Book(models.Model):
         null=True,
         verbose_name=_("size")
     )
-    weight = models.IntegerField(
+    weight = models.PositiveIntegerField(
         help_text=_("The book weight in grams"),
         blank=True,
         null=True,
         verbose_name=_("weight")
     )
-    pages = models.IntegerField(
+    pages = models.PositiveIntegerField(
         help_text=_("The book number of pages"),
         blank=True,
         null=True,
@@ -111,9 +110,10 @@ class Book(models.Model):
         decimal_places=2,
         blank=True,
         null=True,
+        # validators=[MinValueValidator(0)],
         verbose_name=_("price")
     )
-    stock = models.IntegerField(
+    stock = models.PositiveIntegerField(
         help_text=_("The book stock"),
         blank=False,
         null=False,
@@ -176,12 +176,14 @@ class Book(models.Model):
         "books.Topic",  # Topic model is defined below
         related_name="books",
         help_text=_("The book topics (e.g. Science Fiction, Fantasy, etc)"),
+        blank=True,
         verbose_name=_("topics")
     )
     languages = models.ManyToManyField(
         "books.Language",  # Language model is defined below
         related_name="books",
         help_text=_("The book languages"),
+        blank=True,
         verbose_name=_("languages")
     )
 
@@ -211,6 +213,9 @@ class Book(models.Model):
         """
         Custom save method to update the slug field
         """
+        # If price is negative, raise an error
+        if self.price and self.price < 0:
+            raise IntegrityError("The price cannot be negative")
         if not self.slug:
             self.slug = slugify(f"{self.ref}-{self.title}")
         super().save(*args, **kwargs)

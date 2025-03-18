@@ -16,9 +16,8 @@ class KeywordInline(admin.TabularInline):
 
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    # TODO: Add property "sold" if the "sold_at" field is not null
     # * List display
-    list_display = ('ref', 'title', 'author', 'isbn', 'price', 'location')
+    list_display = ('ref', 'title', 'author', 'isbn', 'price', 'location', 'status')
     list_filter = ('status', 'location', 'topics', 'languages')
     search_fields = ('ref', 'title', 'author', 'isbn')
     ordering = ['-ref']
@@ -57,14 +56,12 @@ class StatusAdmin(admin.ModelAdmin):
 
 @admin.register(Topic)
 class TopicAdmin(admin.ModelAdmin):
-    # ? Many to many: what about the books?
     list_display = ('name',)
     search_fields = ('name',)
 
 
 @admin.register(Language)
 class LanguageAdmin(admin.ModelAdmin):
-    # ? Many to many: what about the books?
     list_display = ('code',)
     search_fields = ('code',)
     ordering = ['code']
