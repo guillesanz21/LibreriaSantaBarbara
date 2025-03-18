@@ -21,25 +21,23 @@ class BookAdmin(admin.ModelAdmin):
     list_display = ('ref', 'title', 'author', 'isbn', 'price', 'location')
     list_filter = ('status', 'location', 'topics', 'languages')
     search_fields = ('ref', 'title', 'author', 'isbn')
-    ordering = ['ref']
+    ordering = ['-ref']
     date_hierarchy = 'created_at'
     show_facets = admin.ShowFacets.ALWAYS
     # * Detail and add view
     fieldsets = (
         (_('Public Fields'), {
-            'fields': ('title', 'author', 'isbn', 'price', 'condition', 'publication_place', 'publisher',
-                       'year', 'collection', 'pages', 'description', 'size', 'binding',)
-            #    'images', 'languages', 'topics', 'keywords')
+            'fields': ('ref', 'title', 'author', 'isbn', 'price', 'condition', 'publication_place', 'publisher',
+                       'year', 'collection', 'pages', 'description', 'size', 'binding', 'languages', 'topics')
         }),
         (_('Private Fields'), {
-            'fields': ('ref', 'location', 'private_notes', 'status', 'sold_at', 'stock', 'weight', 'slug')
+            'fields': ('location', 'private_notes', 'status', 'sold_at', 'stock', 'weight', 'slug')
         }),
         (_('Control'), {
             'fields': ('created_at', 'updated_at')
         }),
     )
-    # TODO: languages and topics
-    # filter_horizontal = ('languages', 'topics') # TODO: Creo que tengo que cambiar el lugar del many2many
+    filter_horizontal = ('languages', 'topics')
     readonly_fields = ('created_at', 'updated_at')
     prepopulated_fields = {'slug': ('ref', 'title',)}
     inlines = [ImageInline, KeywordInline]

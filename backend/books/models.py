@@ -172,8 +172,18 @@ class Book(models.Model):
     )
     # images (1..n)
     # keywords (1..n)
-    # topics (m..n)
-    # languages (m..n)
+    topics = models.ManyToManyField(
+        "books.Topic",  # Topic model is defined below
+        related_name="books",
+        help_text=_("The book topics (e.g. Science Fiction, Fantasy, etc)"),
+        verbose_name=_("topics")
+    )
+    languages = models.ManyToManyField(
+        "books.Language",  # Language model is defined below
+        related_name="books",
+        help_text=_("The book languages"),
+        verbose_name=_("languages")
+    )
 
     class Meta:
         indexes = [
@@ -333,12 +343,6 @@ class Topic(models.Model):
     Topic Model.
     [Book M - N Topic]. A book can have multiple topics, and a topic can have multiple books.
     """
-    books = models.ManyToManyField(
-        Book,  # Book model is defined above
-        related_name="topics",
-        help_text=_("The books related to the topic"),
-        verbose_name=_("books")
-    )
     name = models.CharField(
         help_text=_("The topic name (e.g. Science Fiction, Fantasy, etc)"),
         max_length=255,
@@ -364,12 +368,6 @@ class Language(models.Model):
     Language Model.
     [Book M - N Language]. A book can have multiple languages, and a language can have multiple books.
     """
-    books = models.ManyToManyField(
-        Book,  # Book model is defined above
-        related_name="languages",
-        help_text=_("The books related to the language"),
-        verbose_name=_("books")
-    )
     code = models.CharField(
         help_text=_("The language code (ISO 639-1 Alpha-2) (e.g. en, es, fr, etc)"),
         max_length=2,
