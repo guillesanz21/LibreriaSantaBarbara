@@ -26,10 +26,10 @@ class ModelTests(TestCase):
         Test creating a new status.
         """
         status = models.Status.objects.create(
-            name="New",
+            name="sold",
         )
 
-        self.assertEqual(status.name, "New")
+        self.assertEqual(status.name, "sold")
 
     def test_create_location(self):
         """
@@ -73,7 +73,7 @@ class ModelTests(TestCase):
         topic_name = "Fiction"
         language_code = "en"
 
-        status = models.Status.objects.create(name="New")
+        status = models.Status.objects.create(name="sold")
         location = models.Location.objects.create(name="Wharehouse, shelf 1A")
 
         book = models.Book.objects.create(

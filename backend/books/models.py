@@ -8,10 +8,10 @@ class Book(models.Model):
     """
     Book Model
     """
-    ref = models.CharField(
-        help_text=_("The unique book reference"),
+    # TODO: If ref not specified, autoincrement from the last one
+    ref = models.IntegerField(
+        help_text=_("The unique book reference number"),
         error_messages={'unique': 'A book with that reference already exists.'},
-        max_length=255,
         blank=False,
         null=False,
         unique=True,
@@ -93,7 +93,7 @@ class Book(models.Model):
         verbose_name=_("pages")
     )
     condition = models.CharField(
-        help_text=_("The physical book condition"),
+        help_text=_("The physical book condition (e.g. new, used, etc)"),
         max_length=255,
         blank=True,
         null=True,
@@ -212,7 +212,7 @@ class Status(models.Model):
     [Book M - 1 Status]. A status can have multiple books.
     """
     name = models.CharField(
-        help_text=_("The status name"),
+        help_text=_("The status name (e.g. Sold, Available, etc)"),
         max_length=255,
         blank=False,
         null=False,
