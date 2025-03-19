@@ -35,6 +35,7 @@ class TopicSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['id']
 
+    # TODO: Remove tildes
     def create(self, validated_data):
         validated_data['name'] = validated_data['name'].lower()
         return super().create(validated_data)

@@ -1,3 +1,4 @@
+from django.db import IntegrityError
 from drf_spectacular.utils import extend_schema
 from rest_framework.authentication import TokenAuthentication
 from books.models import Language, Location, Status, Topic
@@ -25,6 +26,18 @@ class TopicViewSet(mixins.DestroyModelMixin,
     queryset = Topic.objects.all()
     authentication_classes = [TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        try:
+            return super().create(request, *args, **kwargs)
+        except IntegrityError:
+            raise serializers.serializers.ValidationError('Topic already exists')
+
+    def update(self, request, *args, **kwargs):
+        try:
+            return super().update(request, *args, **kwargs)
+        except IntegrityError:
+            raise serializers.serializers.ValidationError('Topic already exists')
 
 
 @extend_schema(tags=['Books / Status'])
