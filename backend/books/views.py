@@ -13,12 +13,6 @@ class LanguageViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     authentication_classes = [TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
-    def perform_create(self, serializer):
-        serializer.save(code=serializer.validated_data['code'].lower())
-
-    def perform_update(self, serializer):
-        serializer.save(code=serializer.validated_data['code'].lower())
-
 
 @extend_schema(tags=['Books / Topics'])
 class TopicViewSet(mixins.DestroyModelMixin,
@@ -31,12 +25,6 @@ class TopicViewSet(mixins.DestroyModelMixin,
     queryset = Topic.objects.all()
     authentication_classes = [TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
-
-    def perform_create(self, serializer):
-        serializer.save(name=serializer.validated_data['name'].title())
-
-    def perform_update(self, serializer):
-        serializer.save(name=serializer.validated_data['name'].title())
 
 
 @extend_schema(tags=['Books / Status'])

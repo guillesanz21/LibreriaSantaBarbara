@@ -16,6 +16,14 @@ class LanguageSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['id']
 
+    def create(self, validated_data):
+        validated_data['code'] = validated_data['code'].lower()
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        validated_data['code'] = validated_data['code'].lower()
+        return super().update(instance, validated_data)
+
 
 # * Topic Serializers
 class TopicSerializer(serializers.ModelSerializer):
@@ -26,6 +34,14 @@ class TopicSerializer(serializers.ModelSerializer):
         model = Topic
         fields = '__all__'
         read_only_fields = ['id']
+
+    def create(self, validated_data):
+        validated_data['name'] = validated_data['name'].lower()
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        validated_data['name'] = validated_data['name'].lower()
+        return super().update(instance, validated_data)
 
 
 # * Status Serializers
