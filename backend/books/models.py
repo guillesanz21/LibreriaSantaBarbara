@@ -228,6 +228,7 @@ class Status(models.Model):
     """
     name = models.CharField(
         help_text=_("The status name (e.g. Sold, Available, etc)"),
+        error_messages={'unique': 'A status with that name already exists.'},
         max_length=255,
         blank=False,
         null=False,
@@ -259,6 +260,7 @@ class Location(models.Model):
     """
     name = models.CharField(
         help_text=_("The location name (e.g. Store, Warehouse (shelf 13), etc)"),
+        error_messages={'unique': 'A location with that name already exists.'},
         max_length=255,
         blank=False,
         null=False,
@@ -338,9 +340,20 @@ class Keyword(models.Model):
         max_length=75,
         blank=False,
         null=False,
-        unique=True,
+        unique=False,
         verbose_name=_("name")
     )
+
+    class Meta:
+        unique_together = ['book', 'name']
+        verbose_name = _("keyword")
+        verbose_name_plural = _("keywords")
+
+    def __str__(self):
+        """
+        String representation of the keyword
+        """
+        return self.name
 
 
 class Topic(models.Model):
@@ -350,6 +363,7 @@ class Topic(models.Model):
     """
     name = models.CharField(
         help_text=_("The topic name (e.g. Science Fiction, Fantasy, etc)"),
+        error_messages={'unique': 'A topic with that name already exists.'},
         max_length=255,
         blank=False,
         null=False,
@@ -375,6 +389,7 @@ class Language(models.Model):
     """
     code = models.CharField(
         help_text=_("The language code (ISO 639-1 Alpha-2) (e.g. en, es, fr, etc)"),
+        error_messages={'unique': 'A language with that code already exists.'},
         max_length=2,
         blank=False,
         null=False,
