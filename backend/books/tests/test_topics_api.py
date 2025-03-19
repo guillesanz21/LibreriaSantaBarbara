@@ -1,5 +1,5 @@
 """
-Tests for the Languages API
+Tests for the Topics API
 """
 
 from django.test import TestCase
@@ -36,7 +36,7 @@ class PublicTopicsApiTest(TestCase):
         self.client = APIClient()
 
     def test_auth_required(self):
-        """Test that authentication is required for retrieving languages."""
+        """Test that authentication is required for retrieving topics."""
         res = self.client.get(TOPICS_URL)
 
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)

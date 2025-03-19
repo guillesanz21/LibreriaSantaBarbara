@@ -53,6 +53,18 @@ class StatusViewSet(viewsets.ModelViewSet):
             return serializers.StatusListSerializer
         return serializers.StatusSerializer
 
+    def create(self, request, *args, **kwargs):
+        try:
+            return super().create(request, *args, **kwargs)
+        except IntegrityError:
+            raise serializers.serializers.ValidationError('Status already exists')
+
+    def update(self, request, *args, **kwargs):
+        try:
+            return super().update(request, *args, **kwargs)
+        except IntegrityError:
+            raise serializers.serializers.ValidationError('Status already exists')
+
 
 @extend_schema(tags=['Books / Locations'])
 class LocationViewSet(viewsets.ModelViewSet):
@@ -66,3 +78,15 @@ class LocationViewSet(viewsets.ModelViewSet):
         if self.action == 'list':
             return serializers.LocationListSerializer
         return serializers.LocationSerializer
+
+    def create(self, request, *args, **kwargs):
+        try:
+            return super().create(request, *args, **kwargs)
+        except IntegrityError:
+            raise serializers.serializers.ValidationError('Location already exists')
+
+    def update(self, request, *args, **kwargs):
+        try:
+            return super().update(request, *args, **kwargs)
+        except IntegrityError:
+            raise serializers.serializers.ValidationError('Location already exists')
