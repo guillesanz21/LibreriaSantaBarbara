@@ -1,9 +1,18 @@
 from django.db import IntegrityError
 from drf_spectacular.utils import extend_schema
 from rest_framework.authentication import TokenAuthentication
-from books.models import Language, Location, Status, Topic
+from books.models import Book, Language, Location, Status, Topic
 from books import serializers
 from rest_framework import mixins, permissions, viewsets
+
+
+@extend_schema(tags=['Books'])
+class BookViewSet(viewsets.ModelViewSet):
+    """ViewSet for managing Books."""
+    serializer_class = serializers.BookSerializer
+    queryset = Book.objects.all()
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
 
 
 @extend_schema(tags=['Books / Languages'])

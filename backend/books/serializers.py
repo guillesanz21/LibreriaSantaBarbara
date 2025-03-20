@@ -3,7 +3,7 @@ Serializers for the books API.
 """
 
 from rest_framework import serializers
-from books.models import Language, Location, Status, Topic
+from books.models import Book, Image, Keyword, Language, Location, Status, Topic
 
 
 # * Language Serializers
@@ -81,3 +81,70 @@ class LocationListSerializer(LocationSerializer):
     """
     class Meta(LocationSerializer.Meta):
         fields = ['id', 'name']
+
+
+# * Image Serializers
+class ImageSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Image View.
+    """
+    class Meta:
+        model = Image
+        exclude = ['book']
+        read_only_fields = ['id']
+        extra_kwargs = {
+            'book': {'required': False}
+        }
+
+
+# * Keyword Serializers
+class KeywordSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Keyword View.
+    """
+    class Meta:
+        model = Keyword
+        exclude = ['book']
+        read_only_fields = ['id']
+        extra_kwargs = {
+            'book': {'required': False}
+        }
+
+
+# * Book Serializers
+class BookSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Book View.
+    """
+    images = ImageSerializer(many=True, required=False)
+    keywords = KeywordSerializer(many=True, required=False)
+
+    class Meta:
+        model = Book
+        fields = '__all__'  # TODO: Remove some fields
+        read_only_fields = ['id', 'created_at', 'updated_at', 'sold_at']
+        extra_kwargs = {
+            'slug': {'required': False},
+        }
+
+    def _get_or_create_images(self, images, book):
+        """Get or create images for a book."""
+        for image in images:
+            image_obj, _ = Image.objects.get_or_create(book=book, **image)
+            book.images.add(image_obj)
+
+    def _get_or_create_keywords(self, keywords, book):
+        """Get or create keywords for a book."""
+        for keyword in keywords:
+            keyword_obj, _ = Keyword.objects.get_or_create(book=book, **keyword)
+            book.keywords.add(keyword_obj)
+
+    def create(self, validated_data):
+        """Create a new Book."""
+        images = validated_data.pop('images', [])
+        keywords = validated_data.pop('keywords', [])
+        book = super().create(validated_data)
+        self._get_or_create_images(images, book)
+        self._get_or_create_keywords(keywords, book)
+
+        return book
