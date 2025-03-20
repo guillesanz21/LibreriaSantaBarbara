@@ -34,6 +34,9 @@ class TopicSerializer(serializers.ModelSerializer):
         model = Topic
         fields = '__all__'
         read_only_fields = ['id']
+        extra_kwargs = {
+            'name': {'validators': []}
+        }
 
     # TODO: Remove tildes
     def create(self, validated_data):
@@ -118,6 +121,10 @@ class BookSerializer(serializers.ModelSerializer):
     """
     images = ImageSerializer(many=True, required=False)
     keywords = KeywordSerializer(many=True, required=False)
+    topics = TopicSerializer(many=True, required=False)
+    # languages = LanguageSerializer(many=True, required=False)
+    # location = LocationSerializer(required=False)
+    # status = StatusSerializer(required=False)
 
     class Meta:
         model = Book
@@ -139,13 +146,25 @@ class BookSerializer(serializers.ModelSerializer):
             keyword_obj, _ = Keyword.objects.get_or_create(book=book, **keyword)
             book.keywords.add(keyword_obj)
 
+    def _get_or_create_topics(self, topics, book):
+        """Get or create topics for a book."""
+        for topic in topics:
+            topic_obj, _ = Topic.objects.get_or_create(**topic)
+            book.topics.add(topic_obj)
+
     def create(self, validated_data):
         """Create a new Book."""
         images = validated_data.pop('images', [])
         keywords = validated_data.pop('keywords', [])
+        topics = validated_data.pop('topics', [])
+
         book = super().create(validated_data)
         self._get_or_create_images(images, book)
         self._get_or_create_keywords(keywords, book)
+        self._get_or_create_topics(topics, book)
+
+        # TODO: Fail if language, location or status does not exist
+        # We don't want to create a language, location or status on the fly
 
         return book
 
@@ -153,6 +172,7 @@ class BookSerializer(serializers.ModelSerializer):
         """Update a Book."""
         images = validated_data.pop('images', None)
         keywords = validated_data.pop('keywords', None)
+        topics = validated_data.pop('topics', None)
 
         # If the user edits the images or keywords through the base book serializer, then
         # we suppose that he wants to replace the current images or keywords with the new ones.
@@ -164,4 +184,12 @@ class BookSerializer(serializers.ModelSerializer):
             instance.keywords.all().delete()
             self._get_or_create_keywords(keywords, instance)
 
+        if topics is not None:
+            # Instead of deleting all the topics, since this is a many-to-many relationship,
+            # we just clear the current topics and add the new ones.
+            instance.topics.clear()
+            self._get_or_create_topics(topics, instance)
+
         return super().update(instance, validated_data)
+
+    # TODO: Get the status, location, topics and languages objects instead of their ids
