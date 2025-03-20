@@ -148,3 +148,20 @@ class BookSerializer(serializers.ModelSerializer):
         self._get_or_create_keywords(keywords, book)
 
         return book
+
+    def update(self, instance, validated_data):
+        """Update a Book."""
+        images = validated_data.pop('images', None)
+        keywords = validated_data.pop('keywords', None)
+
+        # If the user edits the images or keywords through the base book serializer, then
+        # we suppose that he wants to replace the current images or keywords with the new ones.
+        if images is not None:
+            instance.images.all().delete()
+            self._get_or_create_images(images, instance)
+
+        if keywords is not None:
+            instance.keywords.all().delete()
+            self._get_or_create_keywords(keywords, instance)
+
+        return super().update(instance, validated_data)
