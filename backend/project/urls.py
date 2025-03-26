@@ -34,3 +34,6 @@ urlpatterns = [
     path('api/user/', include('users.urls')),
     path('api/books/', include('books.urls')),
 ]
+
+# TODO: Only include the silk urls in development
+urlpatterns += [path('silk/', include('silk.urls', namespace='silk'))]
