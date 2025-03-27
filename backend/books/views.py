@@ -10,9 +10,30 @@ from rest_framework import mixins, permissions, viewsets
 class BookViewSet(viewsets.ModelViewSet):
     """ViewSet for managing Books."""
     serializer_class = serializers.BookSerializer
-    queryset = Book.objects.all()
+    queryset = Book.objects
     authentication_classes = [TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return serializers.BookListSerializer
+        return serializers.BookSerializer
+
+    def get_queryset(self):
+        if self.action == 'list':
+            # TODO: Add filters:
+            # location, status, keywords, topics, languages
+            # title, author
+            # price (min, max)
+            # TODO: Add pagination
+            # TODO: Add ordering
+            return super().get_queryset().select_related('status').all()
+        # NICETOHAVE: Use RawSQL for better performance
+        return (
+            super().get_queryset()
+            .select_related('status', 'location')
+            .prefetch_related('keywords', 'images', 'topics', 'languages')
+        )
 
 
 @extend_schema(tags=['Books / Languages'])

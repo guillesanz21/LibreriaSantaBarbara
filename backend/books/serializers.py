@@ -122,9 +122,11 @@ class BookSerializer(serializers.ModelSerializer):
     images = ImageSerializer(many=True, required=False)
     keywords = KeywordSerializer(many=True, required=False)
     topics = TopicSerializer(many=True, required=False)
-    # languages = LanguageSerializer(many=True, required=False)
-    # location = LocationSerializer(required=False)
-    # status = StatusSerializer(required=False)
+    status = StatusSerializer(required=True)
+    location = LocationSerializer(required=False)
+    languages = LanguageSerializer(many=True, required=False)
+    # Languages, location and status are specified by the id.
+    # We don't want to create a language, location or status on the fly. They must exist.
 
     class Meta:
         model = Book
@@ -163,9 +165,6 @@ class BookSerializer(serializers.ModelSerializer):
         self._get_or_create_keywords(keywords, book)
         self._get_or_create_topics(topics, book)
 
-        # TODO: Fail if language, location or status does not exist
-        # We don't want to create a language, location or status on the fly
-
         return book
 
     def update(self, instance, validated_data):
@@ -192,4 +191,13 @@ class BookSerializer(serializers.ModelSerializer):
 
         return super().update(instance, validated_data)
 
-    # TODO: Get the status, location, topics and languages objects instead of their ids
+
+class BookListSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Book Detail View.
+    """
+    status = StatusSerializer()
+
+    class Meta:
+        model = Book
+        fields = ['id', 'ref', 'title', 'author', 'condition', 'status', 'stock', 'price']
