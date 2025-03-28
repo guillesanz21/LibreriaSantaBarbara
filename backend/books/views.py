@@ -1,3 +1,4 @@
+from django.core.exceptions import BadRequest
 from django.db import IntegrityError
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter, extend_schema, extend_schema_view
@@ -57,6 +58,11 @@ from rest_framework import mixins, permissions, viewsets
                 type=OpenApiTypes.STR,
                 description='Filter by topics (comma separated)',
             ),
+            OpenApiParameter(
+                name='ordering',
+                type=OpenApiTypes.STR,
+                description='Ordering by field (e.g., updated_at, -price, +ref)',
+            ),
         ]
     )
 )
@@ -78,7 +84,6 @@ class BookViewSet(viewsets.ModelViewSet):
         if self.action == 'list':
             queryset = self.queryset
 
-            # Filtering
             title = self.request.query_params.get('title')
             author = self.request.query_params.get('author')
             price_min = self.request.query_params.get('price_min')
@@ -88,7 +93,9 @@ class BookViewSet(viewsets.ModelViewSet):
             keywords = self.request.query_params.get('keywords')
             languages = self.request.query_params.get('languages')
             topics = self.request.query_params.get('topics')
+            ordering = self.request.query_params.get('ordering')
 
+            # Filtering
             if title:
                 queryset = queryset.filter(title__icontains=title)
             if author:
@@ -111,8 +118,21 @@ class BookViewSet(viewsets.ModelViewSet):
                 topics = [topic.strip() for topic in topics.split(',')]
                 queryset = queryset.filter(topics__name__in=topics)
 
-            # TODO: Add ordering
-            return queryset.select_related('status')
+            queryset = queryset.select_related('status')
+
+            # Ordering
+            # NICETOHAVE: Maybe limit the options to indexed fields
+            if ordering:
+                # Format: -field_name for descending order, +field_name or field_name for ascending order
+                ordering = ordering.lstrip('+')
+                field = ordering.lstrip('+-')
+                valid_fields = [field.name for field in queryset.model._meta.get_fields()]  # Lista de campos válidos
+
+                if field not in valid_fields:
+                    raise BadRequest(f"Invalid ordering field '{ordering}'. Valid fields are: {valid_fields}")
+                queryset = queryset.order_by(ordering)
+            return queryset
+
         # NICETOHAVE: Use RawSQL for better performance
         return (
             super().get_queryset()
