@@ -2,6 +2,7 @@ from django.db import IntegrityError
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter, extend_schema, extend_schema_view
 from rest_framework.authentication import TokenAuthentication
+from books.pagination import StandardPagination
 from books.models import Book, Language, Location, Status, Topic
 from books import serializers
 from rest_framework import mixins, permissions, viewsets
@@ -65,6 +66,7 @@ class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects
     authentication_classes = [TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
+    pagination_class = StandardPagination
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -109,7 +111,6 @@ class BookViewSet(viewsets.ModelViewSet):
                 topics = [topic.strip() for topic in topics.split(',')]
                 queryset = queryset.filter(topics__name__in=topics)
 
-            # TODO: Add pagination
             # TODO: Add ordering
             return queryset.select_related('status')
         # NICETOHAVE: Use RawSQL for better performance
