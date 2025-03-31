@@ -70,6 +70,7 @@ class BookViewSet(viewsets.ModelViewSet):
     """ViewSet for managing Books."""
     serializer_class = serializers.BookSerializer
     queryset = Book.objects
+    # TODO: Public detail and list without authentication and permissions
     authentication_classes = [TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
     pagination_class = StandardPagination
@@ -77,6 +78,8 @@ class BookViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == 'list':
             return serializers.BookListSerializer
+        if self.action == 'retrieve':
+            return serializers.BookDetailSerializer
         return serializers.BookSerializer
 
     def get_queryset(self):
@@ -140,6 +143,12 @@ class BookViewSet(viewsets.ModelViewSet):
             .select_related('status', 'location')
             .prefetch_related('keywords', 'images', 'topics', 'languages')
         )
+
+# TODO: Two more endpoints for public retrievals (detail and list)
+# TODO: At book update, if the status is changed to "Sold", then:
+#     # 1. The stock must be set to actual stock - 1
+#     # 2. The sold_date must be set to the current date
+# TODO: Views for import export
 
 
 @extend_schema(tags=['Books / Languages'])

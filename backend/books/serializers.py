@@ -122,9 +122,6 @@ class BookSerializer(serializers.ModelSerializer):
     images = ImageSerializer(many=True, required=False)
     keywords = KeywordSerializer(many=True, required=False)
     topics = TopicSerializer(many=True, required=False)
-    status = StatusSerializer(required=True)
-    location = LocationSerializer(required=False)
-    languages = LanguageSerializer(many=True, required=False)
     # Languages, location and status are specified by the id.
     # We don't want to create a language, location or status on the fly. They must exist.
 
@@ -190,6 +187,15 @@ class BookSerializer(serializers.ModelSerializer):
             self._get_or_create_topics(topics, instance)
 
         return super().update(instance, validated_data)
+
+
+class BookDetailSerializer(BookSerializer):
+    """
+    Serializer for the Book Detail View.
+    """
+    status = StatusSerializer(required=True)
+    location = LocationSerializer(required=False)
+    languages = LanguageSerializer(many=True, required=False)
 
 
 class BookListSerializer(serializers.ModelSerializer):
