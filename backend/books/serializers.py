@@ -186,6 +186,8 @@ class BookSerializer(serializers.ModelSerializer):
             instance.topics.clear()
             self._get_or_create_topics(topics, instance)
 
+        # TODO: If the status is updated to "sold", then we need to set the sold_at field to now.
+
         return super().update(instance, validated_data)
 
 
